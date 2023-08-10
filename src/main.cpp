@@ -1,6 +1,12 @@
 #include <iostream>
 #include "logger.h"
 #include "config.h"
+#include "option.h"
+
+static int init_option(int argc, char *argv[]) {
+    OPTION.add("h", "help", "help info");
+    return OPTION.init(argc, argv);
+}
 
 static void init_logs() {
     huoguo::utils::LogConfig config;
@@ -12,8 +18,15 @@ static void init_logs() {
     LOGGER.init(config);
 }
 
-int main(int argc, char **argv) {
-
+int main(int argc, char *argv[]) {
+    if (init_option(argc, argv) < 0) {
+        ERROR("init option failed: %d", argc);
+        return -1;
+    }
+    if (OPTION.is_exists("h") || OPTION.is_exists("help")) {
+        OPTION.usage();
+        return 0;
+    }
     CONFIG.init(argv[1]);
     init_logs();
 
