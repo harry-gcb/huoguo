@@ -1,0 +1,6 @@
+aux_source_directory(${PROJECT_SOURCE_DIR}/net/src NET_LIST)
+include_directories(${PROJECT_SOURCE_DIR}/utils/include)
+add_library(net STATIC ${NET_LIST})
+add_library(huoguo::net ALIAS net)
+target_include_directories(net PUBLIC ${PROJECT_SOURCE_DIR}/net/include)
+SET(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/debug/lib) 
