@@ -146,16 +146,16 @@ void Logger::log_message(LOG_LEVE level, const char *filename, int line, const c
     char buff[LOG_MESSAGE_DATA_SIZE + LOG_MESSAGE_TIME_SIZE] = { 0 };
     size_t size = 0;
     if (m_enable_color) {
-        size = snprintf(buff, sizeof(buff),"%s%04d-%02d-%02d %02d:%02d:%02d.%6lld %-5s %s:%d %s%s\n",
+        size = snprintf(buff, sizeof(buff),"%s%04d-%02d-%02d %02d:%02d:%02d.%6ld %-5s %ld [%s:%d] %s%s\n",
         log_level_begin[level], tm->tm_year+1900, tm->tm_mon+1, tm->tm_mday,
         tm->tm_hour, tm->tm_min, tm->tm_sec, us.count(),
-        log_level_names[level], filename, line, data, log_level_end[level]);
+        log_level_names[level], pthread_self(), filename, line, data, log_level_end[level]);
 
     } else {
-        size = snprintf(buff, sizeof(buff),"%04d-%02d-%02d %02d:%02d:%02d.%6lld %-5s %s:%d %s\n",
+        size = snprintf(buff, sizeof(buff),"%04d-%02d-%02d %02d:%02d:%02d.%6ld %-5s %ld [%s:%d] %s\n",
         tm->tm_year+1900, tm->tm_mon+1, tm->tm_mday,
         tm->tm_hour, tm->tm_min, tm->tm_sec, us.count(),
-        log_level_names[level], filename, line, data);
+        log_level_names[level], pthread_self(), filename, line, data);
     }
     if (tm->tm_hour == 0 && tm->tm_min ==0 && tm->tm_sec == 0 && m_has_logfile && m_last_time != time) {
         std::lock_guard<std::mutex> guard(m_mutex);

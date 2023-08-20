@@ -7,18 +7,32 @@
 namespace huoguo {
 namespace net {
 
-class IOEvent;
+class Channel;
 class Socket {
 public:
-    Socket(std::shared_ptr<IOEvent> event);
-    Socket(std::shared_ptr<IOEvent> event, bool is_ipv4 = true, bool is_tcp = true);
+    Socket(sa_family_t family, int type, int protocol);
+    Socket(int sock);
     ~Socket();
-    
+
     int bind(const InetAddr &addr);
+    int listen(int backlog = SOMAXCONN);
+    std::shared_ptr<Socket> accept();
+
+    int read(void *data, int len);
+
+    int set_reuse_addr(bool reuse);
+    int set_reuse_port(bool reuse);
+    
     int get_handle();
+    Channel *get_channel();
+    void set_channel(Channel *);
 private:
-    std::weak_ptr<IOEvent> m_event;
+    std::shared_ptr<Socket> accept(struct sockaddr *addr, socklen_t *addrlen);
+private:
+    sa_family_t m_family;
     int m_socket;
+    Channel *m_channel;
+    
 };
 
 } // namespace net

@@ -16,7 +16,7 @@ namespace utils {
 #define LOGGER                     huoguo::utils::Logger::logger
 #define LOG_LEVEL(level)           huoguo::utils::Logger::LOG_LEVEL_##level, strrchr(__FILE__, '/') + 1, __LINE__, __FUNCTION__
 #define LOG_BASE(level, ...)      (huoguo::utils::Logger::LOG_LEVEL_##level>LOGGER.get_level()) ? (void)0 : LOG_PRINT(level, __VA_ARGS__)
-#define LOG(level, fmt, args...)  (huoguo::utils::Logger::LOG_LEVEL_##level>LOGGER.get_level()) ? (void)0 : LOG_BASE(level, "[%ld] " fmt, pthread_self(), ##args)
+#define LOG(level, fmt, args...)  (huoguo::utils::Logger::LOG_LEVEL_##level>LOGGER.get_level()) ? (void)0 : LOG_BASE(level, fmt, ##args)
 
 #define DEBUG(fmt, args...) LOG(DEBUG, fmt, ##args)
 #define TRACE(fmt, args...) LOG(TRACE, fmt, ##args)

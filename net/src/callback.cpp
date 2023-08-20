@@ -6,9 +6,9 @@ namespace huoguo {
 namespace net {
 
 void default_connect_callback(const TcpConnectionPtr &conn) {
-    INFO("[%s] %s:%d->%s:%d is %s", conn->get_conn_name().c_str(),
-                                    conn->get_remote_addr().c_str(), conn->get_remote_port(),
-                                    conn->get_local_addr().c_str(), conn->get_local_port(),
+    INFO("[%s] %s:%d->%s:%d is %s", conn->get_name().c_str(),
+                                    conn->get_remote_ip().c_str(), conn->get_remote_port(),
+                                    conn->get_local_ip().c_str(), conn->get_local_port(),
                                     conn->is_connected() ? "UP" : "DOWN");
 }
 

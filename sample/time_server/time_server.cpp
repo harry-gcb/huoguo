@@ -17,9 +17,9 @@ void TimeServer::start() {
 
 void TimeServer::on_connect(const huoguo::net::TcpConnectionPtr &conn) {
     INFO("[TimeServer] %s:%d->%s:%d is %s", 
-                        conn->get_remote_addr(), 
+                        conn->get_remote_ip().c_str(), 
                         conn->get_remote_port(), 
-                        conn->get_local_addr(),
+                        conn->get_local_ip().c_str(),
                         conn->get_local_port(),
                         conn->is_connected() ? "UP" : "DOWN");
     if (conn->is_connected()) {
@@ -30,7 +30,7 @@ void TimeServer::on_connect(const huoguo::net::TcpConnectionPtr &conn) {
 }
 
 void TimeServer::on_message(const huoguo::net::TcpConnectionPtr &conn) {
-    INFO("[TimeServer] receive message from %s:%d", conn->get_remote_addr(), conn->get_remote_port());
+    INFO("[TimeServer] receive message from %s:%d", conn->get_remote_ip(), conn->get_remote_port());
 }
 
 } // end of namespace sample
