@@ -1,5 +1,7 @@
 #include "channel.h"
 #include "event_loop.h"
+#include "logger.h"
+#include "uuid.h"
 
 namespace huoguo {
 namespace net {
@@ -8,7 +10,18 @@ Channel::Channel(EventLoop *loop, std::shared_ptr<Socket> sock)
     : m_loop(loop),
       m_socket(sock),
       m_enable_read(false),
-      m_enable_write(false) {
+      m_enable_write(false),
+      m_channel_id(huoguo::utils::uuid::generate()) {
+    m_socket->set_channel(this);
+    INFO("channel=%s, this=%p", m_channel_id.c_str(), this);
+}
+
+Channel::~Channel() {
+    INFO("channel=%s, this=%p", m_channel_id.c_str(), this);
+}
+
+std::string Channel::get_channel_id() const {
+    return m_channel_id;
 }
 
 std::shared_ptr<Socket> Channel::get_socket() {
@@ -54,30 +67,27 @@ void Channel::handle_error_event() {
     }
 }
 
-void Channel::enable_read_event() {
-    m_enable_read = true;
+
+void Channel::enable_read(bool enable) {
+    m_enable_read = enable;
+    m_loop->set_channel(shared_from_this());
+}
+void Channel::enable_write(bool enable) {
+    m_enable_write = enable;
     m_loop->set_channel(shared_from_this());
 }
 
-void Channel::disable_read_event() {
-    m_enable_read = false;
-    m_loop->set_channel(shared_from_this());
-}
-void Channel::enable_write_event() {
-    m_enable_write = true;
+void Channel::enable_all(bool enable) {
+    m_enable_read = enable;
+    m_enable_write = enable;
     m_loop->set_channel(shared_from_this());
 }
 
-void Channel::disable_write_event() {
-    m_enable_write = false;
-    m_loop->set_channel(shared_from_this());
-}
-
-bool Channel::enable_read() {
+bool Channel::is_reading() {
     return m_enable_read;
 }
 
-bool Channel::enable_write() {
+bool Channel::is_writing() {
     return m_enable_write;
 }
 

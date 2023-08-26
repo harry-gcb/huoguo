@@ -58,8 +58,17 @@ std::shared_ptr<Socket> Socket::accept(struct sockaddr *addr, socklen_t *addrlen
     return std::make_shared<Socket>(fd);
 }
 
+int Socket::connect(const struct sockaddr *addr, socklen_t addrlen) {
+    return ::connect(m_socket, addr, addrlen);
+}
+
+
 int Socket::read(void *data, int len) {
     return ::read(m_socket, data, len);
+}
+
+int Socket::write(const void *data, int len) {
+    return ::write(m_socket, data, len);
 }
 
 int Socket::set_reuse_addr(bool reuse) {

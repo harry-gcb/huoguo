@@ -1,11 +1,10 @@
-#ifndef HUOGUO_NET_ACCEPTOR_H_
-#define HUOGUO_NET_ACCEPTOR_H_
+#ifndef HUOGUO_NET_CONNECTOR_H_
+#define HUOGUO_NET_CONNECTOR_H_
 
 #include <memory>
 #include <functional>
 #include "noncopyable.h"
 #include "inet_addr.h"
-
 
 namespace huoguo {
 namespace net {
@@ -13,26 +12,25 @@ namespace net {
 class EventLoop;
 class Channel;
 class Socket;
-class Acceptor: huoguo::utils::Noncopyable {
+class Connector: huoguo::utils::Noncopyable {
     using EstablishCallback = std::function<void(std::shared_ptr<Socket>)>;
 public:
-    Acceptor(EventLoop *loop, const InetAddr &addr, bool reuse);
-    ~Acceptor();
+    Connector(EventLoop *loop, const InetAddr &addr);
+    ~Connector();
 
     void set_establish_callback(EstablishCallback callback);
 
-    void listen();
+    void connect();
 private:
     void handle_read_event();
 private:
     EventLoop *m_loop;
-    bool m_listening;
-    std::shared_ptr<Socket> m_socket;
-    std::shared_ptr<Channel> m_channel;
+    bool m_connecting;
+    InetAddr m_addr;
     EstablishCallback m_establish_callback;
 };
 
-} // namespace huoguo
 } // namespace net
+} // namespace huoguo
 
-#endif // HUOGUO_NET_ACCEPTOR_H_
+#endif // HUOGUO_NET_CONNECTOR_H_

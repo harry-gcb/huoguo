@@ -1,0 +1,7 @@
+aux_source_directory(${PROJECT_SOURCE_DIR}/rtsp/src NET_LIST)
+include_directories(${PROJECT_SOURCE_DIR}/utils/include)
+include_directories(${PROJECT_SOURCE_DIR}/net/include)
+add_library(rtsp STATIC ${NET_LIST})
+add_library(huoguo::rtsp ALIAS rtsp)
+target_include_directories(rtsp PUBLIC ${PROJECT_SOURCE_DIR}/rtsp/include)
+SET(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/debug/lib) 

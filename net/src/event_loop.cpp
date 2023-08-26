@@ -3,17 +3,25 @@
 #include "poller_factory.h"
 #include "epoll_poller.h"
 #include "channel.h"
-
+#include "socket.h"
+#include <sys/eventfd.h>
+#include <unistd.h>
 namespace huoguo {
 namespace net {
 
 EventLoop::EventLoop()
     : m_stop(false),
-      m_poller(PollerFactory::NewPoller()) {
+      m_poller(PollerFactory::NewPoller()),
+      m_socket(new Socket(::eventfd(0, EFD_NONBLOCK | EFD_CLOEXEC))),
+      m_channel(new Channel(this, m_socket)) {
+    m_channel->set_read_callback(std::bind(&EventLoop::handle_read_event, this));
+    this->add_channel(m_channel);
+    m_channel->enable_read(true);
 }
 
 EventLoop::~EventLoop() {
-
+    m_channel->enable_all(false);
+    this->del_channel(m_channel);
 }
 
 int EventLoop::run() {
@@ -32,22 +40,55 @@ int EventLoop::run() {
                 event->m_channel->handle_error_event();
             }
         }
-        DEBUG("EventLoop handle %d events", ret);
+        handle_close_event();
     }
     INFO("EventLoop exit running");
     return 0;
 }
 
+void EventLoop::stop() {
+    m_stop = true;
+    active_read_event();
+}
+
 int EventLoop::add_channel(std::shared_ptr<Channel> channel) {
-    return m_poller->add_event(channel->get_socket(), channel->enable_read(), channel->enable_write());
+    return m_poller->add_event(channel->get_socket(), channel->is_reading(), channel->is_writing());
 }
 
 int EventLoop::set_channel(std::shared_ptr<Channel> channel) {
-    return m_poller->set_event(channel->get_socket(), channel->enable_read(), channel->enable_write());
+    return m_poller->set_event(channel->get_socket(), channel->is_reading(), channel->is_writing());
 }
 
 int EventLoop::del_channel(std::shared_ptr<Channel> channel) {
     return m_poller->del_event(channel->get_socket());
+}
+
+void EventLoop::handle_read_event() {
+    uint64_t one = 1;
+    size_t n = m_socket->read(&one, sizeof(one));
+    if (n != sizeof(one)) {
+        ERROR("read %d bytes instead of %d", n, sizeof(one));
+    }
+}
+
+void EventLoop::active_read_event() {
+    uint64_t one = 1;
+    size_t n = m_socket->write(&one, sizeof(one));
+    if (n != sizeof(one)) {
+        ERROR("read %d bytes instead of %d", n, sizeof(one));
+    }
+}
+
+void EventLoop::push_close_event(Callback callback) {
+    m_callback.push_back(callback);
+    active_read_event();
+}
+
+void EventLoop::handle_close_event() {
+    for (auto callback: m_callback) {
+        callback();
+    }
+    m_callback.clear();
 }
 
 } // namespace net

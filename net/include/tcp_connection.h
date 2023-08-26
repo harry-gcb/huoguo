@@ -15,7 +15,7 @@ class Socket;
 class EventLoop;
 class TcpConnection: public huoguo::utils::Noncopyable, public std::enable_shared_from_this<TcpConnection> {
 public:
-    TcpConnection(EventLoop *loop, const std::string &name, std::shared_ptr<Socket> sock, const InetAddr &local_addr, const InetAddr &peer_addr);
+    TcpConnection(EventLoop *loop, std::shared_ptr<Socket> sock, const InetAddr &local_addr, const InetAddr &peer_addr);
     ~TcpConnection();
 
     void establish();
@@ -39,7 +39,6 @@ private:
     void handle_error_event();
 private:
     EventLoop *m_loop;
-    std::string m_name;
     std::shared_ptr<Socket> m_socket;
     std::shared_ptr<Channel> m_channel;
     const InetAddr m_local_addr;

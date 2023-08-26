@@ -18,7 +18,10 @@ public:
     int listen(int backlog = SOMAXCONN);
     std::shared_ptr<Socket> accept();
 
+    int connect(const struct sockaddr *addr, socklen_t addrlen);
+
     int read(void *data, int len);
+    int write(const void *data, int len);
 
     int set_reuse_addr(bool reuse);
     int set_reuse_port(bool reuse);

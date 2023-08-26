@@ -55,7 +55,7 @@ int EPollPoller::del_event(std::shared_ptr<Socket> sock) {
     ev.data.ptr = sock->get_channel();
     ev.events = 0;
     int ret = epoll_ctl(m_epoll_fd, EPOLL_CTL_DEL, sock->get_handle(), &ev);
-    INFO("epoll_ctl DEL: ret=%d, socket=%d, read=%d, write=%d", ret, sock->get_handle());
+    INFO("epoll_ctl DEL: ret=%d, socket=%d", ret, sock->get_handle());
     return ret;
 }
 

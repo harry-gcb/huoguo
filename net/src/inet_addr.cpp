@@ -43,12 +43,24 @@ InetAddr::InetAddr(uint16_t port, const std::string &ip, bool loopback, bool udp
     }
 }
 
-InetAddr::InetAddr(const std::string &ip, uint16_t &port, bool udp)
+InetAddr::InetAddr(const std::string &ip, uint16_t port, bool udp)
     : m_addr_type(udp ? SOCK_DGRAM : SOCK_STREAM),
       m_addr_protocol(udp ? IPPROTO_UDP : IPPROTO_TCP),
       m_addr_port(port),
       m_addr_ip(ip),
       m_addr_family(ip.find(":") != std::string::npos ? AF_INET6 : AF_INET) {    
+    if (m_addr_family == AF_INET6) {
+        memset(&m_addr_v6, 0, sizeof(m_addr_v6));
+        m_addr_v6.sin6_family = m_addr_family;
+        inet_pton(m_addr_family, m_addr_ip.c_str(), &m_addr_v6.sin6_addr);
+        m_addr_v6.sin6_port = htons(port);
+    } else {
+        memset(&m_addr_v4, 0, sizeof(m_addr_v4));
+        m_addr_v4.sin_family = m_addr_family;
+        inet_pton(m_addr_family, m_addr_ip.c_str(), &m_addr_v4.sin_addr);
+        // addr4.sin_addr.s_addr = inet_addr(m_addr_ip.c_str());
+        m_addr_v4.sin_port = htons(port);
+    }
 }
 
 InetAddr::InetAddr(const struct sockaddr_in& addr4)
@@ -104,6 +116,10 @@ InetAddr InetAddr::get_remote_addr(int fd, bool ipv6) {
 const sockaddr *InetAddr::get_addr() const {
     return m_addr_family == AF_INET ? reinterpret_cast<const sockaddr *>(&m_addr_v4)
                                     : reinterpret_cast<const sockaddr *>(&m_addr_v6);
+}
+
+socklen_t InetAddr::get_len() const {
+    return m_addr_family == AF_INET ? sizeof(m_addr_v4) : sizeof(m_addr_v6);
 }
 
 sa_family_t InetAddr::get_family() const {

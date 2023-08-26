@@ -13,21 +13,25 @@ class Channel: public std::enable_shared_from_this<Channel> {
     using EventCallback = std::function<void()>;
 public:
     Channel(EventLoop *loop, std::shared_ptr<Socket> sock);
+    ~Channel();
+    std::string get_channel_id() const;
     std::shared_ptr<Socket> get_socket();
     void set_read_callback(EventCallback callback);
     void set_write_callback(EventCallback callback);
     void set_close_callback(EventCallback callback);
     void set_error_callback(EventCallback callback);
+
     void handle_read_event();
     void handle_write_event();
     void handle_close_event();
     void handle_error_event();
-    void enable_read_event();
-    void disable_read_event();
-    void enable_write_event();
-    void disable_write_event();
-    bool enable_read();
-    bool enable_write();
+
+    void enable_read(bool enable);
+    void enable_write(bool enable);
+    void enable_all(bool enable);
+
+    bool is_reading();
+    bool is_writing();
 private:
     EventLoop *m_loop;
     std::shared_ptr<Socket> m_socket;
@@ -37,6 +41,7 @@ private:
     EventCallback m_error_callback;
     bool m_enable_read;
     bool m_enable_write;
+    std::string m_channel_id;
 };
 
 } // namespace net
