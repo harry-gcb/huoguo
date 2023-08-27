@@ -38,8 +38,8 @@ void TcpServer::set_message_callback(const MessageCallback &cb) {
 }
 
 void TcpServer::add_connection(std::shared_ptr<Socket> sock) {
-    InetAddr local_addr = InetAddr::get_local_addr(sock->get_handle());
-    InetAddr remote_addr = InetAddr::get_remote_addr(sock->get_handle());
+    InetAddr local_addr = InetAddr::get_local_addr(sock->get_fd());
+    InetAddr remote_addr = InetAddr::get_remote_addr(sock->get_fd());
     auto conn = std::make_shared<TcpConnection>(m_loop, sock, local_addr, remote_addr);
     conn->set_connect_callback(m_connect_callback);
     conn->set_message_callback(m_message_callback);

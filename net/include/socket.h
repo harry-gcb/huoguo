@@ -3,16 +3,17 @@
 
 #include <memory>
 #include "inet_addr.h"
+#include "event_io.h"
+#include "noncopyable.h"
 
 namespace huoguo {
 namespace net {
 
 class Channel;
-class Socket {
+class Socket: public EventIO, huoguo::utils::Noncopyable {
 public:
     Socket(sa_family_t family, int type, int protocol);
     Socket(int sock);
-    Socket(){}
     ~Socket();
 
     int bind(const InetAddr &addr);
@@ -27,14 +28,14 @@ public:
     int set_reuse_addr(bool reuse);
     int set_reuse_port(bool reuse);
     
-    int get_handle();
-    Channel *get_channel();
+    virtual int get_fd() override;
+    virtual Channel *get_channel() override;
     void set_channel(Channel *);
 private:
     std::shared_ptr<Socket> accept(struct sockaddr *addr, socklen_t *addrlen);
 private:
     sa_family_t m_family;
-    int m_socket;
+    int m_fd;
     Channel *m_channel;
     
 };

@@ -2,8 +2,9 @@
 #include <sys/epoll.h>
 #include <unistd.h>
 #include "epoll_poller.h"
-#include "socket.h"
 #include "logger.h"
+#include "io_event.h"
+#include "socket.h"
 
 namespace huoguo {
 namespace net {
@@ -21,9 +22,9 @@ EPollPoller::~EPollPoller() {
     close(m_epoll_fd);
 }
 
-int EPollPoller::add_event(std::shared_ptr<Socket> sock, bool enable_read, bool enable_write) {
+int EPollPoller::add_event(std::shared_ptr<EventIO> event, bool enable_read, bool enable_write) {
     struct epoll_event ev = { 0 };
-    ev.data.ptr = sock->get_channel();
+    ev.data.ptr = event->get_channel();
     ev.events = 0;
     if (enable_read) {
         ev.events |= EPOLLIN;
@@ -31,14 +32,14 @@ int EPollPoller::add_event(std::shared_ptr<Socket> sock, bool enable_read, bool 
     if (enable_write) {
         ev.events |= EPOLLOUT;
     }
-    int ret = epoll_ctl(m_epoll_fd, EPOLL_CTL_ADD, sock->get_handle(), &ev);
-    INFO("epoll_ctl ADD: ret=%d, socket=%d, read=%d, write=%d", ret, sock->get_handle(), enable_read, enable_write);
+    int ret = epoll_ctl(m_epoll_fd, EPOLL_CTL_ADD, event->get_fd(), &ev);
+    INFO("epoll_ctl ADD, ret=%d, fd=%d, read=%d, write=%d", ret, event->get_fd(), enable_read, enable_write);
     return ret;
 }
 
-int EPollPoller::set_event(std::shared_ptr<Socket> sock, bool enable_read, bool enable_write) {
+int EPollPoller::set_event(std::shared_ptr<EventIO> event, bool enable_read, bool enable_write) {
     struct epoll_event ev = { 0 };
-    ev.data.ptr = sock->get_channel();
+    ev.data.ptr = event->get_channel();
     ev.events = 0;
     if (enable_read) {
         ev.events |= EPOLLIN;
@@ -46,17 +47,17 @@ int EPollPoller::set_event(std::shared_ptr<Socket> sock, bool enable_read, bool 
     if (enable_write) {
         ev.events |= EPOLLOUT;
     }
-    int ret = epoll_ctl(m_epoll_fd, EPOLL_CTL_MOD, sock->get_handle(), &ev);
-    INFO("epoll_ctl MOD: ret=%d, socket=%d, read=%d, write=%d", ret, sock->get_handle(), enable_read, enable_write);
+    int ret = epoll_ctl(m_epoll_fd, EPOLL_CTL_MOD, event->get_fd(), &ev);
+    INFO("epoll_ctl MOD, ret=%d, fd=%d, read=%d, write=%d", ret, event->get_fd(), enable_read, enable_write);
     return ret;
 }
 
-int EPollPoller::del_event(std::shared_ptr<Socket> sock) {
+int EPollPoller::del_event(std::shared_ptr<EventIO> event) {
     struct epoll_event ev = { 0 };
-    ev.data.ptr = sock->get_channel();
+    ev.data.ptr = event->get_channel();
     ev.events = 0;
-    int ret = epoll_ctl(m_epoll_fd, EPOLL_CTL_DEL, sock->get_handle(), &ev);
-    INFO("epoll_ctl DEL: ret=%d, socket=%d", ret, sock->get_handle());
+    int ret = epoll_ctl(m_epoll_fd, EPOLL_CTL_DEL, event->get_fd(), &ev);
+    INFO("epoll_ctl DEL, ret=%d, fd=%d", ret, event->get_fd());
     return ret;
 }
 

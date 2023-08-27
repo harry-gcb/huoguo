@@ -1,11 +1,12 @@
 #include "event_loop.h"
 #include "logger.h"
 #include "poller_factory.h"
-#include "epoll_poller.h"
-#include "kqueue_poller.h"
+#include "wakeup_factory.h"
+#include "io_event.h"
 #include "channel.h"
 #include "socket.h"
-// #include <sys/eventfd.h>
+
+#include <sys/eventfd.h>
 #include <unistd.h>
 namespace huoguo {
 namespace net {
@@ -13,8 +14,8 @@ namespace net {
 EventLoop::EventLoop()
     : m_stop(false),
       m_poller(PollerFactory::NewPoller()),
-      m_socket(new Socket(/*::eventfd(0, EFD_NONBLOCK | EFD_CLOEXEC)*/)),
-      m_channel(new Channel(this, m_socket)) {
+      m_event_io(WakeupFactory::NewWakeup()),
+      m_channel(new Channel(this, m_event_io)) {
     m_channel->set_read_callback(std::bind(&EventLoop::handle_read_event, this));
     this->add_channel(m_channel);
     m_channel->enable_read(true);
@@ -53,20 +54,20 @@ void EventLoop::stop() {
 }
 
 int EventLoop::add_channel(std::shared_ptr<Channel> channel) {
-    return m_poller->add_event(channel->get_socket(), channel->is_reading(), channel->is_writing());
+    return m_poller->add_event(channel->get_event(), channel->is_reading(), channel->is_writing());
 }
 
 int EventLoop::set_channel(std::shared_ptr<Channel> channel) {
-    return m_poller->set_event(channel->get_socket(), channel->is_reading(), channel->is_writing());
+    return m_poller->set_event(channel->get_event(), channel->is_reading(), channel->is_writing());
 }
 
 int EventLoop::del_channel(std::shared_ptr<Channel> channel) {
-    return m_poller->del_event(channel->get_socket());
+    return m_poller->del_event(channel->get_event());
 }
 
 void EventLoop::handle_read_event() {
     uint64_t one = 1;
-    size_t n = m_socket->read(&one, sizeof(one));
+    size_t n = m_event_io->read(&one, sizeof(one));
     if (n != sizeof(one)) {
         ERROR("read %d bytes instead of %d", n, sizeof(one));
     }
@@ -74,7 +75,7 @@ void EventLoop::handle_read_event() {
 
 void EventLoop::active_read_event() {
     uint64_t one = 1;
-    size_t n = m_socket->write(&one, sizeof(one));
+    size_t n = m_event_io->write(&one, sizeof(one));
     if (n != sizeof(one)) {
         ERROR("read %d bytes instead of %d", n, sizeof(one));
     }

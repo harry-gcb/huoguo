@@ -12,10 +12,10 @@ class EventLoop;
 class Channel: public std::enable_shared_from_this<Channel> {
     using EventCallback = std::function<void()>;
 public:
-    Channel(EventLoop *loop, std::shared_ptr<Socket> sock);
+    Channel(EventLoop *loop, std::shared_ptr<EventIO> sock);
     ~Channel();
     std::string get_channel_id() const;
-    std::shared_ptr<Socket> get_socket();
+    std::shared_ptr<EventIO> get_event();
     void set_read_callback(EventCallback callback);
     void set_write_callback(EventCallback callback);
     void set_close_callback(EventCallback callback);
@@ -34,7 +34,7 @@ public:
     bool is_writing();
 private:
     EventLoop *m_loop;
-    std::shared_ptr<Socket> m_socket;
+    std::shared_ptr<EventIO> m_event;
     EventCallback m_read_callback;
     EventCallback m_write_callback;
     EventCallback m_close_callback;

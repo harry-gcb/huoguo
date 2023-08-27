@@ -12,7 +12,7 @@ namespace huoguo {
 namespace net {
 
 class Poller;
-class Socket;
+class EventIO;
 class Channel;
 class EventLoop: public huoguo::utils::Noncopyable {
     using Callback = std::function<void()>;
@@ -34,7 +34,7 @@ public:
 private:
     std::atomic<bool> m_stop;
     std::unique_ptr<Poller> m_poller;
-    std::shared_ptr<Socket> m_socket;
+    std::shared_ptr<EventIO> m_event_io;
     std::shared_ptr<Channel> m_channel;
     std::list<Callback> m_callback;
 };
