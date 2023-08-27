@@ -32,7 +32,7 @@ void RtspClient::on_connect(const huoguo::net::TcpConnectionPtr &conn) {
 }
 
 void RtspClient::on_message(const huoguo::net::TcpConnectionPtr &conn) {
-    INFO("[RtspClient] receive message from %s:%d", conn->get_remote_ip(), conn->get_remote_port());
+    INFO("[RtspClient] receive message from %s:%d", conn->get_remote_ip().c_str(), conn->get_remote_port());
 }
 
 

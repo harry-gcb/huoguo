@@ -30,7 +30,7 @@ void TimeClient::on_connect(const huoguo::net::TcpConnectionPtr &conn) {
 }
 
 void TimeClient::on_message(const huoguo::net::TcpConnectionPtr &conn) {
-    INFO("[TimeClient] receive message from %s:%d", conn->get_remote_ip(), conn->get_remote_port());
+    INFO("[TimeClient] receive message from %s:%d", conn->get_remote_ip().c_str(), conn->get_remote_port());
 }
 
 

@@ -1,3 +1,4 @@
+#ifdef USE_EPOLL
 #include <sys/epoll.h>
 #include <unistd.h>
 #include "epoll_poller.h"
@@ -75,3 +76,4 @@ int EPollPoller::get_event(std::list<std::shared_ptr<IOEvent> >& ioevents, int t
 
 } // namespace net
 } // namespace huoguo
+#endif

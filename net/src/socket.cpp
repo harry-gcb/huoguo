@@ -23,7 +23,7 @@ Socket::~Socket() {
 int Socket::bind(const InetAddr &addr) {
     int ret = ::bind(m_socket, addr.get_addr(), static_cast<socklen_t>(sizeof(*addr.get_addr())));
     if (ret < 0) {
-        FATAL("bind error: m_socket=%d, ret=%d, ip=%s, port=%d", m_socket, ret, addr.get_ip(), addr.get_port());
+        FATAL("bind error: m_socket=%d, ret=%d, ip=%s, port=%d", m_socket, ret, addr.get_ip().c_str(), addr.get_port());
     }
     return ret;
 }

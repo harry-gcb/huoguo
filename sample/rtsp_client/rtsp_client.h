@@ -1,5 +1,5 @@
 #ifndef HUOGUO_RTSP_CLIENT_H_
-#define HUOGUO_RTSP_CLINET_H_
+#define HUOGUO_RTSP_CLIENT_H_
 
 #include <memory>
 #include "event_loop.h"

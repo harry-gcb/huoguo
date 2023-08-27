@@ -30,7 +30,7 @@ void TimeServer::on_connect(const huoguo::net::TcpConnectionPtr &conn) {
 }
 
 void TimeServer::on_message(const huoguo::net::TcpConnectionPtr &conn) {
-    INFO("[TimeServer] receive message from %s:%d", conn->get_remote_ip(), conn->get_remote_port());
+    INFO("[TimeServer] receive message from %s:%d", conn->get_remote_ip().c_str(), conn->get_remote_port());
 }
 
 } // end of namespace sample

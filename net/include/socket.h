@@ -12,6 +12,7 @@ class Socket {
 public:
     Socket(sa_family_t family, int type, int protocol);
     Socket(int sock);
+    Socket(){}
     ~Socket();
 
     int bind(const InetAddr &addr);

@@ -2,9 +2,10 @@
 #include "logger.h"
 #include "poller_factory.h"
 #include "epoll_poller.h"
+#include "kqueue_poller.h"
 #include "channel.h"
 #include "socket.h"
-#include <sys/eventfd.h>
+// #include <sys/eventfd.h>
 #include <unistd.h>
 namespace huoguo {
 namespace net {
@@ -12,7 +13,7 @@ namespace net {
 EventLoop::EventLoop()
     : m_stop(false),
       m_poller(PollerFactory::NewPoller()),
-      m_socket(new Socket(::eventfd(0, EFD_NONBLOCK | EFD_CLOEXEC))),
+      m_socket(new Socket(/*::eventfd(0, EFD_NONBLOCK | EFD_CLOEXEC)*/)),
       m_channel(new Channel(this, m_socket)) {
     m_channel->set_read_callback(std::bind(&EventLoop::handle_read_event, this));
     this->add_channel(m_channel);

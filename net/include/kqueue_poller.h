@@ -1,6 +1,6 @@
-#ifdef USE_EPOLL
-#ifndef HUOGUO_NET_EPOLL_POLLER_H_
-#define HUOGUO_NET_EPOLL_POLLER_H_
+#ifdef USE_KQUEUE
+#ifndef HUOGUO_NET_KQUEUE_H_
+#define HUOGUO_NET_KQUEUE_H_
 
 #include <list>
 #include "poller.h"
@@ -11,20 +11,19 @@ namespace net {
 
 class Socket;
 class IOEvent;
-class EPollPoller: public Poller, public huoguo::utils::Noncopyable {
+class KQueuePoller: public Poller, public huoguo::utils::Noncopyable {
 public:
-    EPollPoller();
-    ~EPollPoller();
+    KQueuePoller();
+    ~KQueuePoller();
     virtual int add_event(std::shared_ptr<Socket> sock, bool enable_read, bool enable_write) override;
     virtual int set_event(std::shared_ptr<Socket> sock, bool enable_read, bool enable_write) override;
     virtual int del_event(std::shared_ptr<Socket> sock) override;
     virtual int get_event(std::list<std::shared_ptr<IOEvent> > &ioevents, int timeout) override;
 private:
-    int m_epoll_fd;
+    int m_kqueue_fd;
 };
-
+ 
 }
 }
-
-#endif // HUOGUO_NET_EPOLL_POLLER_H_
+#endif // HUOGUO_NET_KQUEUE_H_
 #endif
