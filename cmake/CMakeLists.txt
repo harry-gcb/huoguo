@@ -1,5 +1,6 @@
 include(utils.cmake)
 include(net.cmake)
 include(rtsp.cmake)
+include(unittest.cmake)
 include(huoguo.cmake)
 include(sample.cmake)

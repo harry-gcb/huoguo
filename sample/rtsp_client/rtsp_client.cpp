@@ -24,15 +24,10 @@ void RtspClient::on_connect(const huoguo::net::TcpConnectionPtr &conn) {
                         conn->get_local_ip().c_str(),
                         conn->get_local_port(),
                         conn->is_connected() ? "UP" : "DOWN");
-    if (conn->is_connected()) {
-        time_t now = time(nullptr);
-        // conn->send(&now, sizeof(now));
-        // conn->shutdown();
-    }
 }
 
-void RtspClient::on_message(const huoguo::net::TcpConnectionPtr &conn) {
-    INFO("[RtspClient] receive message from %s:%d", conn->get_remote_ip().c_str(), conn->get_remote_port());
+void RtspClient::on_message(const std::shared_ptr<huoguo::net::TcpConnection> &conn) {
+
 }
 
 
