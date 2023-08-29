@@ -1,4 +1,6 @@
 build
 debug
 logs
+bin
+lib
 a.out

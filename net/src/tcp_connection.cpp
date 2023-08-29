@@ -12,7 +12,9 @@ TcpConnection::TcpConnection(EventLoop *loop, std::shared_ptr<Socket> sock, cons
       m_channel(new Channel(loop, m_socket)),
       m_local_addr(local_addr),
       m_remote_addr(remote_addr),
-      m_connected(false) {
+      m_connected(false),
+      m_trace_id(m_channel->get_trace_id()) {
+    memset(m_buffer, 0, sizeof(m_buffer));
     m_channel->set_read_callback(std::bind(&TcpConnection::handle_read_event, this));
     m_channel->set_write_callback(std::bind(&TcpConnection::handle_write_event, this));
     m_channel->set_close_callback(std::bind(&TcpConnection::handle_close_event, this));
@@ -55,11 +57,9 @@ void TcpConnection::set_close_callback(CloseCallback callback) {
 }
 
 void TcpConnection::handle_read_event() {
-    const int len = 4096;
-    char data[len] = { 0 };
-    size_t n = m_socket->read(data, len);
+    size_t n = m_socket->read(m_buffer, BUF_SIZE);
     if (n > 0) {
-        m_message_callback(shared_from_this());
+        m_message_callback(shared_from_this(), m_buffer, n);
     } else if (n == 0) {
         handle_close_event();
     } else {
@@ -78,8 +78,8 @@ void TcpConnection::handle_error_event() {
     m_close_callback(shared_from_this());
 }
 
-std::string TcpConnection::get_name() const {
-    return m_channel->get_channel_id();
+std::string TcpConnection::get_trace_id() const {
+    return m_trace_id;
 }
 
 std::string TcpConnection::get_local_ip() const {

@@ -11,17 +11,17 @@ Channel::Channel(EventLoop *loop, std::shared_ptr<EventIO> event)
       m_event(event),
       m_enable_read(false),
       m_enable_write(false),
-      m_channel_id(huoguo::utils::uuid::generate()) {
+      m_trace_id(huoguo::utils::uuid::generate()) {
     m_event->set_channel(this);
-    INFO("channel=%s, this=%p", m_channel_id.c_str(), this);
+    INFO("[%s] Channel ctor, this=%p", m_trace_id.c_str(), this);
 }
 
 Channel::~Channel() {
-    INFO("channel=%s, this=%p", m_channel_id.c_str(), this);
+    INFO("[%s] Channel dtor, this=%p", m_trace_id.c_str(), this);
 }
 
-std::string Channel::get_channel_id() const {
-    return m_channel_id;
+std::string Channel::get_trace_id() const {
+    return m_trace_id;
 }
 
 std::shared_ptr<EventIO> Channel::get_event() {
@@ -66,7 +66,6 @@ void Channel::handle_error_event() {
         m_error_callback();
     }
 }
-
 
 void Channel::enable_read(bool enable) {
     m_enable_read = enable;

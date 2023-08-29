@@ -12,13 +12,13 @@ namespace sample {
 
 class TimeServer {
 public:
-    TimeServer(huoguo::net::EventLoop *loop, int port);
+    TimeServer(net::EventLoop *loop, int port);
     void start();
 private:
-    void on_connect(const std::shared_ptr<huoguo::net::TcpConnection> &conn);
-    void on_message(const std::shared_ptr<huoguo::net::TcpConnection> &conn);
+    void on_connect(std::shared_ptr<net::TcpConnection> conn);
+    void on_message(std::shared_ptr<net::TcpConnection> conn, const uint8_t *data, size_t len);
 private:
-    huoguo::net::TcpServer m_server;
+    net::TcpServer m_server;
 };
 
 } // namespace sample

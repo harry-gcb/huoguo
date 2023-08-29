@@ -41,7 +41,7 @@ void TcpClient::add_connection(std::shared_ptr<Socket> sock) {
     m_connection->establish();
 }
 
-void TcpClient::del_connection(TcpConnectionPtr conn) {
+void TcpClient::del_connection(std::shared_ptr<TcpConnection> conn) {
     m_loop->push_close_event([this, conn]{
         conn->shutdown();
         m_connection.reset();

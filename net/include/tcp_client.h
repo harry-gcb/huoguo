@@ -19,7 +19,7 @@ public:
     void set_message_callback(const MessageCallback &cb);
 private:
     void add_connection(std::shared_ptr<Socket> sock);
-    void del_connection(TcpConnectionPtr conn);
+    void del_connection(std::shared_ptr<TcpConnection> conn);
 private:
     EventLoop *m_loop;
     std::unique_ptr<Connector> m_connector;
@@ -28,7 +28,7 @@ private:
     uint64_t m_conn_id;
     ConnectCallback m_connect_callback;
     MessageCallback m_message_callback;
-    TcpConnectionPtr m_connection;
+    std::shared_ptr<TcpConnection> m_connection;
 };
 
 } // namespace net

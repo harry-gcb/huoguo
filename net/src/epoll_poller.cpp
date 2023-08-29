@@ -5,6 +5,7 @@
 #include "logger.h"
 #include "io_event.h"
 #include "socket.h"
+#include "channel.h"
 
 namespace huoguo {
 namespace net {
@@ -33,7 +34,7 @@ int EPollPoller::add_event(std::shared_ptr<EventIO> event, bool enable_read, boo
         ev.events |= EPOLLOUT;
     }
     int ret = epoll_ctl(m_epoll_fd, EPOLL_CTL_ADD, event->get_fd(), &ev);
-    INFO("epoll_ctl ADD, ret=%d, fd=%d, read=%d, write=%d", ret, event->get_fd(), enable_read, enable_write);
+    INFO("[%s] epoll_ctl ADD, ret=%d, fd=%d, read=%d, write=%d", event->get_channel()->get_trace_id().c_str(), ret, event->get_fd(), enable_read, enable_write);
     return ret;
 }
 
@@ -48,7 +49,7 @@ int EPollPoller::set_event(std::shared_ptr<EventIO> event, bool enable_read, boo
         ev.events |= EPOLLOUT;
     }
     int ret = epoll_ctl(m_epoll_fd, EPOLL_CTL_MOD, event->get_fd(), &ev);
-    INFO("epoll_ctl MOD, ret=%d, fd=%d, read=%d, write=%d", ret, event->get_fd(), enable_read, enable_write);
+    INFO("[%s] epoll_ctl MOD, ret=%d, fd=%d, read=%d, write=%d",event->get_channel()->get_trace_id().c_str(), ret, event->get_fd(), enable_read, enable_write);
     return ret;
 }
 
@@ -57,7 +58,7 @@ int EPollPoller::del_event(std::shared_ptr<EventIO> event) {
     ev.data.ptr = event->get_channel();
     ev.events = 0;
     int ret = epoll_ctl(m_epoll_fd, EPOLL_CTL_DEL, event->get_fd(), &ev);
-    INFO("epoll_ctl DEL, ret=%d, fd=%d", ret, event->get_fd());
+    INFO("[%d] epoll_ctl DEL, ret=%d, fd=%d", event->get_channel()->get_trace_id().c_str(), ret, event->get_fd());
     return ret;
 }
 

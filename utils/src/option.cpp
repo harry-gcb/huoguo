@@ -20,9 +20,14 @@ Option::OptionGroup &Option::add(const std::string &s, const std::string &l, con
     return group("").add(s, l, h, with_value);
 }
 
+#if 0
 template <typename T>
 T Option::get(const std::string &cmd) {
     return group("").get<T>(cmd);
+}
+#endif
+std::string Option::get(const std::string &cmd) {
+    return group("").get(cmd);
 }
 
 bool Option::is_exists(const std::string &cmd) {
@@ -114,7 +119,22 @@ void Option::usage(const std::string &g) {
         if (over_show.find(cmd.first) != over_show.end()) {
             continue;
         }
-        std::cout << "-" << cmd.second->cmd_short << ", --" << cmd.second->cmd_long;
+        if (!cmd.second->cmd_short.empty()) {
+            std::cout << "-" << cmd.second->cmd_short;
+        } else {
+            std::cout << "   ";
+        }
+        if (!cmd.second->cmd_long.empty()) {
+            if (!cmd.second->cmd_short.empty()) {
+                std::cout << ", ";
+            } else {
+                std::cout << " ";
+            }
+            std::cout << "--" << cmd.second->cmd_long;
+        } else if (!cmd.second->cmd_short.empty()) {
+            std::cout << "   ";
+        }
+        std::cout << " " << cmd.second->cmd_help << std::endl;
         over_show.insert(cmd.second->cmd_short);
         over_show.insert(cmd.second->cmd_long);
     }

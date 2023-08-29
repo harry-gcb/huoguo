@@ -48,7 +48,7 @@ public:
             }
             return *this;
         }
-
+#if 0
         template <typename T>
         T to_T(const std::string &value) {
             if (typeid(std::string) == typeid(T)) {
@@ -64,6 +64,11 @@ public:
             }
             return T{};
         }
+#endif
+        std::string get(const std::string &cmd) {
+            auto it = group_option.find(cmd);
+            return it == group_option.end() ? "" : it->second->cmd_value;
+        }
 
         bool is_exists(const std::string &cmd) {
             auto it = group_option.find(cmd);
@@ -78,8 +83,11 @@ public:
     Option() = default;
     OptionGroup &add(const std::string &s, const std::string &l, const std::string &h, bool with_value = false);
     OptionGroup &group(const std::string &n, const std::string &h = "");
+#if 0
     template <typename T>
     T get(const std::string &cmd);
+#endif
+    std::string get(const std::string &cmd);
     bool is_exists(const std::string &cmd);
     int init(int argc, char *argv[]);
     void usage(const std::string &g = "");

@@ -21,7 +21,7 @@ TcpServer::TcpServer(EventLoop *loop, const InetAddr &addr, const std::string &n
 
 TcpServer::~TcpServer() {
     for (auto &item: m_connections) {
-        TcpConnectionPtr conn(item.second);
+        std::shared_ptr<TcpConnection> conn(item.second);
         conn->shutdown();
     }
 }
@@ -44,14 +44,14 @@ void TcpServer::add_connection(std::shared_ptr<Socket> sock) {
     conn->set_connect_callback(m_connect_callback);
     conn->set_message_callback(m_message_callback);
     conn->set_close_callback(std::bind(&TcpServer::del_connection, this, std::placeholders::_1));
-    m_connections[conn->get_name()] = conn;
+    m_connections[conn->get_trace_id()] = conn;
     conn->establish();
 }
 
-void TcpServer::del_connection(TcpConnectionPtr conn) {
+void TcpServer::del_connection(std::shared_ptr<TcpConnection> conn) {
     m_loop->push_close_event([this, conn]{
         conn->shutdown();
-        m_connections.erase(conn->get_name());
+        m_connections.erase(conn->get_trace_id());
     });
 }
 

@@ -7,17 +7,13 @@
 namespace huoguo {
 namespace net {
 
-class Buffer;
-using BufferPtr = std::shared_ptr<Buffer>;
 class TcpConnection;
-using TcpConnectionPtr = std::shared_ptr<huoguo::net::TcpConnection>;
+using ConnectCallback = std::function<void (std::shared_ptr<TcpConnection>)>;
+using MessageCallback = std::function<void (std::shared_ptr<TcpConnection> , const uint8_t *data, int len)>;
+using CloseCallback = std::function<void (std::shared_ptr<TcpConnection>)>;
 
-using ConnectCallback = std::function<void (const TcpConnectionPtr &)>;
-using MessageCallback = std::function<void (const TcpConnectionPtr &)>;
-using CloseCallback = std::function<void (const TcpConnectionPtr &)>;
-
-void default_connect_callback(const TcpConnectionPtr &conn);
-void default_message_callback(const TcpConnectionPtr &conn);
+void default_connect_callback(std::shared_ptr<TcpConnection> conn);
+void default_message_callback(std::shared_ptr<TcpConnection> conn, const uint8_t *data, size_t len);
 
 } // namespace net
 } // namespace huoguo

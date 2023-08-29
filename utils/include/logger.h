@@ -42,11 +42,15 @@ struct LogConfig {
     // size_t file_count;
     size_t file_size;
     bool enable_color;
+    bool enable_fileline;
+    bool enable_function;
     LogConfig()
         // : file_count(DEF_FILE_COUNT),
         : level("INFO"),
           file_size(DEF_FILE_SIZE),
-          enable_color(true) {}
+          enable_color(true),
+          enable_fileline(false),
+          enable_function(false) {}
 };
 
 class Logger {
@@ -98,6 +102,8 @@ private:
     time_t m_last_time;
 
     std::mutex m_mutex;
+    bool m_enable_print_fileline;
+    bool m_enable_print_function;
 };
 
 } // namespace utils

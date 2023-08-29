@@ -15,9 +15,9 @@ static const char *const log_level_begin[] = {"\033[31m", "\033[35m", "\033[33m"
 static const char *const log_level_end[] = {"\033[0m", "\033[0m", "\033[0m", "\033[0m", "\033[0m", "\033[0m"};
 // static const char *const log_level_begin[] = {"\033[41m", "\033[45m", "\033[43m", "\033[47m", "\033[42m", "\033[46m"};
 
-#define LOG_MESSAGE_DATA_SIZE 4096
-#define LOG_MESSAGE_TIME_SIZE 1024
-#define LOG_FILENAME_LENGTH   1024 
+#define LOG_MESSAGE_DATA_SIZE  4096
+#define LOG_MESSAGE_TIME_SIZE  1024
+#define LOG_FILENAME_LENGTH    1024 
 
 Logger::Logger() 
     : m_filep(stdout),
@@ -29,7 +29,9 @@ Logger::Logger()
       m_has_logdir(false),
       m_has_logfile(false),
       m_current_file_size(0),
-      m_current_file_index(0) {
+      m_current_file_index(0),
+      m_enable_print_fileline(false),
+      m_enable_print_function(false) {
         // m_filep = fopen("test.log", "w+");
 }
 
@@ -53,6 +55,8 @@ void Logger::init(const LogConfig &config) {
         m_file_size = (config.file_size < MIN_FILE_COUNT || config.file_size > MAX_FILE_SIZE) ?
                     m_file_size : config.file_size;
         m_enable_color = config.enable_color;
+        m_enable_print_fileline = config.enable_fileline;
+        m_enable_print_function = config.enable_function;
         if (m_filename.empty()) return;
         m_has_logdir = check_logdir(m_logdir);
         m_has_logfile = check_logfile(m_filename);
@@ -146,17 +150,22 @@ void Logger::log_message(LOG_LEVE level, const char *filename, int line, const c
     char buff[LOG_MESSAGE_DATA_SIZE + LOG_MESSAGE_TIME_SIZE] = { 0 };
     size_t size = 0;
     if (m_enable_color) {
-        size = snprintf(buff, sizeof(buff),"%s%04d-%02d-%02d %02d:%02d:%02d.%-6ld %-5s %ld [%s:%d %s] %s%s\n",
-        log_level_begin[level], tm->tm_year+1900, tm->tm_mon+1, tm->tm_mday,
-        tm->tm_hour, tm->tm_min, tm->tm_sec, us.count(),
-        log_level_names[level], pthread_self(), filename, line, function, data, log_level_end[level]);
-
+        size += snprintf(buff, sizeof(buff),"%04d-%02d-%02d %02d:%02d:%02d.%-6ld %s%-5s%s %ld",
+            tm->tm_year+1900, tm->tm_mon+1, tm->tm_mday, tm->tm_hour, tm->tm_min, tm->tm_sec, us.count(),
+            log_level_begin[level], log_level_names[level], log_level_end[level], pthread_self());
     } else {
-        size = snprintf(buff, sizeof(buff),"%04d-%02d-%02d %02d:%02d:%02d.%-6ld %-5s %ld [%s:%d %s] %s\n",
-        tm->tm_year+1900, tm->tm_mon+1, tm->tm_mday,
-        tm->tm_hour, tm->tm_min, tm->tm_sec, us.count(),
-        log_level_names[level], pthread_self(), filename, line, function, data);
+        size += snprintf(buff, sizeof(buff),"%04d-%02d-%02d %02d:%02d:%02d.%-6ld %-5s %ld",
+            tm->tm_year+1900, tm->tm_mon+1, tm->tm_mday, tm->tm_hour, tm->tm_min, tm->tm_sec, us.count(),
+            log_level_names[level], pthread_self());
     }
+
+    if (m_enable_print_fileline) {
+        size += snprintf(buff+size, sizeof(buff)-size, " [%s:%d]", filename, line);
+    }
+    if (m_enable_print_function) {
+        size += snprintf(buff+size, sizeof(buff)-size, " (%s)", function);
+    }
+    size += snprintf(buff+size, sizeof(buff)-size, " %s\n", data);
     if (tm->tm_hour == 0 && tm->tm_min ==0 && tm->tm_sec == 0 && m_has_logfile && m_last_time != time) {
         std::lock_guard<std::mutex> guard(m_mutex);
         if (m_last_time != time) {

@@ -10,6 +10,7 @@
 namespace huoguo {
 namespace net {
 
+#define BUF_SIZE 4096
 class Channel;
 class Socket;
 class EventLoop;
@@ -22,10 +23,9 @@ public:
     void shutdown();
     void set_connect_callback(ConnectCallback callback);
     void set_message_callback(MessageCallback callback);
-
     void set_close_callback(CloseCallback callback);
 
-    std::string get_name() const;
+    std::string get_trace_id() const;
     std::string get_local_ip() const;
     int get_local_port() const;
     std::string get_remote_ip() const;
@@ -44,10 +44,11 @@ private:
     const InetAddr m_local_addr;
     const InetAddr m_remote_addr;
     bool m_connected;
-
+    uint8_t m_buffer[BUF_SIZE];
     ConnectCallback m_connect_callback;
     MessageCallback m_message_callback;
     CloseCallback m_close_callback;
+    std::string m_trace_id;
 };
 
 } // namespace net

@@ -15,8 +15,8 @@ public:
     TimeClient(huoguo::net::EventLoop *loop, const std::string &ip, int port);
     void start();
 private:
-    void on_connect(const std::shared_ptr<huoguo::net::TcpConnection> &conn);
-    void on_message(const std::shared_ptr<huoguo::net::TcpConnection> &conn);
+    void on_connect(std::shared_ptr<net::TcpConnection> conn);
+    void on_message(std::shared_ptr<net::TcpConnection> conn, const uint8_t *data, size_t len);
 private:
     huoguo::net::TcpClient m_client;
 };

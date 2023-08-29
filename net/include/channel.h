@@ -14,7 +14,7 @@ class Channel: public std::enable_shared_from_this<Channel> {
 public:
     Channel(EventLoop *loop, std::shared_ptr<EventIO> sock);
     ~Channel();
-    std::string get_channel_id() const;
+    std::string get_trace_id() const;
     std::shared_ptr<EventIO> get_event();
     void set_read_callback(EventCallback callback);
     void set_write_callback(EventCallback callback);
@@ -41,7 +41,7 @@ private:
     EventCallback m_error_callback;
     bool m_enable_read;
     bool m_enable_write;
-    std::string m_channel_id;
+    std::string m_trace_id;
 };
 
 } // namespace net
