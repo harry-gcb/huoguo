@@ -1,3 +1,4 @@
+#ifdef USE_EPOLL
 #ifndef HUOGUO_NET_EVENTFD_WAKEUP_H_
 #define HUOGUO_NET_EVENTFD_WAKEUP_H_
 
@@ -26,3 +27,4 @@ private:
 }
 
 #endif // HUOGUO_NET_EVENTFD_WAKEUP_H_
+#endif

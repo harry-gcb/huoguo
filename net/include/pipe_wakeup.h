@@ -1,5 +1,5 @@
-#ifndef HUOGUO_NET_PIPE2_WAKEUP_H_
-#define HUOGUO_NET_PIPE2_WAKEUP_H_
+#ifndef HUOGUO_NET_PIPE_WAKEUP_H_
+#define HUOGUO_NET_PIPE_WAKEUP_H_
 
 #include <memory>
 #include "event_io.h"
@@ -9,9 +9,9 @@ namespace net {
 
 class Socket;
 class Channel;
-class Pipe2Wakeup: public EventIO {
+class PipeWakeup: public EventIO {
 public:
-    Pipe2Wakeup();
+    PipeWakeup();
 
     virtual int get_fd() override;
     virtual Channel *get_channel() override;
@@ -26,4 +26,4 @@ private:
 } // namespace net
 } // namespace huoguo
 
-#endif // HUOGUO_NET_PIPE2_WAKEUP_H_
+#endif // HUOGUO_NET_PIPE_WAKEUP_H_

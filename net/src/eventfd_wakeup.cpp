@@ -1,3 +1,4 @@
+#ifdef USE_EPOLL
 #include "eventfd_wakeup.h"
 #include "socket.h"
 #include <sys/eventfd.h>
@@ -31,3 +32,4 @@ int EventfdWakeup::write(const void *data, int len) {
 
 } // namespace net
 } // namespace huoguo
+#endif

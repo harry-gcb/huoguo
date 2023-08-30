@@ -2,8 +2,10 @@
 #include <unistd.h>
 #include <sys/event.h>
 #include "kqueue_poller.h"
-#include "socket.h"
 #include "logger.h"
+#include "io_event.h"
+#include "socket.h"
+#include "channel.h"
 
 namespace huoguo {
 namespace net {
@@ -21,7 +23,7 @@ KQueuePoller::~KQueuePoller() {
     ::close(m_kqueue_fd);
 }
 
-int KQueuePoller::add_event(std::shared_ptr<Socket> sock, bool enable_read, bool enable_write) {
+int KQueuePoller::add_event(std::shared_ptr<EventIO> event, bool enable_read, bool enable_write) {
     int filter = 0;
     struct kevent ev = { 0 };
     if (enable_read) {
@@ -30,13 +32,13 @@ int KQueuePoller::add_event(std::shared_ptr<Socket> sock, bool enable_read, bool
     if (enable_write) {
         filter |= EVFILT_WRITE;
     }
-    EV_SET(&ev, sock->get_handle(), filter, EV_ADD, 0, 0, sock->get_channel());
+    EV_SET(&ev, event->get_fd(), filter, EV_ADD, 0, 0, event->get_channel());
     int ret = kevent(m_kqueue_fd, &ev, 1, nullptr, 0, nullptr);
-    INFO("kevent ADD: ret=%d, socket=%d, read=%d, write=%d", ret, sock->get_handle(), enable_read, enable_write);
+    INFO("[%s] kevent ADD: ret=%d, socket=%d, read=%d, write=%d", event->get_channel()->get_trace_id().c_str(), ret, event->get_fd(), enable_read, enable_write);
     return ret;
 }
 
-int KQueuePoller::set_event(std::shared_ptr<Socket> sock, bool enable_read, bool enable_write) {
+int KQueuePoller::set_event(std::shared_ptr<EventIO> event, bool enable_read, bool enable_write) {
     int filter = 0;
     struct kevent ev = { 0 };
     if (enable_read) {
@@ -45,18 +47,18 @@ int KQueuePoller::set_event(std::shared_ptr<Socket> sock, bool enable_read, bool
     if (enable_write) {
         filter |= EVFILT_WRITE;
     }
-    EV_SET(&ev, sock->get_handle(), filter, EV_ENABLE, 0, 0, sock->get_channel());
+    EV_SET(&ev, event->get_fd(), filter, EV_ENABLE, 0, 0, event->get_channel());
     int ret = kevent(m_kqueue_fd, &ev, 1, nullptr, 0, nullptr);
-    INFO("kevent MOD: ret=%d, socket=%d, read=%d, write=%d", ret, sock->get_handle(), enable_read, enable_write);
+    INFO("[%s] kevent MOD: ret=%d, socket=%d, read=%d, write=%d", event->get_channel()->get_trace_id().c_str(), ret, event->get_fd(), enable_read, enable_write);
     return ret;
 }
 
-int KQueuePoller::del_event(std::shared_ptr<Socket> sock) {
+int KQueuePoller::del_event(std::shared_ptr<EventIO> event) {
     int filter = 0;
     struct kevent ev = { 0 };
-    EV_SET(&ev, sock->get_handle(), filter, EV_DELETE, 0, 0, sock->get_channel());
+    EV_SET(&ev, event->get_fd(), filter, EV_DELETE, 0, 0, event->get_channel());
     int ret = kevent(m_kqueue_fd, &ev, 1, nullptr, 0, nullptr);
-    INFO("kevent DEL: ret=%d, socket=%d", ret, sock->get_handle());
+    INFO("[%s] kevent DEL: ret=%d, socket=%d", event->get_channel()->get_trace_id().c_str(), ret, event->get_fd());
     return ret;
 }
 

@@ -1,6 +1,7 @@
 #ifndef HUOGOU_APP_APPLICATION_H_
 #define HUOGOU_APP_APPLICATION_H_
 
+#include <thread>
 #include <condition_variable>
 
 namespace huoguo {

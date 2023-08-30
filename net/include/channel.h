@@ -42,6 +42,7 @@ private:
     bool m_enable_read;
     bool m_enable_write;
     std::string m_trace_id;
+    std::string m_trace_name;
 };
 
 } // namespace net

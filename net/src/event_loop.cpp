@@ -5,8 +5,6 @@
 #include "io_event.h"
 #include "channel.h"
 #include "socket.h"
-
-#include <sys/eventfd.h>
 #include <unistd.h>
 namespace huoguo {
 namespace net {

@@ -1,4 +1,4 @@
-#include "pipe2_wakeup.h"
+#include "pipe_wakeup.h"
 #include "logger.h"
 #include "socket.h"
 #include <fcntl.h>
@@ -9,9 +9,9 @@
 namespace huoguo {
 namespace net {
 
-Pipe2Wakeup::Pipe2Wakeup() {
+PipeWakeup::PipeWakeup() {
     int fd[2] = { 0 };
-    int ret = pipe2(fd, O_NONBLOCK|O_CLOEXEC);
+    int ret = pipe(fd);
     if (ret < 0) {
         ERROR("pipe2 failed, ret=%d, errno=%d", ret, errno);
     }
@@ -19,22 +19,22 @@ Pipe2Wakeup::Pipe2Wakeup() {
     m_pipe_1= std::make_shared<Socket>(fd[1]);
 }
 
-int Pipe2Wakeup::get_fd() {
+int PipeWakeup::get_fd() {
     return m_pipe_0->get_fd();
 }
 
-Channel *Pipe2Wakeup::get_channel() {
+Channel *PipeWakeup::get_channel() {
     return m_pipe_0->get_channel();
 }
-void Pipe2Wakeup::set_channel(Channel *channel) {
+void PipeWakeup::set_channel(Channel *channel) {
     m_pipe_0->set_channel(channel);
 }
 
-int Pipe2Wakeup::read(void *data, int len) {
+int PipeWakeup::read(void *data, int len) {
     return m_pipe_0->read(data, len);
 }
 
-int Pipe2Wakeup::write(const void *data, int len) {
+int PipeWakeup::write(const void *data, int len) {
     return m_pipe_1->write(data, len);
 }
 

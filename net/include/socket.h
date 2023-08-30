@@ -22,15 +22,15 @@ public:
 
     int connect(const struct sockaddr *addr, socklen_t addrlen);
 
-    int read(void *data, int len);
-    int write(const void *data, int len);
+    virtual int read(void *data, int len) override;
+    virtual int write(const void *data, int len) override;
 
     int set_reuse_addr(bool reuse);
     int set_reuse_port(bool reuse);
     
     virtual int get_fd() override;
     virtual Channel *get_channel() override;
-    void set_channel(Channel *);
+    virtual void set_channel(Channel *) override;
 private:
     std::shared_ptr<Socket> accept(struct sockaddr *addr, socklen_t *addrlen);
 private:

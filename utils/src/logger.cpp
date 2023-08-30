@@ -151,11 +151,11 @@ void Logger::log_message(LOG_LEVE level, const char *filename, int line, const c
     size_t size = 0;
     if (m_enable_color) {
         size += snprintf(buff, sizeof(buff),"%04d-%02d-%02d %02d:%02d:%02d.%-6ld %s%-5s%s %ld",
-            tm->tm_year+1900, tm->tm_mon+1, tm->tm_mday, tm->tm_hour, tm->tm_min, tm->tm_sec, us.count(),
+            tm->tm_year+1900, tm->tm_mon+1, tm->tm_mday, tm->tm_hour, tm->tm_min, tm->tm_sec, static_cast<long>(us.count()),
             log_level_begin[level], log_level_names[level], log_level_end[level], pthread_self());
     } else {
         size += snprintf(buff, sizeof(buff),"%04d-%02d-%02d %02d:%02d:%02d.%-6ld %-5s %ld",
-            tm->tm_year+1900, tm->tm_mon+1, tm->tm_mday, tm->tm_hour, tm->tm_min, tm->tm_sec, us.count(),
+            tm->tm_year+1900, tm->tm_mon+1, tm->tm_mday, tm->tm_hour, tm->tm_min, tm->tm_sec, static_cast<long>(us.count()),
             log_level_names[level], pthread_self());
     }
 

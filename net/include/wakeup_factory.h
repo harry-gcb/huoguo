@@ -2,7 +2,7 @@
 #define HUOGUO_NET_WAKEUP_FACTORY_H_
 
 #include "eventfd_wakeup.h"
-#include "pipe2_wakeup.h"
+#include "pipe_wakeup.h"
 
 namespace huoguo {
 namespace net {
@@ -13,7 +13,7 @@ public:
     #ifdef USE_EPOLL
         return new EventfdWakeup;
     #elif defined (USE_KQUEUE)
-        return new Pipe2Wakeup;
+        return new PipeWakeup;
     #endif
     }
 };

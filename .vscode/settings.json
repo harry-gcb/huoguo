@@ -76,6 +76,7 @@
         "socket": "cpp",
         "timer": "cpp",
         "future": "cpp",
-        "coroutine": "cpp"
+        "coroutine": "cpp",
+        "ios": "cpp"
     }
 }
