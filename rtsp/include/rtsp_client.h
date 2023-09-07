@@ -16,6 +16,13 @@ public:
     RtspClient(net::EventLoop *loop, const std::string &url);
 
     void start();
+
+    void do_options_request();
+
+    void set_options_respone_callback();
+
+
+
 private:
     void on_connect(std::shared_ptr<net::TcpConnection> conn);
 private:

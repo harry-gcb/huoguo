@@ -1,4 +1,5 @@
 #include "rtsp_client.h"
+#include "logger.h"
 
 namespace huoguo {
 namespace rtsp {
@@ -16,8 +17,9 @@ void RtspClient::start() {
 
 void RtspClient::on_connect(std::shared_ptr<net::TcpConnection> conn) {
     if (conn->is_connected()) {
-        auto session = std::make_shared<RtspSession>(conn);
-        // session->do_options();
+        INFO("[%s] rtsp_client connected", conn->get_trace_id().c_str());
+        auto session = std::make_shared<RtspSession>(conn, m_url);
+        session->do_options_request();
         m_sessions.insert({conn->get_trace_id(), session});
     } else {
         auto session = m_sessions.find(conn->get_trace_id());
@@ -25,6 +27,7 @@ void RtspClient::on_connect(std::shared_ptr<net::TcpConnection> conn) {
             // session->second->do_shutdown();
             m_sessions.erase(session);
         }
+        INFO("[%s] rtsp_client disconnected", conn->get_trace_id().c_str());
     }
 }
 

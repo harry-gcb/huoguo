@@ -58,7 +58,7 @@ int EPollPoller::del_event(std::shared_ptr<EventIO> event) {
     ev.data.ptr = event->get_channel();
     ev.events = 0;
     int ret = epoll_ctl(m_epoll_fd, EPOLL_CTL_DEL, event->get_fd(), &ev);
-    INFO("[%d] epoll_ctl DEL, ret=%d, fd=%d", event->get_channel()->get_trace_id().c_str(), ret, event->get_fd());
+    INFO("[%s] epoll_ctl DEL, ret=%d, fd=%d", event->get_channel()->get_trace_id().c_str(), ret, event->get_fd());
     return ret;
 }
 

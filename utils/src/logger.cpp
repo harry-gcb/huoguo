@@ -47,6 +47,14 @@ Logger::~Logger() {
 void Logger::init(const LogConfig &config) {
     bool expired = false;
     if (m_inited.compare_exchange_strong(expired, true)) {
+        std::cout << sizeof(log_level_names)/sizeof(log_level_names[0]) << std::endl;
+        std::string LEVEL = config.level;
+        for (size_t i = 0; i < sizeof(log_level_names)/sizeof(log_level_names[0]); ++i) {
+            if (to_upper(LEVEL) == (log_level_names[i])) {
+                m_level = i;
+                break;
+            }
+        }
         m_logdir = config.logdir;
         m_filename = config.filename;
         m_suffix = config.suffix;
@@ -120,12 +128,13 @@ bool Logger::check_logfile(std::string &logfile, time_t now) {
 }
 
 bool Logger::reopen_logfile(const std::string &filename) {
+    fflush(m_filep);
     m_filep = freopen(filename.c_str(), "w+", m_filep);
     if (!m_filep) {
         return false;
     }
     if (!m_has_logfile) {
-        fclose(stderr);
+        // fclose(stdout);
     }
     m_current_filename = filename;
     return true;
@@ -174,7 +183,7 @@ void Logger::log_message(LOG_LEVE level, const char *filename, int line, const c
             m_current_file_size = 0;
         }
     }
-    m_current_file_size += fwrite(buff, size, 1, m_filep);
+    m_current_file_size += fwrite(buff, 1, size, m_filep);
     if (m_current_file_size > m_file_size) {
         std::lock_guard<std::mutex> guard(m_mutex);
         if (m_current_file_size > m_file_size) {
@@ -182,6 +191,7 @@ void Logger::log_message(LOG_LEVE level, const char *filename, int line, const c
             m_current_file_index = 0;
         }
     }
+    fflush(m_filep);
 }
 
 } // namespace utils

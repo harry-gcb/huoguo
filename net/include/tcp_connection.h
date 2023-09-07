@@ -25,6 +25,8 @@ public:
     void set_message_callback(MessageCallback callback);
     void set_close_callback(CloseCallback callback);
 
+    int send(const std::string &buffer);
+
     std::string get_trace_id() const;
     std::string get_local_ip() const;
     int get_local_port() const;

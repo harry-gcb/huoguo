@@ -20,10 +20,12 @@ TcpConnection::TcpConnection(EventLoop *loop, std::shared_ptr<Socket> sock, cons
     m_channel->set_close_callback(std::bind(&TcpConnection::handle_close_event, this));
     m_channel->set_error_callback(std::bind(&TcpConnection::handle_error_event, this));
     m_loop->add_channel(m_channel);
+    INFO("[%s] TcpConnection ctor, this=%p", m_trace_id.c_str(), this);
 }
 
 TcpConnection::~TcpConnection() {
     m_loop->del_channel(m_channel);
+    INFO("[%s] TcpConnection dtor, this=%p", m_trace_id.c_str(), this);
 }
 
 void TcpConnection::establish() {
@@ -42,6 +44,10 @@ void TcpConnection::shutdown() {
             m_connect_callback(shared_from_this());
         }
     }
+}
+
+int TcpConnection::send(const std::string &buffer) {
+    return m_socket->write(buffer.data(), buffer.length());
 }
 
 void TcpConnection::set_connect_callback(ConnectCallback callback) {

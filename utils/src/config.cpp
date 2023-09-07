@@ -37,37 +37,52 @@ void Config::init(const std::string &cfg) {
     }
 }
 
-template <typename T>
-T Config::get(const std::string &section, const std::string &name, const T &value) {
+bool Config::get(const std::string &section, const std::string &name, std::string &value) {
     auto s = m_config.find(section);
     if (s == m_config.end()) {
-        return value;
+        return false;
     }
     auto n = s->second.find(name);
     if (n == s->second.end())
     {
-        return value;
+        return false;
     }
-    T out;
-    std::stringstream ss(n->second);
-    ss >> out;
-    return out;
+    value = n->second;
+    return true;
 }
 
 int Config::get(const std::string &section, const std::string &name, int value) {
-    return get<int>(section, name, value);
+    std::string out;
+    if (!get(section, name, out)) {
+        return value;
+    }
+    std::stringstream ss(out);
+    ss >> value;
+    return value;
 }
 
 bool Config::get(const std::string &section, const std::string &name, bool value) {
-    return get<bool>(section, name, value);
+    std::string in;
+    if (!get(section, name, in)) {
+        return value;
+    }
+    return (to_lower(in) == "false" || in == "0") ? false : true;
 }
 
 std::string Config::get(const std::string &section, const std::string &name, const std::string &value) {
-    return get<std::string>(section, name, value);
+    std::string out;
+    if (!get(section, name, out)) {
+        return value;
+    }
+    return out;
 }
 
 std::string Config::get(const std::string &section, const std::string &name, const char *value) {
-    return get<std::string>(section, name, std::string(value));
+    std::string out;
+    if (!get(section, name, out)) {
+        return value;
+    }
+    return out;
 }
 
 } // namespace utils

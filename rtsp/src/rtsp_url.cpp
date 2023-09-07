@@ -26,13 +26,11 @@ bool RtspURL::parse(const std::string &url) {
     } else {
         return false;
     }
-    INFO("protocol=%s, view=%s", m_protocol.c_str(), view.data());
     size_t pos = view.find_last_of("@");
     if (pos != std::string_view::npos) {
         m_auth = view.substr(0, pos);
         view.remove_prefix(m_auth.length() + 1);
     }
-    INFO("m_auth=%s, view=%s", m_auth.c_str(), view.data());
     std::string_view address;
     if ((pos = view.find_first_of("/")) != std::string_view::npos) {
         address = view.substr(0, pos);

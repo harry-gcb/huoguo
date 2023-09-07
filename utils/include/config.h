@@ -21,8 +21,7 @@ public:
 public:
     static Config config;
 private:
-    template <typename T>
-    T get(const std::string &section, const std::string &name, const T &value);
+    bool get(const std::string &section, const std::string &name, std::string &value);
 
     std::map<std::string, std::map<std::string, std::string>> m_config;
 };
