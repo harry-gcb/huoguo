@@ -66,7 +66,7 @@ bool Config::get(const std::string &section, const std::string &name, bool value
     if (!get(section, name, in)) {
         return value;
     }
-    return (to_lower(in) == "false" || in == "0") ? false : true;
+    return (to_lower(in) == "false" || in == "0" || to_lower(in) == "disable") ? false : true;
 }
 
 std::string Config::get(const std::string &section, const std::string &name, const std::string &value) {

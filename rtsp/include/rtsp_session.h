@@ -24,6 +24,7 @@ public:
     void set_options_request_callback(RtspOptionRequest callback);
 private:
     void on_message(std::shared_ptr<net::TcpConnection> conn, const uint8_t *data, size_t len);
+    std::shared_ptr<RtspMessage> handle_message(std::string &buffer);
 private:
     uint32_t m_seq;
     std::shared_ptr<net::TcpConnection> m_connnection;

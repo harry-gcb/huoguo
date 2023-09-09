@@ -1,5 +1,6 @@
 #include "option.h"
 #include "strutils.h"
+#include "logger.h"
 #include <set>
 #include <iostream>
 
@@ -43,6 +44,7 @@ int Option::init(int argc, char *argv[]) {
     int i = 1;
     while (i < argc) {
         if (!argv[i]) {
+            break;
         } else if (1 == i && !starts_with(argv[i], "-") && m_option.count(argv[i])) {
             g = argv[i];
         } else if (starts_with(argv[i], "--")) {
@@ -51,18 +53,18 @@ int Option::init(int argc, char *argv[]) {
                 i++;
                 continue;
             }
-            auto korkv = split(arg, "=");
-            auto it = m_option[g].group_option.find(korkv[0]);
+            auto it = m_option[g].group_option.find(arg);
             if (it == m_option[g].group_option.end()) {
-                std::cout << "argv[" << i << "] " << argv[i] << " not identified" << std::endl; 
+                ERROR("argv[%d]=%s not identified");
                 return -1;
             }
-            if (it->second->cmd_with_value) {
-                if (korkv.size() < 2) {
-                    std::cout << "argv[" << i << "] " << argv[i] << " has no args" << std::endl;
+            if (it->second->cmd_with_value && i + 1 < argc) {
+                if (i + 1 < argc) {
+                    it->second->cmd_value = argv[++i];
+                } else {
+                    ERROR("argv[%d]=%s has no args", i, argv[i]);
                     return -1;
                 }
-                it->second->cmd_value = korkv[1];
             }
             it->second->cmd_exists = true;
         } else if (starts_with(argv[i], "-")) {
@@ -71,39 +73,35 @@ int Option::init(int argc, char *argv[]) {
                 i++;
                 continue;
             }
-            auto korkv = split(arg, "=");
-            if (korkv[0].size() > 1) {
-                for (auto &c: korkv[0]) {
+            if (arg.length() > 1) {
+                for (auto &c: arg) {
                     auto it = m_option[g].group_option.find(std::string(c, 1));
                     if (it == m_option[g].group_option.end()) {
-                        std::cout << "argv[" << i << "] " << argv[i] << " not identified" << std::endl;
+                        ERROR("argv[%d]=%s not identified", i, argv[i]);
                         return -1;
                     }
                     if (it->second->cmd_with_value) {
-                        std::cout << "argv[" << i << "] " << argv[i] << "can't with args" << std::endl;
-                        return -1;
-                    }
-                    if (!it->second->cmd_with_value && korkv.size() > 1) {
-                        std::cout << "argv[" << i << "] " << argv[i] << "has no args" << std::endl;
+                        ERROR("argv[%d]=%s can't with args");
                         return -1;
                     }
                     it->second->cmd_exists = true;
                 }
             } else {
-                auto it = m_option[g].group_option.find(korkv[0]);
+                auto it = m_option[g].group_option.find(arg);
                 if (it == m_option[g].group_option.end()) {
-                    std::cout << "argv[" << i << "] " << argv[i] << " not found" << std::endl;
+                    ERROR("argv[%d]=%s not identified");
                     return -1;
                 }
-                if (it->second->cmd_with_value) {
-                    if (korkv.size() < 2) {
-                        std::cout << "argv[" << i << "] " << argv[i] << " has no args" << std::endl;
-                        return -1;        
-                    }
-                    it->second->cmd_value = korkv[1];
+            if (it->second->cmd_with_value && i + 1 < argc) {
+                if (i + 1 < argc) {
+                    it->second->cmd_value = argv[++i];
+                } else {
+                    ERROR("argv[%d]=%s has no args", i, argv[i]);
+                    return -1;
                 }
-                it->second->cmd_exists = true;
             }
+                it->second->cmd_exists = true;
+            }          
         }
         i++;
     }

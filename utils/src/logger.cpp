@@ -47,7 +47,6 @@ Logger::~Logger() {
 void Logger::init(const LogConfig &config) {
     bool expired = false;
     if (m_inited.compare_exchange_strong(expired, true)) {
-        std::cout << sizeof(log_level_names)/sizeof(log_level_names[0]) << std::endl;
         std::string LEVEL = config.level;
         for (size_t i = 0; i < sizeof(log_level_names)/sizeof(log_level_names[0]); ++i) {
             if (to_upper(LEVEL) == (log_level_names[i])) {

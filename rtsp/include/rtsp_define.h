@@ -36,6 +36,7 @@ static const char *rtsp_method[] {
 #define RTSP_COLON   ":"
 #define RTSP_SP      " "
 #define RTSP_CRLF    "\r\n"
+#define RTSP_END     "\r\n\r\n"
 #define RTSP_VERSION "RTSP/1.0"
 
 #define RTSP_GERERAL_HEADER_FIELDS_CSEQ "CSeq"

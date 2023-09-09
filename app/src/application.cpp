@@ -26,9 +26,9 @@ int Application::run() {
         std::string url = OPTION.get("pull");
         if (huoguo::utils::starts_with(url, "rtsp")) {
             rtsp = std::make_shared<huoguo::app::Rtsp>(url);
+            rtsp->start();
         }
     }
-    rtsp->start();
     
     while (!m_stop) {
         using namespace std::literals::chrono_literals;

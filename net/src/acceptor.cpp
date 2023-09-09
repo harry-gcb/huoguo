@@ -16,11 +16,13 @@ Acceptor::Acceptor(EventLoop *loop, const InetAddr &addr, bool reuse)
     m_socket->bind(addr);
     m_channel = std::make_shared<Channel>(loop, m_socket);
     m_channel->set_read_callback(std::bind(&Acceptor::handle_read_event, this));
-    m_loop->add_channel(m_channel);
 }
 
 Acceptor::~Acceptor() {
-    m_loop->del_channel(m_channel);
+    if (m_listening) {
+        m_loop->del_channel(m_channel);
+        m_listening = false;
+    }
 }
 
 void Acceptor::listen() {
@@ -29,6 +31,7 @@ void Acceptor::listen() {
     }
     m_listening = true;
     m_socket->listen();
+    m_loop->add_channel(m_channel);
     m_channel->enable_read(true);
     INFO("listen and enable read");
 }

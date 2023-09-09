@@ -47,5 +47,7 @@ void RtspSession::on_message(std::shared_ptr<net::TcpConnection> conn, const uin
     DEBUG("[%s] recv %d bytes, \n%s", m_trace_id.c_str(), len, data);
 }
 
+std::shared_ptr<RtspMessage> RtspSession::handle_message(std::string &buffer);
+
 }
 }

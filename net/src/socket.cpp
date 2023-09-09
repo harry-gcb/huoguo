@@ -9,15 +9,18 @@ namespace net {
 Socket::Socket(sa_family_t family, int type, int protocol)
     : m_family(family),
       m_fd(::socket(family, type, protocol)) {
+    DEBUG("create fd, m_fd=%d, this=%p", m_fd, this);
 }
 
 
 Socket::Socket(int sock)
     : m_fd(sock) {
+    DEBUG("accept fd, m_fd=%d, this=%p", m_fd, this);
 }
 
 Socket::~Socket() {
     ::close(m_fd);
+    DEBUG("close fd, m_fd=%d, this=%p", m_fd, this);
 }
 
 int Socket::bind(const InetAddr &addr) {

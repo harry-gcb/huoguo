@@ -17,6 +17,7 @@ KQueuePoller::KQueuePoller() {
     if (m_kqueue_fd < 0) {
         ERROR("kqueue failed: m_kqueue_fd=%d", m_kqueue_fd);
     }
+    DEBUG("KQueuePoller ctor, m_kqueue_fd=%d, this=%p", m_kqueue_fd, this);
 }
 
 KQueuePoller::~KQueuePoller() {
@@ -26,7 +27,7 @@ KQueuePoller::~KQueuePoller() {
 int KQueuePoller::add_event(std::shared_ptr<EventIO> event, bool enable_read, bool enable_write) {
     int filter = 0;
     struct kevent ev = { 0 };
-    if (enable_read) {
+    if (1 || enable_read) {
         filter |= EVFILT_READ;
     }
     if (enable_write) {
@@ -34,7 +35,7 @@ int KQueuePoller::add_event(std::shared_ptr<EventIO> event, bool enable_read, bo
     }
     EV_SET(&ev, event->get_fd(), filter, EV_ADD, 0, 0, event->get_channel());
     int ret = kevent(m_kqueue_fd, &ev, 1, nullptr, 0, nullptr);
-    INFO("[%s] kevent ADD: ret=%d, socket=%d, read=%d, write=%d", event->get_channel()->get_trace_id().c_str(), ret, event->get_fd(), enable_read, enable_write);
+    DEBUG("[%s] kevent ADD: ret=%d, errno=%d, socket=%d, read=%d, write=%d", event->get_channel()->get_trace_id().c_str(), ret, errno, event->get_fd(), enable_read, enable_write);
     return ret;
 }
 
@@ -49,7 +50,7 @@ int KQueuePoller::set_event(std::shared_ptr<EventIO> event, bool enable_read, bo
     }
     EV_SET(&ev, event->get_fd(), filter, EV_ENABLE, 0, 0, event->get_channel());
     int ret = kevent(m_kqueue_fd, &ev, 1, nullptr, 0, nullptr);
-    INFO("[%s] kevent MOD: ret=%d, socket=%d, read=%d, write=%d", event->get_channel()->get_trace_id().c_str(), ret, event->get_fd(), enable_read, enable_write);
+    DEBUG("[%s] kevent MOD: ret=%d, errno=%d, socket=%d, read=%d, write=%d", event->get_channel()->get_trace_id().c_str(), ret, errno, event->get_fd(), enable_read, enable_write);
     return ret;
 }
 
@@ -58,7 +59,7 @@ int KQueuePoller::del_event(std::shared_ptr<EventIO> event) {
     struct kevent ev = { 0 };
     EV_SET(&ev, event->get_fd(), filter, EV_DELETE, 0, 0, event->get_channel());
     int ret = kevent(m_kqueue_fd, &ev, 1, nullptr, 0, nullptr);
-    INFO("[%s] kevent DEL: ret=%d, socket=%d", event->get_channel()->get_trace_id().c_str(), ret, event->get_fd());
+    DEBUG("[%s] kevent DEL: ret=%d, errno=%d, socket=%d", event->get_channel()->get_trace_id().c_str(), ret, errno, event->get_fd());
     return ret;
 }
 
