@@ -9,7 +9,7 @@
 namespace huoguo {
 namespace rtsp {
 
-using RtspOptionRequest = std::function<void (std::shared_ptr<RtspOptions>)>;
+using OptionsRequest = std::function<void (std::shared_ptr<RtspOptionsRequest>)>;
 
 
 } // namespace rtsp

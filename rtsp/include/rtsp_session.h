@@ -5,6 +5,7 @@
 #include "tcp_connection.h"
 #include "rtsp_callback.h"
 #include "rtsp_url.h"
+#include "rtsp_message.h"
 
 namespace huoguo {
 namespace rtsp {
@@ -21,12 +22,14 @@ public:
 
     void do_options_request();
 
-    void set_options_request_callback(RtspOptionRequest callback);
+    void set_options_request_callback(OptionsRequest callback);
 private:
     void on_message(std::shared_ptr<net::TcpConnection> conn, const uint8_t *data, size_t len);
     std::shared_ptr<RtspMessage> handle_message(std::string &buffer);
+    std::shared_ptr<RtspMessage> handle_request(std::vector<std::string> &buffer);
+    std::shared_ptr<RtspMessage> handle_response(std::vector<std::string> &buffer);
 private:
-    uint32_t m_seq;
+    uint32_t m_cseq;
     std::shared_ptr<net::TcpConnection> m_connnection;
     std::string m_trace_id;
     RtspURL m_url;
@@ -34,7 +37,7 @@ private:
 
     std::string m_buffer;
 
-    RtspOptionRequest m_do_options_request;
+    OptionsRequest m_do_options_request;
 
     
 

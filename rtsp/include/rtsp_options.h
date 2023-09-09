@@ -2,20 +2,24 @@
 #define HUOGUO_RTSP_RTSP_OPTIONS_H_
 
 #include "rtsp_request.h"
+#include "rtsp_response.h"
 
 namespace huoguo {
 namespace rtsp {
 
-class RtspOptions: public RtspRequest {
+class RtspOptionsRequest: public RtspRequest {
 public:
-    RtspOptions(const std::string &request_uri, int cseq): RtspRequest(OPTIONS, request_uri), m_cseq(cseq) {}
-
-    void set_agent(const std::string &agent) { m_agent = agent; }
-
-    std::string to_string();
+    RtspOptionsRequest(const std::string &request_uri);
+    void set_agent(const std::string &agent);
+    virtual std::string to_string() override;
 private:
-    uint32_t m_cseq;
     std::string m_agent;
+};
+
+class RtspOptionsResponse: public RtspResponse {
+public:
+    RtspOptionsResponse(int status_code, const std::string &status_desc);
+    virtual std::string to_string() override;
 };
 
 } // namespace rtsp

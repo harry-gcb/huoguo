@@ -5,7 +5,7 @@ namespace huoguo {
 namespace rtsp {
 
 
-enum RTSP_METHOD {
+typedef enum RTSP_METHOD {
     OPTIONS,
     DESCRIBE,
     ANNOUNCE,
@@ -17,7 +17,7 @@ enum RTSP_METHOD {
     RECORD,
     REDIRECT,
     TEARDOWN,
-};
+} RTSP_METHOD;
 
 static const char *rtsp_method[] {
     "OPTIONS",
@@ -34,17 +34,19 @@ static const char *rtsp_method[] {
 };
 
 #define RTSP_COLON   ":"
-#define RTSP_SP      " "
+#define RTSP_SPACE   " "
+#define RTSP_SP      RTSP_SPACE
 #define RTSP_CRLF    "\r\n"
 #define RTSP_END     "\r\n\r\n"
 #define RTSP_VERSION "RTSP/1.0"
+#define RTSP_STATUS_CODE_LEN 3
 
-#define RTSP_GERERAL_HEADER_FIELDS_CSEQ "CSeq"
+#define RTSP_HEADER_FIELDS_CSEQ "CSeq"
+#define RTSP_HEADER_FIELDS_USER_AGENT "User-Agent"
+#define RTSP_HEADER_FIELDS_WWW_AUTHENTICATE "WWW-Authenticate"
 
-#define RTSP_REQUEST_HEADER_FIELDS_USER_AGENT "User-Agent"
-
-#define RTSP_REQUEST_HEADER_FIELDS(FIELDS, VALUES) \
-    (std::string("") + (FIELDS) + (RTSP_COLON) + (RTSP_SP) + (VALUES) + (RTSP_CRLF))
+#define RTSP_HEADER_FIELDS(FIELDS, VALUES) \
+    ((std::string("")) + (FIELDS) + (RTSP_COLON) + (RTSP_SP) + (VALUES) + (RTSP_CRLF))
 
 }
 }
