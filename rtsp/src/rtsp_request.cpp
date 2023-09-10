@@ -16,7 +16,7 @@ void RtspRequest::set_url(const std::string &url) {
 }
 std::string RtspRequest::get_request_line() {
     std::string request_line;
-    request_line.append(rtsp_method[m_method]);
+    request_line.append(rtsp_method_map[m_method]);
     request_line.append(RTSP_SP);
     request_line.append(m_url);
     request_line.append(RTSP_SP);

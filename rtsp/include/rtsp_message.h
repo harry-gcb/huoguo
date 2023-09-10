@@ -3,6 +3,7 @@
 
 #include <string>
 #include <map>
+#include <vector>
 #include "rtsp_define.h"
 
 namespace huoguo {
@@ -17,11 +18,14 @@ public:
 public:
     RtspMessage(RTSP_MESSAGE_TYPE type);
     RTSP_MESSAGE_TYPE get_message_type() const;
+
     std::string get_version() const;
     void set_cseq(uint32_t cseq);
     uint32_t get_cseq() const;
 
-    void set_field_with_value(const std::string &field, const std::string &value);
+    void extract_fields(const std::vector<std::string> &fields);
+    void set_field(const std::string &field, const std::string &value);
+    std::string get_field(const std::string &field);
 
     virtual std::string to_string();
 protected:
