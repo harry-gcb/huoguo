@@ -1,5 +1,5 @@
 #include "rtsp_message.h"
-#include "strutils.h"
+#include "utils_string.h"
 
 namespace huoguo {
 namespace rtsp {
@@ -18,11 +18,11 @@ std::string RtspMessage::get_version() const {
 }
 
 void RtspMessage::set_cseq(uint32_t cseq) {
-    m_cseq = cseq;
+    set_field(RTSP_HEADER_FIELDS_CSEQ, std::to_string(cseq));
 }
 
 uint32_t RtspMessage::get_cseq() const {
-    return m_cseq;
+    return std::atoi(get_field(RTSP_HEADER_FIELDS_CSEQ).c_str());
 }
 
 void RtspMessage::extract_fields(const std::vector<std::string> &fields) {
@@ -32,7 +32,7 @@ void RtspMessage::extract_fields(const std::vector<std::string> &fields) {
         if (pos == std::string::npos || pos == 0 || pos == fields[i].length() - 1) {
             continue;
         }
-        std::string field = utils::trim(fields[i].substr(0, pos-1));
+        std::string field = utils::trim(fields[i].substr(0, pos));
         std::string value = utils::trim(fields[i].substr(pos + 1));
         set_field(field, value);
     }
@@ -42,8 +42,9 @@ void RtspMessage::set_field(const std::string &field, const std::string &value) 
     m_fields[field] = value;
 }
 
-std::string RtspMessage::get_field(const std::string &field) {
-    return m_fields[field];
+std::string RtspMessage::get_field(const std::string &field) const {
+    auto it = m_fields.find(field);
+    return it == m_fields.end() ? "" : it->second;
 }
 
 

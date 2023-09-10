@@ -32,8 +32,14 @@ static std::map<RTSP_METHOD, std::string> rtsp_method_map {
     {TEARDOWN, "TEARDOWN"},
 };
 
+typedef enum RTSP_STATUS {
+    OK = 200,
+    UNAUTHORIZED = 401,
+} RTSP_STATUS;
+
 static std::map<int, std::string> rtsp_status_map = {
-    {200, "OK"},
+    {OK, "OK"},
+    {UNAUTHORIZED, "Unauthorized"}
 };
 
 #define RTSP_COLON   ":"
@@ -44,9 +50,17 @@ static std::map<int, std::string> rtsp_status_map = {
 #define RTSP_VERSION "RTSP/1.0"
 #define RTSP_STATUS_CODE_LEN 3
 
+#define RTSP_AUTH_SIZE    256
+#define RTSP_AUTH_REALM   "realm"
+#define RTSP_AUTH_NONCE   "nonce"
+#define RTSP_AUTH_BASIC   "Basic"
+#define RTSP_AUTH_DIGEST  "Digest"
+#define RTSP_AUTH_STALE   "stale"
+
 #define RTSP_HEADER_FIELDS_CSEQ "CSeq"
 #define RTSP_HEADER_FIELDS_USER_AGENT "User-Agent"
 #define RTSP_HEADER_FIELDS_WWW_AUTHENTICATE "WWW-Authenticate"
+#define RTSP_HEADER_FIELDS_AUTHORIZATION "Authorization"
 
 #define RTSP_HEADER_FIELDS(FIELDS, VALUES) \
     ((std::string("")) + (FIELDS) + (RTSP_COLON) + (RTSP_SP) + (VALUES) + (RTSP_CRLF))

@@ -2,6 +2,7 @@
 #include <string_view>
 #include "rtsp_url.h"
 #include "logger.h"
+#include "utils_string.h"
 
 namespace huoguo {
 namespace rtsp {
@@ -18,19 +19,26 @@ bool RtspURL::parse(const std::string &url) {
     // parse protocol
     std::string_view view(url);
     if (view.starts_with("rtsps://")) {
-        m_protocol = "RTSPS";
+        m_protocol = "rtsps";
         view.remove_prefix(strlen("rtsps://"));
     } else if (view.starts_with("rtsp://")) {
         view.remove_prefix(strlen("rtsp://"));
-        m_protocol = "RTSP";
+        m_protocol = "rtsp";
     } else {
         return false;
     }
+
     size_t pos = view.find_last_of("@");
     if (pos != std::string_view::npos) {
         m_auth = view.substr(0, pos);
         view.remove_prefix(m_auth.length() + 1);
+        auto username_password = utils::split(m_auth, ":");
+        if (username_password.size() == 2) {
+            m_username = username_password[0];
+            m_password = username_password[1];
+        }
     }
+
     std::string_view address;
     if ((pos = view.find_first_of("/")) != std::string_view::npos) {
         address = view.substr(0, pos);
@@ -77,6 +85,18 @@ std::string RtspURL::get_ip() const {
 
 uint16_t RtspURL::get_port() const {
     return m_port;
+}
+
+std::string RtspURL::get_username() const {
+    return m_username;
+}
+
+std::string RtspURL::get_password() const {
+    return m_password;
+}
+
+std::string RtspURL::get_target_url() const {
+    return m_protocol + "://" + m_ip + ":" + std::to_string(m_port);
 }
 
 

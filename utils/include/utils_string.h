@@ -11,9 +11,10 @@ namespace utils {
 // extern "C" {
 // #endif
 
-std::string ltrim(const std::string &str);
-std::string rtrim(const std::string &str);
-std::string trim(const std::string &str);
+static const std::string WHITESPACE = " \n\r\t\f\v";
+std::string ltrim(const std::string &str, const std::string &delimiter=WHITESPACE);
+std::string rtrim(const std::string &str, const std::string &delimiter=WHITESPACE);
+std::string trim(const std::string &str, const std::string &delimiter=WHITESPACE);
 std::vector<std::string> split(const std::string &str, const std::string &delimiter);
 bool starts_with(const std::string &str, const std::string &delimiter);
 bool ends_with(const std::string &str, const std::string &delimiter);

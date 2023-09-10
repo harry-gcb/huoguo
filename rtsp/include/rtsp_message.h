@@ -25,14 +25,12 @@ public:
 
     void extract_fields(const std::vector<std::string> &fields);
     void set_field(const std::string &field, const std::string &value);
-    std::string get_field(const std::string &field);
+    std::string get_field(const std::string &field) const;
 
     virtual std::string to_string();
 protected:
     RTSP_MESSAGE_TYPE m_message_type;
     std::string m_version;
-    uint32_t m_cseq;
-
     std::map<std::string, std::string> m_fields;
 };
 

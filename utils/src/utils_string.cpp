@@ -1,26 +1,24 @@
 #include <algorithm>
 #include <cctype>
-#include "strutils.h"
+#include "utils_string.h"
 
 namespace huoguo {
 namespace utils {
 
-static const std::string WHITESPACE = " \n\r\t\f\v";
-
-std::string ltrim(const std::string &str) {
+std::string ltrim(const std::string &str, const std::string &delimiter) {
     if (str.empty()) return str;
-    auto start = str.find_first_not_of(WHITESPACE);
+    auto start = str.find_first_not_of(delimiter);
     return (start == std::string::npos) ? "" : str.substr(start);
 }
 
-std::string rtrim(const std::string &str) {
+std::string rtrim(const std::string &str, const std::string &delimiter) {
     if (str.empty()) return str;
-    size_t end = str.find_last_not_of(WHITESPACE);
+    size_t end = str.find_last_not_of(delimiter);
     return (end == std::string::npos) ? "" : str.substr(0, end + 1);
 }
 
-std::string trim(const std::string &str) {
-    return rtrim(ltrim(str));
+std::string trim(const std::string &str, const std::string &delimiter) {
+    return rtrim(ltrim(str, delimiter), delimiter);
 }
 
 std::vector<std::string> split(const std::string &str, const std::string &delimiter) {

@@ -1,4 +1,5 @@
 #include "rtsp_response.h"
+#include <cstring>
 
 namespace huoguo {
 namespace rtsp {
@@ -7,6 +8,14 @@ RtspResponse::RtspResponse(RTSP_MESSAGE_TYPE message_type, int status_code, cons
     : RtspMessage(message_type),
         m_status_code(status_code),
         m_status_desc(status_desc) {
+}
+
+int RtspResponse::get_status_code() const {
+    return m_status_code;
+}
+
+std::string RtspResponse::get_status_desc() const {
+    return m_status_desc;
 }
 
 void RtspResponse::extract_response_line(const std::string &reponse_line) {
