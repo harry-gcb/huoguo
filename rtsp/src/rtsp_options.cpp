@@ -3,16 +3,12 @@
 namespace huoguo {
 namespace rtsp {
 
-RtspOptionsRequest::RtspOptionsRequest(const std::string &request_uri)
-    : RtspRequest(RTSP_MESSAGE_TYPE_OPTIONS_REQ, OPTIONS, request_uri) {
+RtspOptionsRequest::RtspOptionsRequest()
+    : RtspRequest(RTSP_MESSAGE_TYPE_OPTIONS_REQ, OPTIONS) {
 }
 
 void RtspOptionsRequest::set_agent(const std::string &agent) {
     set_field(RTSP_HEADER_FIELDS_USER_AGENT, agent);
-}
-
-void RtspOptionsRequest::set_auth(const std::string &auth) {
-    set_field(RTSP_HEADER_FIELDS_AUTHORIZATION, auth);
 }
 
 void RtspOptionsRequest::set_username(const std::string &username) {
@@ -21,17 +17,17 @@ void RtspOptionsRequest::set_username(const std::string &username) {
 void RtspOptionsRequest::set_password(const std::string &password) {
     m_password = password;
 }
-std::string RtspOptionsRequest::get_username() const {
-    return m_username;
-}
-std::string RtspOptionsRequest::get_password() const {
-    return m_password;
-}
 
+// std::string RtspOptionsRequest::get_username() const {
+//     return m_username;
+// }
+// std::string RtspOptionsRequest::get_password() const {
+//     return m_password;
+// }
 
-std::string RtspOptionsRequest::get_method() {
-    return rtsp_method_map[OPTIONS];
-}
+// std::string RtspOptionsRequest::get_method() {
+//     return rtsp_method_map[OPTIONS];
+// }
 
 std::string RtspOptionsRequest::to_string() {
     std::string request_header;

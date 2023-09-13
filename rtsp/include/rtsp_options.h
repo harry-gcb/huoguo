@@ -9,15 +9,14 @@ namespace rtsp {
 
 class RtspOptionsRequest: public RtspRequest {
 public:
-    RtspOptionsRequest(const std::string &request_uri);
-    void set_auth(const std::string &auth);
+    RtspOptionsRequest();
     void set_agent(const std::string &agent);
     void set_username(const std::string &username);
     void set_password(const std::string &password);
     
-    std::string get_username() const;
-    std::string get_password() const;
-    std::string get_method();
+    // std::string get_username() const;
+    // std::string get_password() const;
+    // std::string get_method() const;
     
     virtual std::string to_string() override;
 private:
@@ -27,7 +26,7 @@ private:
 
 class RtspOptionsResponse: public RtspResponse {
 public:
-    RtspOptionsResponse(int status_code, const std::string &status_desc);
+    RtspOptionsResponse(int status_code = OK, const std::string &status_desc = rtsp_status_map[OK]);
     virtual std::string to_string() override;
 };
 

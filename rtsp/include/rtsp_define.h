@@ -61,6 +61,7 @@ static std::map<int, std::string> rtsp_status_map = {
 #define RTSP_HEADER_FIELDS_USER_AGENT "User-Agent"
 #define RTSP_HEADER_FIELDS_WWW_AUTHENTICATE "WWW-Authenticate"
 #define RTSP_HEADER_FIELDS_AUTHORIZATION "Authorization"
+#define RTSP_HEADER_FIELDS_CONTENT_LENGTH "Content-Length"
 
 #define RTSP_HEADER_FIELDS(FIELDS, VALUES) \
     ((std::string("")) + (FIELDS) + (RTSP_COLON) + (RTSP_SP) + (VALUES) + (RTSP_CRLF))

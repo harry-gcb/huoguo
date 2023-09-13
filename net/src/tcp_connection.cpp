@@ -27,7 +27,7 @@ TcpConnection::~TcpConnection() {
         m_loop->del_channel(m_channel);
         m_connected = false;
     }
-    INFO("[%s] TcpConnection dtor, this=%p", m_trace_id.c_str(), this);
+    INFO("[%s] ~TcpConnection dtor, this=%p", m_trace_id.c_str(), this);
 }
 
 void TcpConnection::establish() {

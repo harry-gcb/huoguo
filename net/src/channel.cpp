@@ -17,7 +17,7 @@ Channel::Channel(EventLoop *loop, std::shared_ptr<EventIO> event)
 }
 
 Channel::~Channel() {
-    INFO("[%s] Channel dtor, this=%p", m_trace_id.c_str(), this);
+    INFO("[%s] ~Channel dtor, this=%p", m_trace_id.c_str(), this);
 }
 
 std::string Channel::get_trace_id() const {

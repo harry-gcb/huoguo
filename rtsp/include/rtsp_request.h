@@ -9,14 +9,17 @@ namespace rtsp {
 
 class RtspRequest: public RtspMessage {
 public:
-    RtspRequest(RTSP_MESSAGE_TYPE message_type, RTSP_METHOD method, const std::string &url);
+    RtspRequest(RTSP_MESSAGE_TYPE message_type, RTSP_METHOD method);
     void set_method(RTSP_METHOD method);
-    void set_url(const std::string &url);
+    void set_uri(const std::string &uri);
+    void set_auth(const std::string &auth);
+    std::string get_method() const;
+    std::string get_uri() const;
     std::string get_request_line();
     virtual std::string to_string() override;
 protected:
     RTSP_METHOD m_method;
-    std::string m_url;
+    std::string m_uri;
 };
 
 }

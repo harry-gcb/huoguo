@@ -25,6 +25,10 @@ uint32_t RtspMessage::get_cseq() const {
     return std::atoi(get_field(RTSP_HEADER_FIELDS_CSEQ).c_str());
 }
 
+uint32_t RtspMessage::get_content_length() const {
+    return std::atoi(get_field(RTSP_HEADER_FIELDS_CONTENT_LENGTH).c_str());
+}
+
 void RtspMessage::extract_fields(const std::vector<std::string> &fields) {
     int pos = 0;
     for (size_t i = 1; i < fields.size(); ++i) {
