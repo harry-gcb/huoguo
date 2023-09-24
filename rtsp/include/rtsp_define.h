@@ -4,33 +4,18 @@
 namespace huoguo {
 namespace rtsp {
 
-typedef enum RTSP_METHOD {
-    OPTIONS,
-    DESCRIBE,
-    ANNOUNCE,
-    SETUP,
-    SET_PARAMETER,
-    GET_PARAMETER,
-    PLAY,
-    PAUSE,
-    RECORD,
-    REDIRECT,
-    TEARDOWN,
-} RTSP_METHOD;
 
-static std::map<RTSP_METHOD, std::string> rtsp_method_map {
-    {OPTIONS, "OPTIONS"},
-    {DESCRIBE, "DESCRIBE"},
-    {ANNOUNCE, "ANNOUNCE"},
-    {SETUP, "SETUP"},
-    {SET_PARAMETER, "SET_PARAMETER"},
-    {GET_PARAMETER, "GET_PARAMETER"},
-    {PLAY, "PLAY"},
-    {PAUSE, "PAUSE"},
-    {RECORD, "RECORD"},
-    {REDIRECT, "REDIRECT"},
-    {TEARDOWN, "TEARDOWN"},
-};
+#define OPTIONS "OPTIONS"
+#define DESCRIBE "DESCRIBE"
+#define ANNOUNCE "ANNOUNCE"
+#define SETUP "SETUP"
+#define SET_PARAMETER "SET_PARAMETER"
+#define GET_PARAMETER "GET_PARAMETER"
+#define PLAY "PLAY"
+#define PAUSE "PAUSE"
+#define RECORD "RECORD"
+#define REDIRECT "REDIRECT"
+#define TEARDOWN "TEARDOWN"
 
 typedef enum RTSP_STATUS {
     OK = 200,
@@ -49,6 +34,8 @@ static std::map<int, std::string> rtsp_status_map = {
 #define RTSP_END     "\r\n\r\n"
 #define RTSP_VERSION "RTSP/1.0"
 #define RTSP_STATUS_CODE_LEN 3
+#define RTSP_END_LEN 4
+#define RTSP_SDP_TYPE "application/sdp"
 
 #define RTSP_AUTH_SIZE    256
 #define RTSP_AUTH_REALM   "realm"
@@ -62,6 +49,7 @@ static std::map<int, std::string> rtsp_status_map = {
 #define RTSP_HEADER_FIELDS_WWW_AUTHENTICATE "WWW-Authenticate"
 #define RTSP_HEADER_FIELDS_AUTHORIZATION "Authorization"
 #define RTSP_HEADER_FIELDS_CONTENT_LENGTH "Content-Length"
+#define RTSP_HEADER_FIELDS_CONTENT_TYPE   "Content-Type"
 
 #define RTSP_HEADER_FIELDS(FIELDS, VALUES) \
     ((std::string("")) + (FIELDS) + (RTSP_COLON) + (RTSP_SP) + (VALUES) + (RTSP_CRLF))

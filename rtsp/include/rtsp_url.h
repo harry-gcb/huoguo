@@ -8,7 +8,7 @@ namespace rtsp {
 
 class RtspURL {
 public:
-    RtspURL(const std::string &url);
+    RtspURL(const std::string &url = "");
 
     bool parse(const std::string &url);
 

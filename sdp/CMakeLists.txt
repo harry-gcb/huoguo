@@ -1,0 +1,5 @@
+aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/src SRC_LIST)
+add_library(sdp STATIC ${SRC_LIST})
+add_library(huoguo::sdp ALIAS sdp)
+target_include_directories(sdp PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_link_libraries(sdp PRIVATE huoguo::utils)

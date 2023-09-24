@@ -3,9 +3,26 @@
 namespace huoguo {
 namespace rtsp {
 
-RtspRequest::RtspRequest(RTSP_MESSAGE_TYPE message_type, RTSP_METHOD method)
-    : RtspMessage(message_type),
-      m_method(method) {
+RtspRequest::RtspRequest(const std::string &method, const std::string &uri, const std::string &version)
+    : RtspMessage(true),
+      m_request_line(method, uri, version) {
+}
+
+std::string RtspRequest::get_method() const {
+    return m_request_line.m_method;
+}
+
+std::string RtspRequest::to_string() {
+    std::string request;
+    request += m_request_line.to_string();
+    request += RtspMessage::to_string();
+    return request;
+}
+
+#if 0
+RtspRequest::RtspRequest(RTSP_METHOD method)
+    : m_method(method) {
+    set_is_request(true);
 }
 void RtspRequest::set_method(RTSP_METHOD method) {
     m_method = method;
@@ -41,6 +58,8 @@ std::string RtspRequest::get_request_line() {
 std::string RtspRequest::to_string() {
     return get_request_line();
 }
+
+#endif
 
 }
 }

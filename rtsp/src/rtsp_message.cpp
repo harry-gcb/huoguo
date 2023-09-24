@@ -4,13 +4,48 @@
 namespace huoguo {
 namespace rtsp {
 
-RtspMessage::RtspMessage(RTSP_MESSAGE_TYPE type)
-    : m_message_type(type), m_version(RTSP_VERSION) {
-
+RtspMessage::RtspMessage(bool is_request)
+    : m_is_request(is_request) {
 }
+
+bool RtspMessage::is_request_message() const {
+    return m_is_request;
+}
+
+void RtspMessage::set_rtsp_header(const std::string &field, const std::string &value) {
+    m_rtsp_header.add_field(field, value);
+}
+
+void RtspMessage::set_rtsp_body(const std::string &body) {
+    m_rtsp_body = body;
+}
+
+std::string RtspMessage::get_rtsp_header(const std::string &field) const {
+    return m_rtsp_header.get_field(field);
+}
+
+std::string RtspMessage::get_rtsp_body() const {
+    return m_rtsp_body;
+}
+
+std::string RtspMessage::to_string() {
+    std::string message;
+    message += m_rtsp_header.to_string() + RTSP_CRLF;
+    message += m_rtsp_body;
+    return message;
+}
+
+#if 0
 
 RtspMessage::RTSP_MESSAGE_TYPE RtspMessage::get_message_type() const {
     return m_message_type;
+}
+
+void RtspMessage::set_is_request(bool is_request) {
+    m_is_request_message = is_request;
+}
+bool RtspMessage::is_request_message() const {
+    return m_is_request_message;
 }
 
 std::string RtspMessage::get_version() const {
@@ -51,6 +86,21 @@ std::string RtspMessage::get_field(const std::string &field) const {
     return it == m_fields.end() ? "" : it->second;
 }
 
+void RtspMessage::set_content(const std::string &content) {
+    m_content = content;
+}
+
+std::string RtspMessage::get_content() const {
+    return m_content;
+}
+
+void RtspMessage::clone(const RtspMessage &message) {
+    m_is_request_message = message.m_is_request_message;
+    m_message_type = message.m_message_type;
+    m_version = message.m_version;
+    m_fields = message.m_fields;
+    m_content = message.m_content;
+}
 
 std::string RtspMessage::to_string() {
     // 用于调试
@@ -65,6 +115,7 @@ std::string RtspMessage::to_string() {
     // message.append(RTSP_CRLF);
     return message;
 }
+#endif
 
 }
 }

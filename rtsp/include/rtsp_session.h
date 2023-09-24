@@ -6,15 +6,18 @@
 #include "rtsp_callback.h"
 #include "rtsp_url.h"
 #include "rtsp_message.h"
+#include "rtsp_parser.h"
 
 namespace huoguo {
 namespace rtsp {
 
 class RtspSession: public std::enable_shared_from_this<RtspSession> {
+public:
     typedef enum RTSP_SESSION_STATE {
         RTSP_SESSION_STATE_INIT = 0,
         RTSP_SESSION_STATE_OPTIONS = 1,
         RTSP_SESSION_STATE_DESCRIBE = 2,
+        RTSP_SESSION_STATE_SETUP = 3,
         RTSP_SESSION_STATE_UNKNOWN,
     } RTSP_SESSION_STATE;
     typedef enum RTSP_AUTH_SLN {
@@ -38,18 +41,12 @@ public:
     void set_play_response_callback(PlayResponse callback);
     void set_teardown_response_callback(TeardownResponse callback);
 private:
-    void on_message(std::shared_ptr<net::TcpConnection> conn, const uint8_t *data, size_t len);
-    void handle_message(std::shared_ptr<RtspMessage> message);
+    void recv_message(std::shared_ptr<net::TcpConnection> conn, const uint8_t *data, size_t len);
     void send_message(std::shared_ptr<RtspMessage> message);
-
-    void handle_options_response(std::shared_ptr<RtspOptionsResponse> response);
-
-    std::shared_ptr<RtspMessage> parse_message(std::string &buffer);
-    std::shared_ptr<RtspRequest> parse_request(std::string &buffer);
-    std::shared_ptr<RtspResponse> parse_response(std::string &buffer);
     
-    std::shared_ptr<RtspRequest> generate_request();
-    std::shared_ptr<RtspResponse> generate_response();
+    void handle_options_response(std::shared_ptr<RtspOptionsResponse> response);
+    void handle_describe_response(std::shared_ptr<RtspDescribeResponse> response);
+    void handle_setup_response(std::shared_ptr<RtspSetupResponse> response);
 
     std::string generate_auth(const std::string &www_authenticate, const std::string &method, const std::string &uri);
 private:
@@ -63,7 +60,7 @@ private:
     RTSP_AUTH_SLN m_auth_sln;
     std::string m_auth_realm;
     std::string m_auth_nonce;
-    std::string m_auth_response;
+    std::string m_authorization;
     
     std::string m_buffer;
 
@@ -72,6 +69,8 @@ private:
     SetupResponse m_on_setup_response;
     PlayResponse m_on_play_response;
     TeardownResponse m_on_teardown_response;
+
+    RtspParser m_parser;
 };
 
 }

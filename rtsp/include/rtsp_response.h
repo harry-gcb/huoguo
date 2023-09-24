@@ -7,17 +7,27 @@ namespace huoguo {
 namespace rtsp {
 
 class RtspResponse: public RtspMessage {
+    class ResponseLine {
+    public:
+        int m_res_code;
+        std::string m_res_desc;
+        std::string m_version;
+        ResponseLine() {}
+        ResponseLine(int res_code, const std::string &res_desc, const std::string &version="RTSP/1.0")
+            : m_res_code(res_code), m_res_desc(res_desc), m_version(version) {}
+        std::string to_string() {
+            return m_version + RTSP_SP + std::to_string(m_res_code) + RTSP_SP + m_res_desc + RTSP_CRLF;
+        }
+    };
 public:
-    RtspResponse(RTSP_MESSAGE_TYPE message_type, int status_code = OK, const std::string &status_desc = rtsp_status_map[OK]);
-    void extract_response_line(const std::string &reponse_line);
+    RtspResponse(int res_code, const std::string &res_desc, const std::string &version="RTSP/1.0");
 
-    int get_status_code() const;
-    std::string get_status_desc() const;
+    int get_res_code() const;
+    std::string get_res_desc() const;
 
     virtual std::string to_string() override;
 private:
-    int m_status_code;
-    std::string m_status_desc;
+    ResponseLine m_response_line;
 };
 
 }

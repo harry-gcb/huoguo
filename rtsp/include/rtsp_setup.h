@@ -7,8 +7,28 @@
 namespace huoguo {
 namespace rtsp {
 
-class RtspSetupRequest: public RtspRequest{};
-class RtspSetupResponse: public RtspResponse{};
+class RtspSetupRequest {
+public:
+    RtspSetupRequest(const std::string &uri, const std::string &version = RTSP_VERSION);
+
+    void set_cseq(int cseq);
+    void set_authorization(const std::string &value);
+
+    std::shared_ptr<RtspRequest> get_message();
+private:
+    std::shared_ptr<RtspRequest> m_request;
+};
+
+class RtspSetupResponse {
+public:
+    RtspSetupResponse(std::shared_ptr<RtspResponse> response);
+    std::shared_ptr<RtspResponse> get_message() const;
+
+    int get_cseq() const;
+    std::string get_www_authenticate() const;
+private:
+    std::shared_ptr<RtspResponse> m_response;
+};
 
 } // namespace rtsp
 } // namespace huoguo

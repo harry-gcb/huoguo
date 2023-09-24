@@ -1,5 +1,5 @@
-#ifndef HUOGUO_RTSP_CLIENT_H_
-#define HUOGUO_RTSP_CLIENT_H_
+#ifndef HUOGUO_RTSP_RTSP_CLIENT_H_
+#define HUOGUO_RTSP_RTSP_CLIENT_H_
 
 #include "event_loop.h"
 #include "tcp_client.h"
@@ -21,12 +21,6 @@ public:
 
     void set_start_callback(Callback callback);
     void set_stop_callback(Callback callback);
-
-    // void do_options_request(std::shared_ptr<RtspOptionsRequest> request = nullptr);
-    // void do_describe_request();
-    // void do_setup_request();
-    // void do_play_request();
-    // void do_teardown_request();
 
     void set_options_respone_callback(OptionsResponse callback);
     void set_describe_response_callback(DescribeResponse callback);
@@ -53,7 +47,7 @@ private:
     TeardownResponse m_on_teardown_response;
 };
 
-}
-}
+} // namespace rtsp
+} // namespace huoguo
 
-#endif // HUOGUO_RTSP_CLIENT_H_
+#endif // HUOGUO_RTSP_RTSP_CLIENT_H_

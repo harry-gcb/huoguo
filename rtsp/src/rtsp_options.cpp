@@ -3,56 +3,51 @@
 namespace huoguo {
 namespace rtsp {
 
-RtspOptionsRequest::RtspOptionsRequest()
-    : RtspRequest(RTSP_MESSAGE_TYPE_OPTIONS_REQ, OPTIONS) {
+RtspOptionsRequest::RtspOptionsRequest(const std::string &uri, const std::string &version)
+    : m_request(new RtspRequest(OPTIONS, uri, version)){
 }
 
-void RtspOptionsRequest::set_agent(const std::string &agent) {
-    set_field(RTSP_HEADER_FIELDS_USER_AGENT, agent);
+RtspOptionsRequest::RtspOptionsRequest(std::shared_ptr<RtspRequest> request)
+    : m_request(request) {
 }
 
-void RtspOptionsRequest::set_username(const std::string &username) {
-    m_username = username;
-}
-void RtspOptionsRequest::set_password(const std::string &password) {
-    m_password = password;
+std::string RtspOptionsRequest::get_method() const {
+    return m_request->get_method();
 }
 
-// std::string RtspOptionsRequest::get_username() const {
-//     return m_username;
+void RtspOptionsRequest::set_cseq(int cseq) {
+    return m_request->set_rtsp_header(RTSP_HEADER_FIELDS_CSEQ, std::to_string(cseq));
+}
+
+void RtspOptionsRequest::set_authorization(const std::string &value) {
+    m_request->set_rtsp_header(RTSP_HEADER_FIELDS_AUTHORIZATION, value);
+}
+
+std::shared_ptr<RtspRequest> RtspOptionsRequest::get_message() {
+    return m_request;
+}
+
+//////////////////////////////////// RtspOptionsResponse ////////////////////////////////////
+
+RtspOptionsResponse::RtspOptionsResponse(std::shared_ptr<RtspResponse> response)
+    : m_response(response) {
+}
+
+std::shared_ptr<RtspResponse> RtspOptionsResponse::get_message() const {
+    return m_response;
+}
+
+int RtspOptionsResponse::get_cseq() const {
+    return std::atoi(m_response->get_rtsp_header(RTSP_HEADER_FIELDS_CSEQ).c_str());
+}
+
+std::string RtspOptionsResponse::get_www_authenticate() const {
+    return m_response->get_rtsp_header(RTSP_HEADER_FIELDS_WWW_AUTHENTICATE);
+}
+
+// std::string RtspOptionsResponse::to_string() {
+//     return m_response->to_string();
 // }
-// std::string RtspOptionsRequest::get_password() const {
-//     return m_password;
-// }
-
-// std::string RtspOptionsRequest::get_method() {
-//     return rtsp_method_map[OPTIONS];
-// }
-
-std::string RtspOptionsRequest::to_string() {
-    std::string request_header;
-    std::string request_line = get_request_line();
-    std::string user_agent = get_field(RTSP_HEADER_FIELDS_USER_AGENT);
-    std::string authorization = get_field(RTSP_HEADER_FIELDS_AUTHORIZATION);
-    request_header += RTSP_HEADER_FIELDS(RTSP_HEADER_FIELDS_CSEQ, std::to_string(get_cseq()));
-    if (!user_agent.empty()) {
-        request_header += RTSP_HEADER_FIELDS(RTSP_HEADER_FIELDS_USER_AGENT, user_agent);
-    }
-    if (!authorization.empty()) {
-        request_header += RTSP_HEADER_FIELDS(RTSP_HEADER_FIELDS_AUTHORIZATION, authorization);
-    }
-    request_header += RTSP_CRLF;
-    return request_line + request_header;
-}
-
-RtspOptionsResponse::RtspOptionsResponse(int status_code, const std::string &status_desc)
-    : RtspResponse(RTSP_MESSAGE_TYPE_OPTIONS_RSP, status_code, status_desc) {
-
-}
-
-std::string RtspOptionsResponse::to_string() {
-    return "";
-}
 
 }
 }

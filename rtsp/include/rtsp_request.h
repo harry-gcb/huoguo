@@ -8,18 +8,27 @@ namespace huoguo {
 namespace rtsp {
 
 class RtspRequest: public RtspMessage {
+    class RequestLine {
+    public:
+        std::string m_method;
+        std::string m_uri;
+        std::string m_version;
+        RequestLine() {}
+        RequestLine(const std::string &method, const std::string &uri, const std::string &version="RTSP/1.0")
+            : m_method(method), m_uri(uri), m_version(version) {}
+        std::string to_string() {
+            return m_method + RTSP_SP + m_uri + RTSP_SP + m_version + RTSP_CRLF;
+        }
+    };
 public:
-    RtspRequest(RTSP_MESSAGE_TYPE message_type, RTSP_METHOD method);
-    void set_method(RTSP_METHOD method);
-    void set_uri(const std::string &uri);
-    void set_auth(const std::string &auth);
+    RtspRequest(const std::string &method, const std::string &uri, const std::string &version="RTSP/1.0");
+
     std::string get_method() const;
-    std::string get_uri() const;
-    std::string get_request_line();
+
     virtual std::string to_string() override;
 protected:
-    RTSP_METHOD m_method;
-    std::string m_uri;
+    RequestLine m_request_line;
+
 };
 
 }

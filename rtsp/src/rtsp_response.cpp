@@ -4,10 +4,30 @@
 namespace huoguo {
 namespace rtsp {
 
-RtspResponse::RtspResponse(RTSP_MESSAGE_TYPE message_type, int status_code, const std::string &status_desc)
-    : RtspMessage(message_type),
-        m_status_code(status_code),
-        m_status_desc(status_desc) {
+RtspResponse::RtspResponse(int res_code, const std::string &res_desc, const std::string &version)
+    : RtspMessage(false),
+      m_response_line(res_code, res_desc, version) {
+}
+
+int RtspResponse::get_res_code() const {
+    return m_response_line.m_res_code;
+}
+std::string RtspResponse::get_res_desc() const {
+    return m_response_line.m_res_desc;
+}
+
+std::string RtspResponse::to_string() {
+    std::string response;
+    response += m_response_line.to_string();
+    response += RtspMessage::to_string();
+    return response;
+}
+
+#if 0
+RtspResponse::RtspResponse(int status_code, const std::string &status_desc)
+    : m_status_code(status_code),
+      m_status_desc(status_desc) {
+    set_is_request(false);
 }
 
 int RtspResponse::get_status_code() const {
@@ -37,9 +57,16 @@ void RtspResponse::extract_response_line(const std::string &reponse_line) {
     }
 }
 
+void RtspResponse::clone(const RtspResponse &response) {
+    RtspMessage::clone((RtspMessage)response);
+    m_status_code = response.m_status_code;
+    m_status_desc = response.m_status_desc;
+}
+
 std::string RtspResponse::to_string() {
     return "";
 }
+#endif
 
 }
 }

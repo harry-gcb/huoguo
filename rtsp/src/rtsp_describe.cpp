@@ -3,25 +3,35 @@
 namespace huoguo {
 namespace rtsp {
 
-RtspDescribeRequest::RtspDescribeRequest()
-    : RtspRequest(RTSP_MESSAGE_TYPE_DESCRIBE_REQ, DESCRIBE){
+//////////////////////////////////// RtspDescribeRequest ////////////////////////////////////
 
+RtspDescribeRequest::RtspDescribeRequest(const std::string &uri, const std::string &version)
+    : m_request(new RtspRequest(DESCRIBE, uri, version)) {
 }
 
-std::string RtspDescribeRequest::to_string() {
-    std::string request_header;
-    std::string request_line = get_request_line();
-    std::string user_agent = get_field(RTSP_HEADER_FIELDS_USER_AGENT);
-    std::string authorization = get_field(RTSP_HEADER_FIELDS_AUTHORIZATION);
-    request_header += RTSP_HEADER_FIELDS(RTSP_HEADER_FIELDS_CSEQ, std::to_string(get_cseq()));
-    if (!user_agent.empty()) {
-        request_header += RTSP_HEADER_FIELDS(RTSP_HEADER_FIELDS_USER_AGENT, user_agent);
-    }
-    if (!authorization.empty()) {
-        request_header += RTSP_HEADER_FIELDS(RTSP_HEADER_FIELDS_AUTHORIZATION, authorization);
-    }
-    request_header += RTSP_CRLF;
-    return request_line + request_header;
+void RtspDescribeRequest::set_cseq(int cseq) {
+    return m_request->set_rtsp_header(RTSP_HEADER_FIELDS_CSEQ, std::to_string(cseq));
+}
+
+void RtspDescribeRequest::set_authorization(const std::string &value) {
+    m_request->set_rtsp_header(RTSP_HEADER_FIELDS_AUTHORIZATION, value);
+}
+
+std::shared_ptr<RtspRequest> RtspDescribeRequest::get_message() {
+    return m_request;
+}
+//////////////////////////////////// RtspDescribeResponse ////////////////////////////////////
+
+RtspDescribeResponse::RtspDescribeResponse(std::shared_ptr<RtspResponse> response)
+    : m_response(response) {
+}
+
+std::string RtspDescribeResponse::get_content_type() const {
+    return m_response->get_rtsp_header(RTSP_HEADER_FIELDS_CONTENT_TYPE);
+}
+
+std::string RtspDescribeResponse::get_content_body() const {
+    return m_response->get_rtsp_body();
 }
 
 }

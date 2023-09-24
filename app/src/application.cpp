@@ -3,7 +3,7 @@
 #include "config.h"
 #include "logger.h"
 #include "utils_string.h"
-#include "rtsp.h"
+#include "rtspclient.h"
 
 #include <iostream>
 
@@ -21,21 +21,19 @@ int Application::run() {
         OPTION.usage();
         return 0;
     }
-    std::shared_ptr<huoguo::app::Rtsp> rtsp;
+    net::EventLoop m_loop;
+    auto rtsp = std::make_shared<RtspClient>(&m_loop);
     if (OPTION.is_exists("pull")) {
-        std::string url = OPTION.get("pull");
-        if (huoguo::utils::starts_with(url, "rtsp")) {
-            rtsp = std::make_shared<huoguo::app::Rtsp>(url);
-            rtsp->start();
-        }
+        rtsp->pull(OPTION.get("pull"));
     }
+    return m_loop.run();
     
-    while (!m_stop) {
-        using namespace std::literals::chrono_literals;
-        std::unique_lock<std::mutex> lock(m_mutex);
-        m_cv.wait_for(lock, 1s);
-    }
-    return 0;
+    // while (!m_stop) {
+    //     using namespace std::literals::chrono_literals;
+    //     std::unique_lock<std::mutex> lock(m_mutex);
+    //     m_cv.wait_for(lock, 1s);
+    // }
+    // return 0;
 }
 
 int Application::init_option(int argc, char *argv[]) {

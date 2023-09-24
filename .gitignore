@@ -3,5 +3,6 @@ debug
 logs
 bin
 lib
+output
 a.out
 .vscode
