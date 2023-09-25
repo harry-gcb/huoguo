@@ -3,7 +3,7 @@
 #include "config.h"
 #include "logger.h"
 #include "utils_string.h"
-#include "rtspclient.h"
+#include "rtsp_puller.h"
 
 #include <iostream>
 
@@ -22,7 +22,7 @@ int Application::run() {
         return 0;
     }
     net::EventLoop m_loop;
-    auto rtsp = std::make_shared<RtspClient>(&m_loop);
+    auto rtsp = std::make_shared<RtspPuller>(&m_loop);
     if (OPTION.is_exists("pull")) {
         rtsp->pull(OPTION.get("pull"));
     }

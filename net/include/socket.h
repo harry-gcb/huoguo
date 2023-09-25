@@ -21,9 +21,12 @@ public:
     std::shared_ptr<Socket> accept();
 
     int connect(const struct sockaddr *addr, socklen_t addrlen);
-
+    // TCP I/O
     virtual int read(void *data, int len) override;
     virtual int write(const void *data, int len) override;
+    // UDP I/O
+    int recvfrom(void *data, int len, InetAddr &addr);
+    int sendto(const void *data, int len, const InetAddr &addr);
 
     int set_reuse_addr(bool reuse);
     int set_reuse_port(bool reuse);

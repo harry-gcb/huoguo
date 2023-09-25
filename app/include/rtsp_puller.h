@@ -11,13 +11,11 @@
 namespace huoguo {
 namespace app {
 
-class RtspClient {
+class RtspPuller {
 public:
-    RtspClient(net::EventLoop *loop);
+    RtspPuller(net::EventLoop *loop);
 
     void pull(const std::string &url);
-    void push(const std::string &url);
-
 private:
     void on_describe_response(std::shared_ptr<rtsp::RtspSession> session, std::shared_ptr<rtsp::RtspDescribeResponse> response);
 private:

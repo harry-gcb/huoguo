@@ -14,6 +14,12 @@ static const int addr_len = 128;
 #define IPV4_ANY        "0.0.0.0"
 #define IPV4_LOOPBACK   "127.0.0.1"
 
+InetAddr::InetAddr()
+    : m_addr_type(AF_INET),
+      m_addr_protocol(SOCK_STREAM),
+      m_addr_family(IPPROTO_TCP) {
+};
+
 InetAddr::InetAddr(uint16_t port, const std::string &ip, bool loopback, bool udp, bool ipv6)
     : m_addr_type(udp ? SOCK_DGRAM : SOCK_STREAM),
       m_addr_protocol(udp ? IPPROTO_UDP : IPPROTO_TCP),
@@ -83,6 +89,26 @@ InetAddr::InetAddr(const struct sockaddr_in6& addr6)
     char buf[addr_len] = { 0 };
     inet_ntop(m_addr_family, &m_addr_v6.sin6_addr, buf, addr_len);
     m_addr_ip = std::string(buf);
+}
+
+int InetAddr::from_inet_addr4(const struct sockaddr_in& addr4) {
+    m_addr_port = ntohs(addr4.sin_port),
+    m_addr_family = addr4.sin_family;
+    m_addr_v4 = addr4;
+    char buf[addr_len] = { 0 };
+    inet_ntop(m_addr_family, &m_addr_v4.sin_addr, buf, addr_len);
+    m_addr_ip = std::string(buf);
+    return 0;
+}
+
+int InetAddr::from_inet_addr6(const struct sockaddr_in6& addr6) {
+    m_addr_port = ntohs(addr6.sin6_port),
+    m_addr_family = addr6.sin6_family;
+    m_addr_v6 = addr6;
+    char buf[addr_len] = { 0 };
+    inet_ntop(m_addr_family, &m_addr_v6.sin6_addr, buf, addr_len);
+    m_addr_ip = std::string(buf);
+    return 0;
 }
 
 InetAddr InetAddr::get_local_addr(int fd, bool ipv6) {

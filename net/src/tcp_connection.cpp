@@ -78,8 +78,8 @@ void TcpConnection::handle_read_event() {
 }
 
 void TcpConnection::handle_write_event() {
-
 }
+
 void TcpConnection::handle_close_event() {
     m_close_callback(shared_from_this());
 }

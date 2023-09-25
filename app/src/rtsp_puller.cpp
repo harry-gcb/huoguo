@@ -1,23 +1,20 @@
-#include "rtspclient.h"
+#include "rtsp_puller.h"
 #include "logger.h"
 
 namespace huoguo {
 namespace app {
 
-RtspClient::RtspClient(net::EventLoop *loop)
+RtspPuller::RtspPuller(net::EventLoop *loop)
     : m_loop(loop){
 }
 
-void RtspClient::pull(const std::string &url) {
+void RtspPuller::pull(const std::string &url) {
     m_rtsp_puller = std::make_shared<rtsp::RtspClient>(m_loop, url);
-    m_rtsp_puller->set_describe_response_callback(std::bind(&RtspClient::on_describe_response, this, std::placeholders::_1, std::placeholders::_2));
+    m_rtsp_puller->set_describe_response_callback(std::bind(&RtspPuller::on_describe_response, this, std::placeholders::_1, std::placeholders::_2));
     m_rtsp_puller->start();
 }
 
-void RtspClient::push(const std::string &url) {
-}
-
-void RtspClient::on_describe_response(std::shared_ptr<rtsp::RtspSession> session, std::shared_ptr<rtsp::RtspDescribeResponse> response) {
+void RtspPuller::on_describe_response(std::shared_ptr<rtsp::RtspSession> session, std::shared_ptr<rtsp::RtspDescribeResponse> response) {
     if (RTSP_SDP_TYPE == response->get_content_type()) {
         m_sdp.from_string(response->get_content_body());
         INFO("RtspClient::on_describe_response, sdp=\n%s", m_sdp.to_string().c_str());

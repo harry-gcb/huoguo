@@ -65,13 +65,31 @@ int Socket::connect(const struct sockaddr *addr, socklen_t addrlen) {
     return ::connect(m_fd, addr, addrlen);
 }
 
-
 int Socket::read(void *data, int len) {
     return ::read(m_fd, data, len);
 }
 
 int Socket::write(const void *data, int len) {
     return ::write(m_fd, data, len);
+}
+
+int Socket::recvfrom(void *data, int len, InetAddr &addr) {
+    int n = 0;
+    if (AF_INET6 == m_family) {
+        struct sockaddr_in6 addr6 = { 0 };
+        socklen_t addr6len = sizeof(addr6);
+        n = ::recvfrom(m_fd, data, len, 0, (sockaddr *)&addr6, &addr6len);
+        addr.from_inet_addr6(addr6);
+    } else {
+        struct sockaddr_in addr4 = { 0 };
+        socklen_t addr4len = sizeof(addr4);
+        n = ::recvfrom(m_fd, data, len, 0, (sockaddr *)&addr4, &addr4len);
+        addr.from_inet_addr4(addr4);
+    }
+    return n;
+}
+int Socket::sendto(const void *data, int len, const InetAddr &addr) {
+    return ::sendto(m_fd, data, len, 0, addr.get_addr(), addr.get_len());
 }
 
 int Socket::set_reuse_addr(bool reuse) {
