@@ -5,7 +5,8 @@
 #include <any>
 #include "event_loop.h"
 #include "rtsp_client.h"
-#include "rtsp_session.h"
+#include "rtp_receiver.h"
+#include "rtp_packet.h"
 #include "sdp.h"
 
 namespace huoguo {
@@ -18,10 +19,12 @@ public:
     void pull(const std::string &url);
 private:
     void on_describe_response(std::shared_ptr<rtsp::RtspSession> session, std::shared_ptr<rtsp::RtspDescribeResponse> response);
+
+    void on_rtp_packet(std::shared_ptr<rtp::RtpPacket> packet);
 private:
     net::EventLoop *m_loop;
     std::shared_ptr<rtsp::RtspClient> m_rtsp_puller;
-    std::shared_ptr<rtsp::RtspClient> m_rtsp_pusher;
+    std::shared_ptr<rtp::RtpReceiver> m_rtp_receiver;
     sdp::Sdp m_sdp;
 };
 

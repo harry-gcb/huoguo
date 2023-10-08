@@ -1,5 +1,8 @@
 #include "rtsp_puller.h"
+#include "singleton.h"
+#include "rtp_portpool.h"
 #include "logger.h"
+#include "utils_string.h"
 
 namespace huoguo {
 namespace app {
@@ -9,6 +12,12 @@ RtspPuller::RtspPuller(net::EventLoop *loop)
 }
 
 void RtspPuller::pull(const std::string &url) {
+
+    // m_rtsp_client = std::make_shared<rtsp::RtspClient>(url);
+    // auto rtsp_url = m_rtsp_client->get_rtsp_url();
+
+    // m_tcp_client = std::make_shared<net::TcpClient>(m_loop, InetAddr())
+
     m_rtsp_puller = std::make_shared<rtsp::RtspClient>(m_loop, url);
     m_rtsp_puller->set_describe_response_callback(std::bind(&RtspPuller::on_describe_response, this, std::placeholders::_1, std::placeholders::_2));
     m_rtsp_puller->start();
@@ -19,7 +28,39 @@ void RtspPuller::on_describe_response(std::shared_ptr<rtsp::RtspSession> session
         m_sdp.from_string(response->get_content_body());
         INFO("RtspClient::on_describe_response, sdp=\n%s", m_sdp.to_string().c_str());
     }
-    
+
+    int rtp_port = 0;
+    int rtcp_port = 0;
+    if (!utils::Singleton<rtp::RtpPortPool>::getInstance().require_free_port_pair(rtp_port, rtcp_port)) {
+        return;
+    }
+
+    std::string path;
+    auto stream = m_sdp.get_stream("video");
+    auto attributes = stream->get_attributes_list();
+    for (auto &attribute: attributes) {
+        if (!utils::starts_with(attribute, "control:")) {
+            continue;
+        }
+        path = attribute.substr(strlen("control:"));
+    }
+    std::string transport;
+    transport.append(stream->get_protocol());
+    transport.append(";unicast;client_port=");
+    transport.append(std::to_string(rtp_port) + "-" + std::to_string(rtcp_port));
+    auto message = std::make_shared<rtsp::RtspSetupRequest>(session->get_url() + "/" + path);
+    message->set_transport(transport);
+    session->do_setup_request(message);
+
+
+    m_rtp_receiver = std::make_shared<rtp::RtpReceiver>(m_loop, rtp_port);
+    m_rtp_receiver->set_rtp_packet_callback(std::bind(&RtspPuller::on_rtp_packet, this, std::placeholders::_1));
+    m_rtp_receiver->start();
+    // m_rtp_receiver->add_data_observer();
+}
+
+void RtspPuller::on_rtp_packet(std::shared_ptr<rtp::RtpPacket> packet) {
+
 }
 
 // void RtspClient::on_option_response(std::shared_ptr<rtsp::RtspSession> session, std::shared_ptr<rtsp::RtspOptionsResponse> response) {

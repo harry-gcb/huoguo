@@ -11,14 +11,16 @@ class SdpStream : public SdpMeta {
 public:
     virtual void set(const std::string &key, const std::string &val) override;
     virtual std::string to_string() override;
+
+    std::string get_type() const;
+    std::string get_protocol() const;
+    const std::vector<std::string> &get_attributes_list() const;
 private:
     std::string m_m_type;
     std::string m_m_port;
     std::string m_m_protocol;
     std::vector<std::string> m_m_format;
-    
     std::vector<std::string> m_attributes;
-
 };
 
 }

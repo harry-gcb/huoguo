@@ -39,5 +39,17 @@ std::string SdpStream::to_string() {
     return stream;
 }
 
+std::string SdpStream::get_type() const {
+    return m_m_type;
+}
+
+std::string SdpStream::get_protocol() const {
+    return m_m_protocol;
+}
+
+const std::vector<std::string> &SdpStream::get_attributes_list() const {
+    return m_attributes;
+}
+
 }
 }

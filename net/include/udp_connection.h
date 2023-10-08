@@ -37,7 +37,7 @@ private:
     std::shared_ptr<Socket> m_socket;
     std::shared_ptr<Channel> m_channel;
     std::string m_trace_id;
-    uint8_t m_buffer[BUF_SIZE];
+    char m_buffer[BUF_SIZE];
     DatagramCallback m_datagram_callback;
 
     InetAddr m_local_addr;

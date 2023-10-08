@@ -40,8 +40,10 @@ public:
     void set_setup_response_callback(SetupResponse callback);
     void set_play_response_callback(PlayResponse callback);
     void set_teardown_response_callback(TeardownResponse callback);
+
+    std::string get_url() const;
 private:
-    void recv_message(std::shared_ptr<net::TcpConnection> conn, const uint8_t *data, size_t len);
+    void recv_message(std::shared_ptr<net::TcpConnection> conn, const char *data, size_t len);
     void send_message(std::shared_ptr<RtspMessage> message);
     
     void handle_options_response(std::shared_ptr<RtspOptionsResponse> response);

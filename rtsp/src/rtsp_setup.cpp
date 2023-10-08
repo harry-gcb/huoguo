@@ -13,8 +13,12 @@ void RtspSetupRequest::set_cseq(int cseq) {
     return m_request->set_rtsp_header(RTSP_HEADER_FIELDS_CSEQ, std::to_string(cseq));
 }
 
-void RtspSetupRequest::set_authorization(const std::string &value) {
-    m_request->set_rtsp_header(RTSP_HEADER_FIELDS_AUTHORIZATION, value);
+void RtspSetupRequest::set_authorization(const std::string &authorization) {
+    m_request->set_rtsp_header(RTSP_HEADER_FIELDS_AUTHORIZATION, authorization);
+}
+
+void RtspSetupRequest::set_transport(const std::string &transport) {
+    m_request->set_rtsp_header(RTSP_HEADER_FIELDS_TRANSPORT, transport);
 }
 
 std::shared_ptr<RtspRequest> RtspSetupRequest::get_message() {

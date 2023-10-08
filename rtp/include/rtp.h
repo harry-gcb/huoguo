@@ -4,6 +4,11 @@
 namespace huoguo {
 namespace rtp {
 
+class Rtp {
+public:
+    
+};
+
 } // namespace rtp
 } // namespace huoguo
 

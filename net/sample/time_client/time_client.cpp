@@ -29,7 +29,7 @@ void TimeClient::on_connect(std::shared_ptr<net::TcpConnection> conn) {
     }
 }
 
-void TimeClient::on_message(std::shared_ptr<net::TcpConnection> conn, const uint8_t *data, size_t len) {
+void TimeClient::on_message(std::shared_ptr<net::TcpConnection> conn, const char *data, size_t len) {
     INFO("[TimeClient] receive message from %s:%d", conn->get_remote_ip().c_str(), conn->get_remote_port());
 }
 

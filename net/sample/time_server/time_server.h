@@ -16,7 +16,7 @@ public:
     void start();
 private:
     void on_connect(std::shared_ptr<net::TcpConnection> conn);
-    void on_message(std::shared_ptr<net::TcpConnection> conn, const uint8_t *data, size_t len);
+    void on_message(std::shared_ptr<net::TcpConnection> conn, const char *data, size_t len);
 private:
     net::TcpServer m_server;
 };

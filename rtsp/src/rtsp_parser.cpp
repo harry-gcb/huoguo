@@ -7,7 +7,7 @@ namespace huoguo {
 namespace rtsp {
 
 std::shared_ptr<RtspMessage> RtspParser::parse(const char *data, int len) {
-    m_buffer.append(std::string((const char *)data));
+    m_buffer.append(std::string((const char *)data, len));
     return parse_message(m_buffer);
 }
 

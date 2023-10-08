@@ -44,5 +44,21 @@ std::string Sdp::to_string() {
     return sdp;
 }
 
+int Sdp::stream_count() const {
+    return m_streams.size();
+}
+std::shared_ptr<SdpStream> Sdp::get_steram(uint32_t index) const {
+    return m_streams[index % m_streams.size()];
+}
+
+std::shared_ptr<SdpStream> Sdp::get_stream(const std::string &type) const {
+    for (auto &stream: m_streams) {
+        if (stream->get_type() == type) {
+            return stream;
+        }
+    }
+    return nullptr;
+}
+
 }
 }

@@ -11,6 +11,7 @@ namespace net {
 
 class UdpServer {
 public:
+    UdpServer() {};
     UdpServer(EventLoop *loop, const InetAddr &addr, const std::string &name, bool reuse = true);
     ~UdpServer();
 

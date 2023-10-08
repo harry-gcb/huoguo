@@ -84,11 +84,10 @@ void RtspSession::set_teardown_response_callback(TeardownResponse callback) {
     m_on_teardown_response = callback;
 }
 
-void RtspSession::recv_message(std::shared_ptr<net::TcpConnection> conn, const uint8_t *data, size_t len) {
-    INFO("[%s] recv message from %s:%d with %d bytes\n%s", 
-          m_trace_id.c_str(), conn->get_remote_ip().c_str(), conn->get_remote_port(), len, data);
-    // TODO
-    // if ()
+void RtspSession::recv_message(std::shared_ptr<net::TcpConnection> conn, const char *data, size_t len) {
+    INFO("[%s] recv message from %s:%d with %d bytes\n%s",
+          m_trace_id.c_str(), conn->get_remote_ip().c_str(), conn->get_remote_port(), len, std::string(data, len).c_str());
+
     auto message = m_parser.parse((const char *)data, len);
     if (!message) {
         WARN("[%s] message is not completed", m_trace_id.c_str());
@@ -177,6 +176,10 @@ std::string RtspSession::generate_auth(const std::string &www_authenticate, cons
     }
     m_authorization = authorization;
     return m_authorization;
+}
+
+std::string RtspSession::get_url() const {
+    return m_url.get_target_url();
 }
 
 

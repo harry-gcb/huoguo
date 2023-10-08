@@ -10,12 +10,12 @@ namespace net {
 class TcpConnection;
 class UdpConnection;
 using ConnectCallback = std::function<void (std::shared_ptr<TcpConnection>)>;
-using MessageCallback = std::function<void (std::shared_ptr<TcpConnection>, const uint8_t *data, int len)>;
+using MessageCallback = std::function<void (std::shared_ptr<TcpConnection>, const char *data, int len)>;
 using CloseCallback = std::function<void (std::shared_ptr<TcpConnection>)>;
-using DatagramCallback = std::function<void (std::shared_ptr<UdpConnection>, const uint8_t *data, int len)>;
+using DatagramCallback = std::function<void (std::shared_ptr<UdpConnection>, const char *data, int len)>;
 
 void default_connect_callback(std::shared_ptr<TcpConnection> conn);
-void default_message_callback(std::shared_ptr<TcpConnection> conn, const uint8_t *data, size_t len);
+void default_message_callback(std::shared_ptr<TcpConnection> conn, const char *data, size_t len);
 
 } // namespace net
 } // namespace huoguo
