@@ -1,5 +1,5 @@
 #include "time_client.h"
-#include "logger.h"
+#include "utils.h"
 
 int main(int argc, char *argv[]) {
     if (argc < 2) {

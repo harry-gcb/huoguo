@@ -1,5 +1,5 @@
-#ifndef HUOGUO_SDP_SDP_META_H_
-#define HUOGUO_SDP_SDP_META_H_
+#ifndef HUOGUO_SDP_META_H_
+#define HUOGUO_SDP_META_H_
 
 #include <string>
 

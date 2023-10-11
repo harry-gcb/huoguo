@@ -3,9 +3,7 @@
 
 #include <memory>
 
-#include "event_loop.h"
-#include "tcp_server.h"
-#include "tcp_connection.h"
+#include "net.h"
 
 namespace huoguo {
 namespace sample {

@@ -1,8 +1,6 @@
 #include "rtsp_puller.h"
-#include "singleton.h"
+#include "utils.h"
 #include "rtp_portpool.h"
-#include "logger.h"
-#include "utils_string.h"
 
 namespace huoguo {
 namespace app {

@@ -2,7 +2,7 @@
 #define HUOGUO_RTSP_RTSP_SESSION_H_
 
 #include <map>
-#include "tcp_connection.h"
+#include "net.h"
 #include "rtsp_callback.h"
 #include "rtsp_url.h"
 #include "rtsp_message.h"

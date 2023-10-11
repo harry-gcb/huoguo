@@ -1,5 +1,5 @@
-#ifndef HUOGUO_SDP_SDP_STREAM_H_
-#define HUOGUO_SDP_SDP_STREAM_H_
+#ifndef HUOGUO_SDP_STREAM_H_
+#define HUOGUO_SDP_STREAM_H_
 
 #include "sdp_meta.h"
 #include <vector>

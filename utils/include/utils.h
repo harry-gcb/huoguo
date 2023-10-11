@@ -1,16 +1,17 @@
 #ifndef HUOGUO_UTILS_H_
 #define HUOGUO_UTILS_H_
 
-namespace huoguo {
-namespace utils {
-
-#define OK   0
-#define ERR -1
-
-bool is_power_of_2(unsigned int n);
-unsigned int roundup_pow_of_2(unsigned int n);
-
-} // namespace utils
-} // namespace huoguo
+#include "utils_config.h"
+#include "utils_string.h"
+#include "utils_kfifo.h"
+#include "utils_bits.h"
+#include "utils_logger.h"
+#include "utils_thread.h"
+#include "utils_option.h"
+#include "utils_uuid.h"
+#include "utils_process.h"
+#include "utils_noncopyable.h"
+#include "utils_singleton.h"
+#include "utils_ssl.h"
 
 #endif // HUOGUO_UTILS_H_

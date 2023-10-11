@@ -1,5 +1,5 @@
-#ifndef HUOGUO_SDP_SDP_ATTRIBUTE_H_
-#define HUOGUO_SDP_SDP_ATTRIBUTE_H_
+#ifndef HUOGUO_SDP_ATTRIBUTE_H_
+#define HUOGUO_SDP_ATTRIBUTE_H_
 
 #include "sdp_meta.h"
 

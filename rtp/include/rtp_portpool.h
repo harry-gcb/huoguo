@@ -2,7 +2,7 @@
 #define HUOGUO_RTP_RTP_PORTPOOL_H_
 
 #include <map>
-#include "singleton.h"
+#include "utils.h"
 
 namespace huoguo {
 namespace rtp {

@@ -1,8 +1,7 @@
 #ifndef HUOGUO_RTP_RTP_RECEIVER_H_
 #define HUOGUO_RTP_RTP_RECEIVER_H_
 
-#include "event_loop.h"
-#include "udp_server.h"
+#include "net.h"
 #include "rtp_callback.h"
 
 namespace huoguo {
