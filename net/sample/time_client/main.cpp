@@ -3,7 +3,7 @@
 
 int main(int argc, char *argv[]) {
     if (argc < 2) {
-        ERROR("Usage: time_client [IP]");
+        ErrorL("Usage: time_client [IP]");
         return -1;
     }
     huoguo::net::EventLoop loop;

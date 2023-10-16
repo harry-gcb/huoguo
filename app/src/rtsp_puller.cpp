@@ -24,7 +24,7 @@ void RtspPuller::pull(const std::string &url) {
 void RtspPuller::on_describe_response(std::shared_ptr<rtsp::RtspSession> session, std::shared_ptr<rtsp::RtspDescribeResponse> response) {
     if (RTSP_SDP_TYPE == response->get_content_type()) {
         m_sdp.from_string(response->get_content_body());
-        INFO("RtspClient::on_describe_response, sdp=\n%s", m_sdp.to_string().c_str());
+        InfoL("RtspClient::on_describe_response, sdp=\n%s", m_sdp.to_string().c_str());
     }
 
     int rtp_port = 0;
@@ -95,7 +95,7 @@ void RtspPuller::on_rtp_packet(std::shared_ptr<rtp::RtpPacket> packet) {
 
 // void RtspClient::on_connect(std::shared_ptr<net::TcpConnection> conn) {
 //     if (conn->is_connected()) {
-//         INFO("[%s] rtsp_client connected", conn->get_trace_id().c_str());
+//         InfoL("[%s] rtsp_client connected", conn->get_trace_id().c_str());
 //         m_session = std::make_shared<RtspSession>(conn, m_url);
 //         m_session->set_options_response_callback(m_on_options_response);
 //         m_session->set_describe_response_callback(m_on_describe_response);
@@ -108,7 +108,7 @@ void RtspPuller::on_rtp_packet(std::shared_ptr<rtp::RtpPacket> packet) {
 //             m_session->do_options_request();
 //         }
 //     } else {
-//         INFO("[%s] rtsp_client disconnected", conn->get_trace_id().c_str());
+//         InfoL("[%s] rtsp_client disconnected", conn->get_trace_id().c_str());
 //         if (m_on_stop) {
 //             m_on_stop(m_session);
 //         }

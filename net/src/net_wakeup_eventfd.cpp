@@ -1,5 +1,6 @@
-#ifdef USE_EPOLL
-#include "net.h"
+#ifdef USE_EVENTFD_WAKEUP
+#include "net_wakeup_eventfd.h"
+#include "net_socket.h"
 #include <sys/eventfd.h>
 
 namespace huoguo {
@@ -21,11 +22,11 @@ void EventfdWakeup::set_channel(Channel *channel) {
     m_event_fd->set_channel(channel);
 }
 
-int EventfdWakeup::read(void *data, int len) {
+int EventfdWakeup::read(char *data, int len) {
     return m_event_fd->read(data, len);
 }
 
-int EventfdWakeup::write(const void *data, int len) {
+int EventfdWakeup::write(const char *data, int len) {
     return m_event_fd->write(data, len);
 }
 

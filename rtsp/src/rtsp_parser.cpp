@@ -17,7 +17,7 @@ std::shared_ptr<RtspMessage> RtspParser::parse_message(std::string &buffer) {
     if (rtsp_header_pos == std::string::npos) {
         return message;
     }
-    readlen += rtsp_header_pos+RTSP_END_LEN;
+    readlen += static_cast<uint32_t>(rtsp_header_pos)+RTSP_END_LEN;
     std::string rtsp_header = buffer.substr(0, readlen);
     if (utils::starts_with(rtsp_header, RTSP_VERSION))
     {
@@ -28,7 +28,7 @@ std::shared_ptr<RtspMessage> RtspParser::parse_message(std::string &buffer) {
     auto content_length = std::atoi(message->get_rtsp_header(RTSP_HEADER_FIELDS_CONTENT_LENGTH).c_str());
     if (message && content_length > 0) {
         if (readlen + content_length > m_buffer.length()) {
-            ERROR("readlen=%d, content_len=%d, buffer.length=%d", readlen, content_length, m_buffer.length());
+            ErrorL("readlen=%d, content_len=%d, buffer.length=%d", readlen, content_length, m_buffer.length());
             return nullptr;
         }
         message->set_rtsp_body(m_buffer.substr(readlen, content_length));
@@ -58,7 +58,7 @@ std::shared_ptr<RtspResponse> RtspParser::parse_response(std::string &buffer) {
     }
     auto rtsp_header = utils::split(buffer, RTSP_CRLF);
     if (rtsp_header.empty()) {
-        WARN("error rtsp header, buffer=%s", buffer.c_str());
+        WarnL("error rtsp header, buffer=%s", buffer.c_str());
         return nullptr;
     }
     int res_code;
@@ -71,7 +71,7 @@ std::shared_ptr<RtspResponse> RtspParser::parse_response(std::string &buffer) {
 }
 
 int RtspParser::parse_response_line(std::string &buffer, int &res_code, std::string &res_desc, std::string &version) {
-    int pos = 0;
+    size_t pos = 0;
     version = buffer.substr(0, strlen(RTSP_VERSION));
     pos += version.length();
 
@@ -96,12 +96,12 @@ int RtspParser::parse_rtsp_header(std::string &buffer, std::shared_ptr<RtspMessa
     }
     auto rtsp_header = utils::split(buffer, RTSP_CRLF);
     if (rtsp_header.empty()) {
-        WARN("error rtsp header, buffer=%s", buffer.c_str());
+        WarnL("error rtsp header, buffer=%s", buffer.c_str());
         return -1;
     }
     int pos = 0;
     for (size_t i = 1; i < rtsp_header.size(); ++i) {
-        pos = rtsp_header[i].find_first_of(RTSP_COLON);
+        pos = static_cast<int>(rtsp_header[i].find_first_of(RTSP_COLON));
         if (pos == std::string::npos || pos == 0 || pos == rtsp_header[i].length() - 1) {
             continue;
         }

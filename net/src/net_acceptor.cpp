@@ -32,7 +32,7 @@ void Acceptor::listen() {
     m_socket->listen();
     m_loop->add_channel(m_channel);
     m_channel->enable_read(true);
-    INFO("listen and enable read");
+    InfoL("listen and enable read");
 }
 
 void Acceptor::set_establish_callback(EstablishCallback callback) {
@@ -43,13 +43,13 @@ void Acceptor::handle_read_event() {
     auto sock = m_socket->accept();
     if (sock) {
         if (m_establish_callback) {
-            INFO("accept a new connection");
+            InfoL("accept a new connection");
             m_establish_callback(sock);
         } else {
-            WARN("no establish callback for %d", sock->get_fd());
+            WarnL("no establish callback for %d", sock->get_fd());
         }
     } else {
-        ERROR("error for accept");
+        ErrorL("error for accept");
     }
 }
 

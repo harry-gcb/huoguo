@@ -95,6 +95,26 @@
         "__tuple": "cpp",
         "complex": "cpp",
         "locale": "cpp",
-        "stack": "cpp"
+        "stack": "cpp",
+        "xiosbase": "cpp",
+        "xmemory": "cpp",
+        "filesystem": "cpp",
+        "xlocinfo": "cpp",
+        "xstring": "cpp",
+        "charconv": "cpp",
+        "resumable": "cpp",
+        "format": "cpp",
+        "xfacet": "cpp",
+        "xhash": "cpp",
+        "xlocale": "cpp",
+        "xlocbuf": "cpp",
+        "xlocmes": "cpp",
+        "xlocmon": "cpp",
+        "xlocnum": "cpp",
+        "xloctime": "cpp",
+        "xstddef": "cpp",
+        "xtr1common": "cpp",
+        "xtree": "cpp",
+        "xutility": "cpp"
     }
 }

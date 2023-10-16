@@ -48,7 +48,7 @@ void RtspClient::set_teardown_response_callback(TeardownResponse callback) {
 
 void RtspClient::on_connect(std::shared_ptr<net::TcpConnection> conn) {
     if (conn->is_connected()) {
-        INFO("[%s] rtsp_client connected", conn->get_trace_id().c_str());
+        InfoL("[%s] rtsp_client connected", conn->get_trace_id().c_str());
         m_session = std::make_shared<RtspSession>(conn, m_url);
         m_session->set_options_response_callback(m_on_options_response);
         m_session->set_describe_response_callback(m_on_describe_response);
@@ -61,7 +61,7 @@ void RtspClient::on_connect(std::shared_ptr<net::TcpConnection> conn) {
             m_session->do_options_request();
         }
     } else {
-        INFO("[%s] rtsp_client disconnected", conn->get_trace_id().c_str());
+        InfoL("[%s] rtsp_client disconnected", conn->get_trace_id().c_str());
         if (m_on_stop) {
             m_on_stop(m_session);
         }

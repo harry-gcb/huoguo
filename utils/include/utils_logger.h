@@ -13,18 +13,19 @@ namespace huoguo {
 namespace utils {
 
 #ifdef _WIN32
-#define LOG_PRINT(level, ...)      LOGGER.log_message(LOG_LEVEL(level), __VA_ARGS__)
-#define LOGGER                     huoguo::utils::Logger::logger
-#define LOG_LEVEL(level)           huoguo::utils::Logger::LOG_LEVEL_##level, strrchr(__FILE__, '/') + 1, __LINE__, __FUNCTION__
-#define LOG_BASE(level, ...)      (huoguo::utils::Logger::LOG_LEVEL_##level>LOGGER.get_level()) ? (void)0 : LOG_PRINT(level, __VA_ARGS__)
-#define LOG(level, fmt, ...)  (huoguo::utils::Logger::LOG_LEVEL_##level>LOGGER.get_level()) ? (void)0 : LOG_BASE(level, fmt, __VA_ARGS__)
 
-#define DEBUG(fmt, ...) LOG(DEBUG, fmt, __VA_ARGS__)
-#define TRACE(fmt, ...) LOG(TRACE, fmt, __VA_ARGS__)
-#define INFO(fmt,  ...) LOG(INFO,  fmt, __VA_ARGS__)
-#define WARN(fmt,  ...) LOG(WARN,  fmt, __VA_ARGS__)
-#define ERROR(fmt, ...) LOG(ERROR, fmt, __VA_ARGS__)
-#define FATAL(fmt, ...) LOG(FATAL, fmt, __VA_ARGS__)
+#define LOG_PRINT(level, ...)  LOGGER.log_message(LOG_LEVEL(level), __VA_ARGS__)
+#define LOGGER                 huoguo::utils::Logger::logger
+#define LOG_LEVEL(level)       huoguo::utils::Logger::LOG_##level, __FILE__, __LINE__, __FUNCTION__
+#define LOG_BASE(level, ...)   LOG_PRINT(level, __VA_ARGS__)
+#define LOG(level, fmt, ...)   LOG_BASE(level, fmt, __VA_ARGS__)
+
+#define DebugL(fmt, ...) LOG(LEVEL_DEBUG, fmt, __VA_ARGS__)
+#define TraceL(fmt, ...) LOG(LEVEL_TRACE, fmt, __VA_ARGS__)
+#define InfoL(fmt,  ...) LOG(LEVEL_INFO,  fmt, __VA_ARGS__)
+#define WarnL(fmt,  ...) LOG(LEVEL_WARN,  fmt, __VA_ARGS__)
+#define ErrorL(fmt, ...) LOG(LEVEL_ERROR, fmt, __VA_ARGS__)
+#define FatalL(fmt, ...) LOG(LEVEL_FATAL, fmt, __VA_ARGS__)
 #else
 #define LOG_PRINT(level, args...)  LOGGER.log_message(LOG_LEVEL(level), ##args)
 #define LOGGER                     huoguo::utils::Logger::logger
@@ -32,12 +33,12 @@ namespace utils {
 #define LOG_BASE(level, args...)  (huoguo::utils::Logger::LOG_LEVEL_##level>LOGGER.get_level()) ? (void)0 : LOG_PRINT(level, ##args)
 #define LOG(level, fmt, args...)  (huoguo::utils::Logger::LOG_LEVEL_##level>LOGGER.get_level()) ? (void)0 : LOG_BASE(level, fmt, ##args)
 
-#define DEBUG(fmt, args...) LOG(DEBUG, fmt, ##args)
-#define TRACE(fmt, args...) LOG(TRACE, fmt, ##args)
-#define INFO(fmt,  args...) LOG(INFO,  fmt, ##args)
-#define WARN(fmt,  args...) LOG(WARN,  fmt, ##args)
-#define ERROR(fmt, args...) LOG(ERROR, fmt, ##args)
-#define FATAL(fmt, args...) LOG(FATAL, fmt, ##args)
+#define DebugL(fmt, args...) LOG(DEBUG, fmt, ##args)
+#define TraceL(fmt, args...) LOG(TRACE, fmt, ##args)
+#define InfoL(fmt,  args...) LOG(INFO,  fmt, ##args)
+#define WarnL(fmt,  args...) LOG(WARN,  fmt, ##args)
+#define ErrorL(fmt, args...) LOG(ERROR, fmt, ##args)
+#define FatalL(fmt, args...) LOG(FATAL, fmt, ##args)
 #endif
 
 #define TRACE_LEVEL huoguo::utils::Logger::LOG_LEVEL_TRACE

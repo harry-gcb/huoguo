@@ -14,7 +14,7 @@ public:
     void set_rtp_packet_callback(RtpPacketCallback callback);
     void start();
 private:
-    void on_datagram_in(std::shared_ptr<net::UdpConnection> connection, const char *data, int len);
+    void on_message(const std::shared_ptr<net::UdpConnection> &connection, const net::InetAddr &addr, const char *data, int len);
 private:
     net::EventLoop *m_loop;
     net::UdpServer  m_server;

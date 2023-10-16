@@ -20,13 +20,13 @@ void Connector::connect() {
     }
     m_connecting = true;
     socklen_t addrlen = m_addr.get_len();
-    DEBUG("connect to peer, ip=%s, port=%d, family=%d, type=%d, protocol=%d", m_addr.get_ip().c_str(), m_addr.get_port(), m_addr.get_family(), m_addr.get_type(), m_addr.get_protocol());
+    DebugL("connect to peer, ip=%s, port=%d, family=%d, type=%d, protocol=%d", m_addr.get_ip().c_str(), m_addr.get_port(), m_addr.get_family(), m_addr.get_type(), m_addr.get_protocol());
     auto sock = std::make_shared<Socket>(m_addr.get_family(), m_addr.get_type(), m_addr.get_protocol());
     int ret = sock->connect(m_addr.get_addr(), addrlen);
     if (ret == 0) {
         m_establish_callback(sock);
     } else {
-        ERROR("ip=%s, port=%d, return=%d, errno=%d", m_addr.get_ip().c_str(), m_addr.get_port(), ret, errno);
+        ErrorL("ip=%s, port=%d, return=%d, errno=%d", m_addr.get_ip().c_str(), m_addr.get_port(), ret, errno);
     }
 }
 

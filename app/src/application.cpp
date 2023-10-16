@@ -57,7 +57,7 @@ void Application::init_logs() {
     config.filename = CONFIG.get("LOG", "filename", "huoguo");
     config.suffix = CONFIG.get("LOG", "suffix", "txt");
     config.enable_color = CONFIG.get("LOG", "color", false);
-    config.level = CONFIG.get("LOG", "level", "info");
+    config.level = CONFIG.get("LOG", "level", "debug");
     config.enable_fileline = CONFIG.get("LOG", "fileline", false);
     config.enable_function = CONFIG.get("LOG", "function", false);
     return LOGGER.init(config);

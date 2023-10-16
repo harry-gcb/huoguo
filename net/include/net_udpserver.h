@@ -15,7 +15,11 @@ public:
     UdpServer(EventLoop *loop, const InetAddr &addr, const std::string &name, bool reuse = true);
     ~UdpServer();
 
-    void set_datagram_callback(DatagramCallback callback);
+    void set_message_callback(DatagramCallback callback);
+    void start();
+
+    int sendto(const InetAddr &addr, const std::string &buffer);
+    int sendto(const InetAddr &addr, const char *buffer, int length);
 private:
     EventLoop *m_loop;
     std::shared_ptr<UdpConnection> m_connection;

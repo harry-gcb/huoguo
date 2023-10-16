@@ -1,6 +1,6 @@
 #include "net_eventloop.h"
-#include "net_pollerfactory.h"
-#include "net_wakeupfactory.h"
+#include "net_poller_factory.h"
+#include "net_wakeup_factory.h"
 #include "net_channel.h"
 #include "net_ioevent.h"
 #include "net_poller.h"
@@ -24,7 +24,7 @@ EventLoop::~EventLoop() {
 }
 
 int EventLoop::run() {
-    INFO("EventLoop start running");
+    InfoL("EventLoop start running");
     while (!m_stop) {
         std::list<std::shared_ptr<IOEvent>> ioevents;
         int ret = m_poller->get_event(ioevents, 1000);
@@ -41,7 +41,7 @@ int EventLoop::run() {
         }
         handle_close_event();
     }
-    INFO("EventLoop exit running");
+    InfoL("EventLoop exit running");
     return 0;
 }
 
@@ -66,7 +66,7 @@ void EventLoop::handle_read_event() {
     uint64_t one = 1;
     size_t n = m_event_io->read((char *)&one, sizeof(one));
     if (n != sizeof(one)) {
-        ERROR("read %d bytes instead of %d", n, sizeof(one));
+        ErrorL("read %d bytes instead of %d", n, sizeof(one));
     }
 }
 
@@ -74,7 +74,7 @@ void EventLoop::active_read_event() {
     uint64_t one = 1;
     size_t n = m_event_io->write((const char *)&one, sizeof(one));
     if (n != sizeof(one)) {
-        ERROR("read %d bytes instead of %d", n, sizeof(one));
+        ErrorL("read %d bytes instead of %d", n, sizeof(one));
     }
 }
 

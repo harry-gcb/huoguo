@@ -21,9 +21,10 @@ public:
     UdpConnection(EventLoop *loop, std::shared_ptr<Socket> sock);
     ~UdpConnection();
 
-    void set_datagram_callback(DatagramCallback callback);
+    void set_message_callback(DatagramCallback callback);
 
-    int sendto(const std::string &buffer, const InetAddr &remote_addr);
+    int sendto(const InetAddr &addr, const std::string &buffer);
+    int sendto(const InetAddr &addr, const char *buffer, int length);
 
     std::string get_trace_id() const;
 
@@ -40,7 +41,9 @@ private:
     std::shared_ptr<Channel> m_channel;
     std::string m_trace_id;
     char m_buffer[BUF_SIZE];
-    DatagramCallback m_datagram_callback;
+    DatagramCallback m_message_callback;
+    
+    InetAddr m_current_addr;
 
     InetAddr m_local_addr;
     InetAddr m_remote_addr;

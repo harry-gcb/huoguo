@@ -22,7 +22,7 @@ public:
     void establish();
     void shutdown();
     void set_connect_callback(ConnectCallback callback);
-    void set_message_callback(MessageCallback callback);
+    void set_message_callback(SegmentCallback callback);
     void set_close_callback(CloseCallback callback);
 
     int send(const std::string &buffer);
@@ -48,7 +48,7 @@ private:
     bool m_connected;
     char m_buffer[BUF_SIZE];
     ConnectCallback m_connect_callback;
-    MessageCallback m_message_callback;
+    SegmentCallback m_message_callback;
     CloseCallback m_close_callback;
     std::string m_trace_id;
 };

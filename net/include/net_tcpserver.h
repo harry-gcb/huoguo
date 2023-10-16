@@ -23,7 +23,7 @@ public:
     void start();
 
     void set_connect_callback(const ConnectCallback &cb);
-    void set_message_callback(const MessageCallback &cb);
+    void set_message_callback(const SegmentCallback &cb);
 private:
     void add_connection(std::shared_ptr<Socket> sock);
     void del_connection(std::shared_ptr<TcpConnection> conn);
@@ -34,7 +34,7 @@ private:
     std::string m_server_name;
     uint64_t m_conn_id;
     ConnectCallback m_connect_callback;
-    MessageCallback m_message_callback;
+    SegmentCallback m_message_callback;
     std::map<std::string, std::shared_ptr<TcpConnection>> m_connections;
 };
 

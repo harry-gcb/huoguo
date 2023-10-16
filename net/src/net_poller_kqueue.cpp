@@ -1,4 +1,4 @@
-#ifdef USE_KQUEUE
+#ifdef USE_KQUEUE_POLLER
 #include <unistd.h>
 #include <sys/event.h>
 #include "net.h"

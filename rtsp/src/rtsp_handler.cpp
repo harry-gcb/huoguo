@@ -10,7 +10,7 @@ void RtspSession::handle_options_response(std::shared_ptr<RtspOptionsResponse> r
         return m_on_options_response(shared_from_this(), response);
     }
     if (!response || response->get_cseq() != m_cseq) {
-        WARN("[%s] some wrong, %d, %d", m_trace_id.c_str(), response->get_cseq(), m_cseq);
+        WarnL("[%s] some wrong, %d, %d", m_trace_id.c_str(), response->get_cseq(), m_cseq);
         return;
     }
     if (response->get_message()->get_res_code() == OK) {

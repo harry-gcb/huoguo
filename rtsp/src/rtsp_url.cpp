@@ -9,7 +9,7 @@ namespace rtsp {
 RtspURL::RtspURL(const std::string &url)
     : m_url(url) {
     if (!parse(url)) {
-        ERROR("rtsp url format is error: %s", url.c_str());
+        ErrorL("rtsp url format is error: %s", url.c_str());
     }
     m_url = url;
 }

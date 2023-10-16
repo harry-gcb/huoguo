@@ -18,7 +18,7 @@ void SdpStream::set(const std::string &key, const std::string &val) {
     } else if ("a" == key) {
         m_attributes.push_back(val);
     } else {
-        INFO("%s=%s", key.c_str(), val.c_str());
+        InfoL("%s=%s", key.c_str(), val.c_str());
     }
 }
 

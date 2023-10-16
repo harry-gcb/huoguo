@@ -1,5 +1,5 @@
 #include <cstring>
-
+#include "utils.h"
 #include "net_inetaddr.h"
 
 namespace huoguo {
@@ -27,7 +27,7 @@ InetAddr::InetAddr(uint16_t port, const std::string &ip, bool loopback, bool udp
         else if (!ipv6 && !loopback)    { m_addr_ip = IPV4_ANY; }
         else if ( ipv6 &&  loopback)    { m_addr_ip = IPV6_LOOPBACK; }
         else if ( ipv6 && !loopback)    { m_addr_ip = IPV6_ANY; }
-        else { ERROR("unsupport protocol, ipv6=%d, lookback=%d", ipv6, loopback); }
+        else { ErrorL("unsupport protocol, ipv6=%d, lookback=%d", ipv6, loopback); }
     } else {
         ipv6 = ip.find(":") != std::string::npos;
         m_addr_ip = ip;

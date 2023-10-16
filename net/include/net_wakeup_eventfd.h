@@ -1,9 +1,9 @@
-#ifdef USE_EPOLL
+#ifdef USE_EVENTFD_WAKEUP
 #ifndef HUOGUO_NET_EVENTFDWAKEUP_H_
 #define HUOGUO_NET_EVENTFDWAKEUP_H_
 
 #include <memory>
-#include "event_io.h"
+#include "net_eventio.h"
 
 namespace huoguo {
 namespace net {
@@ -17,8 +17,8 @@ public:
     virtual int get_fd() override;
     virtual Channel *get_channel() override;
     virtual void set_channel(Channel *channel) override;
-    virtual int read(void *data, int len) override;
-    virtual int write(const void *data, int len) override;
+    virtual int read(char *data, int len) override;
+    virtual int write(const char *data, int len) override;
 private:
     std::shared_ptr<Socket> m_event_fd;
 };

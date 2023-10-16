@@ -11,11 +11,11 @@ Channel::Channel(EventLoop *loop, std::shared_ptr<EventIO> event)
       m_enable_write(false),
       m_trace_id(huoguo::utils::uuid::generate()) {
     m_event->set_channel(this);
-    INFO("[%s] Channel ctor, this=%p", m_trace_id.c_str(), this);
+    InfoL("[%s] Channel ctor, this=%p", m_trace_id.c_str(), this);
 }
 
 Channel::~Channel() {
-    INFO("[%s] ~Channel dtor, this=%p", m_trace_id.c_str(), this);
+    InfoL("[%s] ~Channel dtor, this=%p", m_trace_id.c_str(), this);
 }
 
 std::string Channel::get_trace_id() const {

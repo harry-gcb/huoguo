@@ -17,7 +17,7 @@ RtspSession::RtspSession(std::shared_ptr<net::TcpConnection> conn, const RtspURL
 }
 
 RtspSession::~RtspSession() {
-    INFO("[%s] ~RtspSession", m_trace_id.c_str());
+    InfoL("[%s] ~RtspSession", m_trace_id.c_str());
 }
 
 void RtspSession::do_options_request(std::shared_ptr<RtspOptionsRequest> request) {
@@ -83,12 +83,12 @@ void RtspSession::set_teardown_response_callback(TeardownResponse callback) {
 }
 
 void RtspSession::recv_message(std::shared_ptr<net::TcpConnection> conn, const char *data, size_t len) {
-    INFO("[%s] recv message from %s:%d with %d bytes\n%s",
+    InfoL("[%s] recv message from %s:%d with %d bytes\n%s",
           m_trace_id.c_str(), conn->get_remote_ip().c_str(), conn->get_remote_port(), len, std::string(data, len).c_str());
 
-    auto message = m_parser.parse((const char *)data, len);
+    auto message = m_parser.parse((const char *)data, static_cast<int>(len));
     if (!message) {
-        WARN("[%s] message is not completed", m_trace_id.c_str());
+        WarnL("[%s] message is not completed", m_trace_id.c_str());
         return;
     }
     if (message->is_request_message()) {
@@ -108,7 +108,7 @@ void RtspSession::recv_message(std::shared_ptr<net::TcpConnection> conn, const c
         handle_setup_response(std::make_shared<RtspSetupResponse>(response));
         break;
     default:
-        INFO("[%s] not implement, %d", m_trace_id.c_str(), m_state);
+        InfoL("[%s] not implement, %d", m_trace_id.c_str(), m_state);
     }
 }
 
@@ -118,7 +118,7 @@ void RtspSession::send_message(std::shared_ptr<RtspMessage> message) {
     }
     std::string buffer = message->to_string();
     m_connnection->send(buffer);
-    INFO("[%s] send message to %s:%d with %d bytes\n%s", m_trace_id.c_str(), m_connnection->get_remote_ip().c_str(), m_connnection->get_remote_port(), buffer.length(), buffer.c_str());
+    InfoL("[%s] send message to %s:%d with %d bytes\n%s", m_trace_id.c_str(), m_connnection->get_remote_ip().c_str(), m_connnection->get_remote_port(), buffer.length(), buffer.c_str());
 }
 
 std::string RtspSession::generate_auth(const std::string &www_authenticate, const std::string &method, const std::string &uri) {
@@ -132,7 +132,7 @@ std::string RtspSession::generate_auth(const std::string &www_authenticate, cons
         auth_way = RTSP_AUTH_DIGEST;
         auth_sln = RTSP_AUTH_SLN_DIGEST;
     } else {
-        WARN("[%s] auth not support, auth=%s", m_trace_id.c_str(), www_authenticate.c_str());
+        WarnL("[%s] auth not support, auth=%s", m_trace_id.c_str(), www_authenticate.c_str());
         return m_authorization;
     }
     std::vector<std::string> authenticate_info = utils::split(www_authenticate.substr(auth_way.length()), ",");

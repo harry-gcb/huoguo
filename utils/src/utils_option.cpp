@@ -56,14 +56,14 @@ int Option::init(int argc, char *argv[]) {
             }
             auto it = m_option[g].group_option.find(arg);
             if (it == m_option[g].group_option.end()) {
-                ERROR("argv[%d]=%s not identified");
+                ErrorL("argv[%d]=%s not identified", i, argv[i]);
                 return -1;
             }
             if (it->second->cmd_with_value && i + 1 < argc) {
                 if (i + 1 < argc) {
                     it->second->cmd_value = argv[++i];
                 } else {
-                    ERROR("argv[%d]=%s has no args", i, argv[i]);
+                    ErrorL("argv[%d]=%s has no args", i, argv[i]);
                     return -1;
                 }
             }
@@ -78,11 +78,11 @@ int Option::init(int argc, char *argv[]) {
                 for (auto &c: arg) {
                     auto it = m_option[g].group_option.find(std::string(c, 1));
                     if (it == m_option[g].group_option.end()) {
-                        ERROR("argv[%d]=%s not identified", i, argv[i]);
+                        ErrorL("argv[%d]=%s not identified", i, argv[i]);
                         return -1;
                     }
                     if (it->second->cmd_with_value) {
-                        ERROR("argv[%d]=%s can't with args");
+                        ErrorL("argv[%d]=%s can't with args");
                         return -1;
                     }
                     it->second->cmd_exists = true;
@@ -90,14 +90,14 @@ int Option::init(int argc, char *argv[]) {
             } else {
                 auto it = m_option[g].group_option.find(arg);
                 if (it == m_option[g].group_option.end()) {
-                    ERROR("argv[%d]=%s not identified");
+                    ErrorL("argv[%d]=%s not identified");
                     return -1;
                 }
             if (it->second->cmd_with_value && i + 1 < argc) {
                 if (i + 1 < argc) {
                     it->second->cmd_value = argv[++i];
                 } else {
-                    ERROR("argv[%d]=%s has no args", i, argv[i]);
+                    ErrorL("argv[%d]=%s has no args", i, argv[i]);
                     return -1;
                 }
             }

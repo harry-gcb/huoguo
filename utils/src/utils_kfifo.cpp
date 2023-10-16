@@ -27,12 +27,12 @@ Kfifo::~Kfifo() {
     }
 }
 
-// 返回实际写入缓冲区中的数据
+// Returns the data actually written to the buffer
 uint32_t Kfifo::put(const uint8_t *buffer, uint32_t len) {
     uint32_t l = 0;
-    // 当前缓冲区空闲空间
+    // Current buffer free space
     len = std::min(len, m_size - m_in + m_out);
-    // 当前in位置到buffer末尾的长度
+    // The length from the current in position to the end of the buffer
     l = std::min(len, m_size - (m_in & m_mask));
     memcpy(m_data + (m_in & m_mask), buffer, l);
     memcpy(m_data, buffer + l, len - l);

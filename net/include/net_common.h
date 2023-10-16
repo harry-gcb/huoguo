@@ -7,11 +7,26 @@
 
 #pragma comment (lib, "ws2_32.lib") 
 
+class Win32NetInitializer {
+public:
+    Win32NetInitializer() {
+        WSADATA wsaData;
+        WSAStartup( MAKEWORD(2, 2), &wsaData);
+    }
+    ~Win32NetInitializer() {
+        WSACleanup();
+    }
+};
+
+static Win32NetInitializer win32NetInitializer;
+
 namespace huoguo {
 namespace net {
 
 using socklen_t=int;
 using sa_family_t = unsigned short;
+
+#define LOCALHOST "127.0.0.1"
 
 }
 }

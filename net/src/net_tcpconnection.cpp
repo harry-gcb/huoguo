@@ -19,7 +19,7 @@ TcpConnection::TcpConnection(EventLoop *loop, std::shared_ptr<Socket> sock, cons
     m_channel->set_write_callback(std::bind(&TcpConnection::handle_write_event, this));
     m_channel->set_close_callback(std::bind(&TcpConnection::handle_close_event, this));
     m_channel->set_error_callback(std::bind(&TcpConnection::handle_error_event, this));
-    INFO("[%s] TcpConnection ctor, this=%p", m_trace_id.c_str(), this);
+    InfoL("[%s] TcpConnection ctor, this=%p", m_trace_id.c_str(), this);
 }
 
 TcpConnection::~TcpConnection() {
@@ -27,7 +27,7 @@ TcpConnection::~TcpConnection() {
         m_loop->del_channel(m_channel);
         m_connected = false;
     }
-    INFO("[%s] ~TcpConnection dtor, this=%p", m_trace_id.c_str(), this);
+    InfoL("[%s] ~TcpConnection dtor, this=%p", m_trace_id.c_str(), this);
 }
 
 void TcpConnection::establish() {
@@ -51,14 +51,14 @@ void TcpConnection::shutdown() {
 }
 
 int TcpConnection::send(const std::string &buffer) {
-    return m_socket->write(buffer.data(), buffer.length());
+    return m_socket->write(buffer.data(), static_cast<int>(buffer.length()));
 }
 
 void TcpConnection::set_connect_callback(ConnectCallback callback) {
     m_connect_callback = callback;
 }
 
-void TcpConnection::set_message_callback(MessageCallback callback) {
+void TcpConnection::set_message_callback(SegmentCallback callback) {
     m_message_callback = callback;
 }
 
@@ -69,7 +69,7 @@ void TcpConnection::set_close_callback(CloseCallback callback) {
 void TcpConnection::handle_read_event() {
     size_t n = m_socket->read(m_buffer, BUF_SIZE);
     if (n > 0) {
-        m_message_callback(shared_from_this(), m_buffer, n);
+        m_message_callback(shared_from_this(), m_buffer, static_cast<int>(n));
     } else if (n == 0) {
         handle_close_event();
     } else {

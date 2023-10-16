@@ -33,7 +33,7 @@ void TcpServer::start() {
 void TcpServer::set_connect_callback(const ConnectCallback &cb) {
     m_connect_callback = cb;
 }
-void TcpServer::set_message_callback(const MessageCallback &cb) {
+void TcpServer::set_message_callback(const SegmentCallback &cb) {
     m_message_callback = cb;
 }
 

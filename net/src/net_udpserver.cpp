@@ -16,8 +16,20 @@ UdpServer::UdpServer(EventLoop *loop, const InetAddr &addr, const std::string &n
 UdpServer::~UdpServer() {
 }
 
-void UdpServer::set_datagram_callback(DatagramCallback callback) {
-    m_connection->set_datagram_callback(callback);
+void UdpServer::start() {
+
+}
+
+void UdpServer::set_message_callback(DatagramCallback callback) {
+    m_connection->set_message_callback(callback);
+}
+
+int UdpServer::sendto(const InetAddr &addr, const std::string &buffer) {
+    return m_connection->sendto(addr, buffer);
+}
+
+int UdpServer::sendto(const InetAddr &addr, const char *buffer, int length) {
+    return m_connection->sendto(addr, buffer, length);
 }
 
 }

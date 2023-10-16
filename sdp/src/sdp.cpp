@@ -45,7 +45,7 @@ std::string Sdp::to_string() {
 }
 
 int Sdp::stream_count() const {
-    return m_streams.size();
+    return static_cast<int>(m_streams.size());
 }
 std::shared_ptr<SdpStream> Sdp::get_steram(uint32_t index) const {
     return m_streams[index % m_streams.size()];

@@ -5,8 +5,6 @@
 
 #include "net_common.h"
 
-
-
 namespace huoguo {
 namespace net {
 

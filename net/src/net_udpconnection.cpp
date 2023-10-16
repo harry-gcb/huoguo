@@ -17,27 +17,33 @@ UdpConnection::UdpConnection(EventLoop *loop, std::shared_ptr<Socket> sock)
     m_channel->set_error_callback(std::bind(&UdpConnection::handle_error_event, this));
     m_loop->add_channel(m_channel);
     m_channel->enable_read(true);
-    INFO("[%s] UdpConnection ctor, this=%p", m_trace_id.c_str(), this);
+    InfoL("[%s] UdpConnection ctor, this=%p", m_trace_id.c_str(), this);
 }
 
 UdpConnection::~UdpConnection() {
     m_channel->enable_all(false);
     m_loop->del_channel(m_channel);
-    INFO("[%s] ~UdpConnection dtor, this=%p", m_trace_id.c_str(), this);
+    InfoL("[%s] ~UdpConnection dtor, this=%p", m_trace_id.c_str(), this);
 }
 
-int UdpConnection::sendto(const std::string &buffer, const InetAddr &remote_addr) {
-    return m_socket->sendto(buffer.data(), buffer.length(), remote_addr);
+int UdpConnection::sendto(const InetAddr &addr, const std::string &buffer) {
+    return this->sendto(addr, buffer.data(), static_cast<int>(buffer.length()));
 }
 
-void UdpConnection::set_datagram_callback(DatagramCallback callback) {
-    m_datagram_callback = callback;
+int UdpConnection::sendto(const InetAddr &addr, const char *buffer, int length) {
+    int ret = m_socket->sendto(buffer, length, addr);
+    InfoL("[%s] sendto %d bytes, data=%s, ret=%d, this=%p", m_trace_id.c_str(), length, buffer, ret, this);
+    return ret;
+}
+
+void UdpConnection::set_message_callback(DatagramCallback callback) {
+    m_message_callback = callback;
 }
 
 void UdpConnection::handle_read_event() {
     size_t n = m_socket->recvfrom(m_buffer, BUF_SIZE, m_remote_addr);
     if (n > 0) {
-        m_datagram_callback(shared_from_this(), m_buffer, n);
+        m_message_callback(shared_from_this(), m_remote_addr, m_buffer, static_cast<int>(n));
     }
 }
 

@@ -82,20 +82,20 @@ void Logger::set_level(LOG_LEVE level) {
 bool Logger::check_logdir(std::string &logdir) {
     std::error_code ec;
     if (logdir.empty()) {
-        INFO("logdir is empty");
+        InfoL("logdir is empty");
         return false;
     }
     if (!std::filesystem::exists(logdir) && !std::filesystem::create_directory(logdir)) {
-        WARN("logdir[%s] not exists and can't create", logdir.c_str());
+        WarnL("logdir[%s] not exists and can't create", logdir.c_str());
         return false;
     }
     if (!std::filesystem::is_directory(logdir)) {
-        WARN("logdir[%s] is not a directory", logdir.c_str());
+        WarnL("logdir[%s] is not a directory", logdir.c_str());
         return false;
     }
     std::filesystem::permissions(logdir, std::filesystem::perms::owner_write, std::filesystem::perm_options::add, ec);
     if (ec.value()) {
-        ERROR("logdir[%s] can't be accessed", logdir.c_str());
+        ErrorL("logdir[%s] can't be accessed", logdir.c_str());
         return false;
     }
     return true;
@@ -103,7 +103,7 @@ bool Logger::check_logdir(std::string &logdir) {
 
 bool Logger::check_logfile(std::string &logfile, time_t now) {
     if (logfile.empty()) {
-        INFO("logfile is empty");
+        InfoL("logfile is empty");
         return false;
     }
     m_last_time = now;
@@ -169,7 +169,7 @@ void Logger::log_message(LOG_LEVE level, const char *filename, int line, const c
     }
 
     if (m_enable_print_fileline) {
-        size += snprintf(buff+size, sizeof(buff)-size, " [%s:%d]", filename, line);
+        size += snprintf(buff+size, sizeof(buff)-size, " [%ls:%d]", std::filesystem::path(filename).filename().c_str(), line);
     }
     if (m_enable_print_function) {
         size += snprintf(buff+size, sizeof(buff)-size, " (%s)", function);

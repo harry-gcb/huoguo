@@ -19,7 +19,9 @@ public:
     int bind(const InetAddr &addr);
     int listen(int backlog = SOMAXCONN);
     std::shared_ptr<Socket> accept();
+    std::shared_ptr<Socket> accept(struct sockaddr *addr, socklen_t *addrlen);
 
+    int connect(const InetAddr &addr);
     int connect(const struct sockaddr *addr, socklen_t addrlen);
     // TCP I/O
     virtual int read(char *data, int len) override;
@@ -34,12 +36,13 @@ public:
     virtual int get_fd() override;
     virtual Channel *get_channel() override;
     virtual void set_channel(Channel *) override;
-private:
-    std::shared_ptr<Socket> accept(struct sockaddr *addr, socklen_t *addrlen);
+
+    const InetAddr &get_addr() const;
 private:
     sa_family_t m_family;
     int m_fd;
     Channel *m_channel;
+    InetAddr m_addr;
     
 };
 
