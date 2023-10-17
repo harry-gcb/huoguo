@@ -29,6 +29,9 @@ public:
     RtspSession(std::shared_ptr<net::TcpConnection> conn, const RtspURL &url);
     ~RtspSession();
 
+    template <typename T>
+    std::shared_ptr<T> get_request_message(const std::string &uri = m_url.get_target_url());
+
     void do_options_request(std::shared_ptr<RtspOptionsRequest> request = nullptr);
     void do_describe_request(std::shared_ptr<RtspDescribeRequest> request = nullptr);
     void do_setup_request(std::shared_ptr<RtspSetupRequest> request = nullptr);
@@ -50,7 +53,7 @@ private:
     void handle_describe_response(std::shared_ptr<RtspDescribeResponse> response);
     void handle_setup_response(std::shared_ptr<RtspSetupResponse> response);
 
-    std::string generate_auth(const std::string &www_authenticate, const std::string &method, const std::string &uri);
+    std::string generate_auth(const std::string &method, const std::string &uri);
 private:
     uint32_t m_cseq;
     std::shared_ptr<net::TcpConnection> m_connnection;
@@ -59,7 +62,7 @@ private:
     RTSP_SESSION_STATE m_state;
 
     bool m_need_authorize;
-    RTSP_AUTH_SLN m_auth_sln;
+    std::string m_auth_sln;
     std::string m_auth_realm;
     std::string m_auth_nonce;
     std::string m_authorization;

@@ -7,8 +7,9 @@
 namespace huoguo {
 namespace rtp {
 
+class RtpSession;
 class RtpPacket;
-using RtpPacketCallback = std::function<void(std::shared_ptr<RtpPacket>)>;
+using RtpPacketCallback = std::function<void(const std::shared_ptr<RtpSession> &, const std::shared_ptr<RtpPacket> &)>;
 
 }
 }

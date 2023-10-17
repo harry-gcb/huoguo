@@ -9,7 +9,7 @@ namespace sample {
 class EchoClient {
 public:
     EchoClient(net::EventLoop *loop, const std::string &host, int port, const std::string &echo, int count)
-        : m_addr(host, port, true), 
+        : m_addr(port, host, true), 
           m_client(loop, m_addr, "udp_echo_client"),
           m_echo(echo),
           m_count(count),

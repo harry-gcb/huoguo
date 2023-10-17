@@ -46,19 +46,19 @@ void RtspPuller::on_describe_response(std::shared_ptr<rtsp::RtspSession> session
     transport.append(stream->get_protocol());
     transport.append(";unicast;client_port=");
     transport.append(std::to_string(rtp_port) + "-" + std::to_string(rtcp_port));
-    auto message = std::make_shared<rtsp::RtspSetupRequest>(session->get_url() + "/" + path);
+    auto message = session->get_request_message<rtsp::RtspSetupRequest>(session->get_url() + "/" + path);
     message->set_transport(transport);
     session->do_setup_request(message);
 
 
     m_rtp_receiver = std::make_shared<rtp::RtpReceiver>(m_loop, rtp_port);
-    m_rtp_receiver->set_rtp_packet_callback(std::bind(&RtspPuller::on_rtp_packet, this, std::placeholders::_1));
+    m_rtp_receiver->set_rtp_packet_callback(std::bind(&RtspPuller::on_rtp_packet, this, std::placeholders::_1, std::placeholders::_2));
     m_rtp_receiver->start();
     // m_rtp_receiver->add_data_observer();
 }
 
-void RtspPuller::on_rtp_packet(std::shared_ptr<rtp::RtpPacket> packet) {
-
+void RtspPuller::on_rtp_packet(const std::shared_ptr<rtp::RtpSession> &session, const std::shared_ptr<rtp::RtpPacket> &packet) {
+    InfoL("on_rtp_packet");
 }
 
 // void RtspClient::on_option_response(std::shared_ptr<rtsp::RtspSession> session, std::shared_ptr<rtsp::RtspOptionsResponse> response) {

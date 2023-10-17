@@ -54,7 +54,7 @@ void Application::init_config() {
 void Application::init_logs() {
     huoguo::utils::LogConfig config;
     config.logdir = CONFIG.get("LOG", "logdir", "logs");
-    config.filename = CONFIG.get("LOG", "filename", "huoguo");
+    // config.filename = CONFIG.get("LOG", "filename", "huoguo");
     config.suffix = CONFIG.get("LOG", "suffix", "txt");
     config.enable_color = CONFIG.get("LOG", "color", false);
     config.level = CONFIG.get("LOG", "level", "debug");

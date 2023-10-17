@@ -13,9 +13,8 @@ public:
     // Late Bind
     explicit InetAddr();
     // default 
-    explicit InetAddr(uint16_t port, const std::string &ip = "", bool loopback = false, bool udp = false, bool ipv6 = false);
-    // UDP easy
-    explicit InetAddr(const std::string &ip, uint16_t port, bool udp = false);
+    explicit InetAddr(uint16_t port, const std::string &ip = "0.0.0.0", bool udp = false, bool loopback = false, bool ipv6 = false);
+
     // from sockaddr
     explicit InetAddr(const struct sockaddr_in& addr4);
     explicit InetAddr(const struct sockaddr_in6& addr6);

@@ -20,7 +20,7 @@ public:
 private:
     void on_describe_response(std::shared_ptr<rtsp::RtspSession> session, std::shared_ptr<rtsp::RtspDescribeResponse> response);
 
-    void on_rtp_packet(std::shared_ptr<rtp::RtpPacket> packet);
+    void on_rtp_packet(const std::shared_ptr<rtp::RtpSession> &session, const std::shared_ptr<rtp::RtpPacket> &packet);
 private:
     net::EventLoop *m_loop;
     std::shared_ptr<rtsp::RtspClient> m_rtsp_puller;

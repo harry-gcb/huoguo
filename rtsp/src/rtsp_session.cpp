@@ -11,8 +11,7 @@ RtspSession::RtspSession(std::shared_ptr<net::TcpConnection> conn, const RtspURL
       m_trace_id(m_connnection->get_trace_id()),
       m_url(url),
       m_state(RTSP_SESSION_STATE_INIT),
-      m_need_authorize(false),
-      m_auth_sln(RTSP_AUTH_SLN_UNKNOWN) {
+      m_need_authorize(false) {
     m_connnection->set_message_callback(std::bind(&RtspSession::recv_message, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
 }
 
@@ -20,36 +19,38 @@ RtspSession::~RtspSession() {
     InfoL("[%s] ~RtspSession", m_trace_id.c_str());
 }
 
+template <typename T>
+std::shared_ptr<T> RtspSession::get_request_message(const std::string &uri) {
+    auto request = std::make_shared<T>(uri);
+    request->set_cseq(++m_cseq);
+    if (m_need_authorize)
+    {
+        request->set_authorization(generate_auth(request->get_message()->get_method(), uri));
+    }
+    return request;
+}
+
 void RtspSession::do_options_request(std::shared_ptr<RtspOptionsRequest> request) {
     if (!request) {
-        request = std::make_shared<RtspOptionsRequest>(m_url.get_target_url());
+        request = get_request_message<RtspOptionsRequest>(get_url());
     }
     m_state = RTSP_SESSION_STATE_OPTIONS;    
-    request->set_cseq(++m_cseq);
     send_message(request->get_message());
 }
 
 void RtspSession::do_describe_request(std::shared_ptr<RtspDescribeRequest> request) {
     if (!request) {
-        request = std::make_shared<RtspDescribeRequest>(m_url.get_target_url());
-    }
-    if (m_need_authorize) {
-        request->set_authorization(m_authorization);
+        request = get_request_message<RtspDescribeRequest>(get_url());
     }
     m_state = RTSP_SESSION_STATE_DESCRIBE;    
-    request->set_cseq(++m_cseq);
     send_message(request->get_message());
 }
 
 void RtspSession::do_setup_request(std::shared_ptr<RtspSetupRequest> request) {
     if (!request) {
-        request = std::make_shared<RtspSetupRequest>(m_url.get_target_url());
-    }
-    if (m_need_authorize) {
-        request->set_authorization(m_authorization);
+        request = get_request_message<RtspSetupRequest>(get_url());
     }
     m_state = RTSP_SESSION_STATE_SETUP;    
-    request->set_cseq(++m_cseq);
     send_message(request->get_message());
 }
 
@@ -59,6 +60,7 @@ void RtspSession::do_play_request(std::shared_ptr<RtspPlayRequest> request) {
         return send_message(request->get_message());
     }
 }
+
 void RtspSession::do_teardown_request(std::shared_ptr<RtspTeardownRequest> request) {
     if (request) {
         request->set_cseq(++m_cseq);
@@ -121,37 +123,7 @@ void RtspSession::send_message(std::shared_ptr<RtspMessage> message) {
     InfoL("[%s] send message to %s:%d with %d bytes\n%s", m_trace_id.c_str(), m_connnection->get_remote_ip().c_str(), m_connnection->get_remote_port(), buffer.length(), buffer.c_str());
 }
 
-std::string RtspSession::generate_auth(const std::string &www_authenticate, const std::string &method, const std::string &uri) {
-    m_need_authorize = true;
-    std::string auth_way;
-    RTSP_AUTH_SLN auth_sln = RTSP_AUTH_SLN_UNKNOWN;
-    if (utils::starts_with(www_authenticate, RTSP_AUTH_BASIC)) {
-        auth_way = RTSP_AUTH_BASIC;
-        auth_sln = RTSP_AUTH_SLN_BASIC;
-    } else if (utils::starts_with(www_authenticate, RTSP_AUTH_DIGEST)) {
-        auth_way = RTSP_AUTH_DIGEST;
-        auth_sln = RTSP_AUTH_SLN_DIGEST;
-    } else {
-        WarnL("[%s] auth not support, auth=%s", m_trace_id.c_str(), www_authenticate.c_str());
-        return m_authorization;
-    }
-    std::vector<std::string> authenticate_info = utils::split(www_authenticate.substr(auth_way.length()), ",");
-    for (size_t i = 0; i < authenticate_info.size(); ++i) {
-        std::vector<std::string> kv = utils::split(authenticate_info[i], "=");
-        if (kv.empty()) {
-            continue;
-        }
-        std::string key = utils::trim(kv[0]);
-        if (key.empty()) {
-            continue;
-        }
-        if (RTSP_AUTH_REALM == utils::to_lower(key)) {
-            m_auth_realm = kv.size() >= 2 ? utils::trim(utils::trim(kv[1]), "\"") : "";
-        } else if (RTSP_AUTH_NONCE == utils::to_lower(key)) {
-            m_auth_nonce = kv.size() >= 2 ? utils::trim(utils::trim(kv[1]), "\"") : "";
-        }
-    }
-
+std::string RtspSession::generate_auth(const std::string &method, const std::string &uri) {
     std::string auth_response;
     char authorization[RTSP_AUTH_SIZE] = { 0 };
     std::string username = m_url.get_username();
@@ -159,18 +131,14 @@ std::string RtspSession::generate_auth(const std::string &www_authenticate, cons
     if (username.empty() || password.empty()) {
         return m_authorization;
     }
-    switch (auth_sln) {
-        case RTSP_AUTH_SLN_BASIC:
-            break;
-        case RTSP_AUTH_SLN_DIGEST:
-            auth_response = utils::md5(
-                            utils::md5(username + ":" + m_auth_realm + ":" + password) + ":" + m_auth_nonce + ":" + 
-                            utils::md5(method + ":" + uri));
-            snprintf(authorization, sizeof(authorization), "%s username=\"%s\", realm=\"%s\", nonce=\"%s\", uri=\"%s\", response=\"%s\"",
-                    RTSP_AUTH_DIGEST, username.c_str(), m_auth_realm.c_str(), m_auth_nonce.c_str(), uri.c_str(), auth_response.c_str());
-            break;
-        default:
-            break;
+    if (RTSP_AUTH_BASIC == m_auth_sln) {
+    } else if (RTSP_AUTH_DIGEST == m_auth_sln) {
+        auth_response = utils::md5(
+                        utils::md5(username + ":" + m_auth_realm + ":" + password) + ":" + m_auth_nonce + ":" + 
+                        utils::md5(method + ":" + uri));
+        snprintf(authorization, sizeof(authorization), "%s username=\"%s\", realm=\"%s\", nonce=\"%s\", uri=\"%s\", response=\"%s\"",
+                RTSP_AUTH_DIGEST, username.c_str(), m_auth_realm.c_str(), m_auth_nonce.c_str(), uri.c_str(), auth_response.c_str());
+    } else {
     }
     m_authorization = authorization;
     return m_authorization;

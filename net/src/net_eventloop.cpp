@@ -38,6 +38,7 @@ int EventLoop::run() {
             if (event->m_error_occurred) {
                 event->m_channel->handle_error_event();
             }
+            InfoL("[%s] active, read=%d, write=%d, error=%d", event->m_channel->get_trace_id().c_str(), event->m_read_occurred, event->m_write_occurred, event->m_error_occurred);
         }
         handle_close_event();
     }

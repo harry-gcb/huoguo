@@ -8,8 +8,8 @@ namespace sample {
 
 class EchoServer {
 public:
-    EchoServer(net::EventLoop *loop, const std::string &host, int port, const std::string &echo, int count)
-        : m_server(loop, net::InetAddr(host, port, true), "udp_echo_server") {
+    EchoServer(net::EventLoop *loop, const std::string &host, int port)
+        : m_server(loop, net::InetAddr(port, host, true), "udp_echo_server") {
         m_server.set_message_callback(std::bind(&EchoServer::on_message, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4));
 
     }
@@ -25,9 +25,6 @@ private:
     net::UdpServer m_server;
     std::string m_host;
     int m_port;
-    std::string m_echo;
-    int m_count;
-    int m_num;
 };
 
 #if 0

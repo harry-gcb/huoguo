@@ -16,11 +16,10 @@ void RtspSession::handle_options_response(std::shared_ptr<RtspOptionsResponse> r
     if (response->get_message()->get_res_code() == OK) {
         do_describe_request();
     } else if (response->get_message()->get_res_code() == UNAUTHORIZED) {
-        const std::string request_url = m_url.get_target_url();
-        auto request = std::make_shared<RtspOptionsRequest>(OPTIONS, request_url);
-        m_authorization = generate_auth(response->get_message()->get_rtsp_header(RTSP_HEADER_FIELDS_WWW_AUTHENTICATE), request->get_method(), request_url);
-        request->set_authorization(m_authorization);
-        do_options_request(request);
+        m_need_authorize = true;
+        response->get_message()->parse_www_authenticate(m_auth_sln, m_auth_realm, m_auth_nonce);
+        m_authorization = generate_auth(OPTIONS, get_url());
+        do_options_request();
     }
 }
 

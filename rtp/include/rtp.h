@@ -1,15 +1,8 @@
 #ifndef HUOGUO_RTP_RTP_H_
 #define HUOGUO_RTP_RTP_H_
 
-namespace huoguo {
-namespace rtp {
-
-class Rtp {
-public:
-    
-};
-
-} // namespace rtp
-} // namespace huoguo
+#include "rtp_packet.h"
+#include "rtp_session.h"
+#include "rtp_receiver.h"
 
 #endif // HUOGUO_RTP_RTP_H_

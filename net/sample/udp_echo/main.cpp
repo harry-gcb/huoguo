@@ -18,18 +18,18 @@ int main(int argc, char *argv[]) {
     huoguo::net::EventLoop loop;
     std::string host = OPTION.get("host");
     std::string port = OPTION.get("port");
-    std::string echo = OPTION.get("echo");
-    std::string count = OPTION.get("count");
     if (port.empty()) {
         OPTION.usage();
         return -1;
     }
     if (OPTION.is_exists("client")) {
+        std::string echo = OPTION.get("echo");
+        std::string count = OPTION.get("count");
         huoguo::sample::EchoClient client(&loop, host, std::atoi(port.c_str()), echo, std::atoi(count.c_str()));
         client.start();
         return loop.run();
     } else {
-        huoguo::sample::EchoServer server(&loop, host, std::atoi(port.c_str()), echo, std::atoi(count.c_str()));
+        huoguo::sample::EchoServer server(&loop, host, std::atoi(port.c_str()));
         server.start();
         return loop.run();
     }

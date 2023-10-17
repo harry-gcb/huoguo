@@ -18,6 +18,6 @@ ELSE ()
 ENDIF (CMAKE_SYSTEM_NAME MATCHES "Linux")
 
 if (${BUILD_SAMPLE})
-    message(STATUS "build with sample")
+    message(STATUS "build net with sample")
     add_subdirectory(sample)
 endif()

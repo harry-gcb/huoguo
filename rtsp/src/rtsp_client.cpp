@@ -7,7 +7,7 @@ namespace rtsp {
 RtspClient::RtspClient(net::EventLoop *loop, const std::string &url)
     : m_loop(loop),
       m_url(url),
-      m_client(loop, net::InetAddr(m_url.get_ip(), m_url.get_port()), "rtsp_client") {
+      m_client(loop, net::InetAddr(m_url.get_port(), m_url.get_ip()), "rtsp_client") {
     m_client.set_connect_callback(std::bind(&RtspClient::on_connect, this, std::placeholders::_1));
 }
 

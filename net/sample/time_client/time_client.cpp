@@ -6,7 +6,7 @@ namespace huoguo {
 namespace sample {
 
 TimeClient::TimeClient(huoguo::net::EventLoop *loop, const std::string &ip, int port) 
-    : m_client(loop, huoguo::net::InetAddr(ip, port), "TimeClient") {
+    : m_client(loop, huoguo::net::InetAddr(port, ip), "TimeClient") {
     m_client.set_connect_callback(std::bind(&TimeClient::on_connect, this, std::placeholders::_1));
     m_client.set_message_callback(std::bind(&TimeClient::on_message, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
 }

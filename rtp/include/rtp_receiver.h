@@ -3,6 +3,7 @@
 
 #include "net.h"
 #include "rtp_callback.h"
+#include "rtp_session.h"
 
 namespace huoguo {
 namespace rtp {
@@ -19,6 +20,7 @@ private:
     net::EventLoop *m_loop;
     net::UdpServer  m_server;
     RtpPacketCallback m_callback;
+    std::map<std::string, std::shared_ptr<RtpSession>> m_sessions;
 };
 
 } // namespace rtp

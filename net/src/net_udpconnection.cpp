@@ -32,7 +32,7 @@ int UdpConnection::sendto(const InetAddr &addr, const std::string &buffer) {
 
 int UdpConnection::sendto(const InetAddr &addr, const char *buffer, int length) {
     int ret = m_socket->sendto(buffer, length, addr);
-    InfoL("[%s] sendto %d bytes, data=%s, ret=%d, this=%p", m_trace_id.c_str(), length, buffer, ret, this);
+    InfoL("[%s] sendto %d bytes, data=%s, ret=%d, error=%d, this=%p", m_trace_id.c_str(), length, buffer, ret, GetLastError(), this);
     return ret;
 }
 
@@ -44,6 +44,7 @@ void UdpConnection::handle_read_event() {
     size_t n = m_socket->recvfrom(m_buffer, BUF_SIZE, m_remote_addr);
     if (n > 0) {
         m_message_callback(shared_from_this(), m_remote_addr, m_buffer, static_cast<int>(n));
+        InfoL("[%s] recvfrom %d bytes", m_trace_id.c_str(), n);
     }
 }
 

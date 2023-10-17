@@ -24,6 +24,7 @@ public:
 
     int get_res_code() const;
     std::string get_res_desc() const;
+    int parse_www_authenticate(std::string &auth_sln, std::string &auth_realm, std::string &auth_nonce);
 
     virtual std::string to_string() override;
 private:

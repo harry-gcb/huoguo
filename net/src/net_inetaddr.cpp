@@ -18,7 +18,7 @@ InetAddr::InetAddr()
       m_addr_family(IPPROTO_TCP) {
 };
 
-InetAddr::InetAddr(uint16_t port, const std::string &ip, bool loopback, bool udp, bool ipv6)
+InetAddr::InetAddr(uint16_t port, const std::string &ip, bool udp, bool loopback, bool ipv6)
     : m_addr_type(udp ? SOCK_DGRAM : SOCK_STREAM),
       m_addr_protocol(udp ? IPPROTO_UDP : IPPROTO_TCP),
       m_addr_port(port) {
@@ -44,26 +44,7 @@ InetAddr::InetAddr(uint16_t port, const std::string &ip, bool loopback, bool udp
         inet_pton(m_addr_family, m_addr_ip.c_str(), &m_addr_v4.sin_addr);
         // addr4.sin_addr.s_addr = inet_addr(m_addr_ip.c_str());
         m_addr_v4.sin_port = htons(port);
-    }
-}
-
-InetAddr::InetAddr(const std::string &ip, uint16_t port, bool udp)
-    : m_addr_type(udp ? SOCK_DGRAM : SOCK_STREAM),
-      m_addr_protocol(udp ? IPPROTO_UDP : IPPROTO_TCP),
-      m_addr_port(port),
-      m_addr_ip(ip),
-      m_addr_family(ip.find(":") != std::string::npos ? AF_INET6 : AF_INET) {    
-    if (m_addr_family == AF_INET6) {
-        memset(&m_addr_v6, 0, sizeof(m_addr_v6));
-        m_addr_v6.sin6_family = m_addr_family;
-        inet_pton(m_addr_family, m_addr_ip.c_str(), &m_addr_v6.sin6_addr);
-        m_addr_v6.sin6_port = htons(port);
-    } else {
-        memset(&m_addr_v4, 0, sizeof(m_addr_v4));
-        m_addr_v4.sin_family = m_addr_family;
-        inet_pton(m_addr_family, m_addr_ip.c_str(), &m_addr_v4.sin_addr);
-        // addr4.sin_addr.s_addr = inet_addr(m_addr_ip.c_str());
-        m_addr_v4.sin_port = htons(port);
+        // m_addr_v4.sin_port = port;
     }
 }
 

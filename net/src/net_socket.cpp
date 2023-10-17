@@ -13,7 +13,7 @@ Socket::Socket(sa_family_t family, int type, int protocol)
 
 Socket::Socket(int sock)
     : m_fd(sock) {
-    DebugL("accept fd, m_fd=%d, this=%p", m_fd, this);
+    DebugL("Socket, m_fd=%d, this=%p", m_fd, this);
 }
 
 Socket::~Socket() {
@@ -29,6 +29,7 @@ int Socket::bind(const InetAddr &addr) {
     int ret = ::bind(m_fd, addr.get_addr(), static_cast<socklen_t>(sizeof(*addr.get_addr())));
     if (ret < 0) {
         FatalL("bind error: m_fd=%d, ret=%d, ip=%s, port=%d", m_fd, ret, addr.get_ip().c_str(), addr.get_port());
+        return ret;
     }
     InfoL("bind success: m_fd=%d, ret=%d, ip=%s, port=%d", m_fd, ret, addr.get_ip().c_str(), addr.get_port());
     return ret;
@@ -38,13 +39,13 @@ int Socket::listen(int backlog) {
     int ret = ::listen(m_fd, backlog);
     if (ret < 0) {
         FatalL("listen error: m_fd=%d, ret=%d", m_fd, ret);
+        return ret;
     }
-    InfoL("listen: m_fd=%d", m_fd);
+    InfoL("listen success: m_fd=%d", m_fd);
     return ret;
 }
 
 std::shared_ptr<Socket> Socket::accept() {
-    InfoL("accept: m_fd=%d", m_fd);
     int ret = 0;
     if (AF_INET6 == m_family) {
         struct sockaddr_in6 addr = { 0 };
@@ -68,7 +69,6 @@ std::shared_ptr<Socket> Socket::accept(struct sockaddr *addr, socklen_t *addrlen
 }
 
 int Socket::connect(const InetAddr &addr) {
-    InfoL("connect: m_fd=%d, ip=%s, port=%d", m_fd, addr.get_ip().c_str(), addr.get_port());
     int ret = this->connect(addr.get_addr(), static_cast<socklen_t>(sizeof(*addr.get_addr())));
     InfoL("connect: m_fd=%d, ret=%d, ip=%s, port=%d", m_fd, ret, addr.get_ip().c_str(), addr.get_port());
     return ret;
