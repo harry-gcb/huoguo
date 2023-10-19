@@ -25,6 +25,12 @@ public:
 
     std::string get_method() const;
 
+    void set_cseq(int cseq);
+    void set_authorization(const std::string &authorization);
+    void set_transport(const std::string &transport);
+    void set_session(const std::string &session);
+    void set_range(const std::string &range);
+
     virtual std::string to_string() override;
 protected:
     RequestLine m_request_line;

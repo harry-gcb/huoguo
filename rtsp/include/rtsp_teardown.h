@@ -7,19 +7,19 @@
 namespace huoguo {
 namespace rtsp {
 
-class RtspTeardownRequest {
+class RtspTeardownRequest: public RtspRequest {
 public:
-    RtspTeardownRequest(const std::string &uri, const std::string &version = RTSP_VERSION);
-
-    void set_cseq(int cseq);
-    void set_authorization(const std::string &value);
-
-    std::shared_ptr<RtspRequest> get_message();
-private:
-    std::shared_ptr<RtspRequest> m_request;
+    RtspTeardownRequest(const std::string &uri, const std::string &version=RTSP_VERSION)
+        : RtspRequest(TEARDOWN, uri, version) {
+    }
 };
 
-class RtspTeardownResponse: public RtspResponse{};
+class RtspTeardownResponse: public RtspResponse {
+public:
+    RtspTeardownResponse(int res_code, const std::string &res_desc, const std::string &version=RTSP_VERSION)
+        : RtspResponse(res_code, res_desc, version) {
+    }
+};
 
 } // namespace rtsp
 } // namespace huoguo

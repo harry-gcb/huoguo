@@ -1,11 +1,11 @@
-#include "utils_string.h"
-#include "sdp.h"
+#include "utils.h"
+#include "sdp_content.h"
 #include <iostream>
 
 namespace huoguo {
 namespace sdp {
 
-int Sdp::from_string(const std::string &buffer) {
+int SdpContent::from_string(const std::string &buffer) {
     std::shared_ptr<SdpMeta> meta = nullptr;
     auto sdp_line = utils::split(buffer, "\r\n");
     if (sdp_line.empty()) {
@@ -35,7 +35,7 @@ int Sdp::from_string(const std::string &buffer) {
     return 0;
 }
 
-std::string Sdp::to_string() {
+std::string SdpContent::to_string() {
     std::string sdp;
     if (m_session) sdp.append(m_session->to_string());
     for (auto &stream: m_streams) {
@@ -44,14 +44,14 @@ std::string Sdp::to_string() {
     return sdp;
 }
 
-int Sdp::stream_count() const {
+int SdpContent::stream_count() const {
     return static_cast<int>(m_streams.size());
 }
-std::shared_ptr<SdpStream> Sdp::get_steram(uint32_t index) const {
+std::shared_ptr<SdpStream> SdpContent::get_stream(size_t index) const {
     return m_streams[index % m_streams.size()];
 }
 
-std::shared_ptr<SdpStream> Sdp::get_stream(const std::string &type) const {
+std::shared_ptr<SdpStream> SdpContent::get_stream(const std::string &type) const {
     for (auto &stream: m_streams) {
         if (stream->get_type() == type) {
             return stream;

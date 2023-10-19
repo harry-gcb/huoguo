@@ -53,6 +53,7 @@ public:
     std::string get_rtsp_body() const;
 
     virtual std::string to_string();
+    void clone_from(const RtspMessage &message);
 private:
     bool m_is_request;
 

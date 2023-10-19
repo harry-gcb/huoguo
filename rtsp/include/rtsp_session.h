@@ -18,6 +18,7 @@ public:
         RTSP_SESSION_STATE_OPTIONS = 1,
         RTSP_SESSION_STATE_DESCRIBE = 2,
         RTSP_SESSION_STATE_SETUP = 3,
+        RTSP_SESSION_STATE_PLAY = 4,
         RTSP_SESSION_STATE_UNKNOWN,
     } RTSP_SESSION_STATE;
     typedef enum RTSP_AUTH_SLN {
@@ -30,7 +31,14 @@ public:
     ~RtspSession();
 
     template <typename T>
-    std::shared_ptr<T> get_request_message(const std::string &uri = m_url.get_target_url());
+    std::shared_ptr<T> get_request_message(const std::string &uri);
+
+    void set_session_id(uint32_t session_id);
+    size_t get_session_id() const;
+    void set_stream_count(size_t stream_count);
+    size_t get_stream_count() const;
+    void set_stream_index(size_t stream_index);
+    size_t get_stream_index() const;
 
     void do_options_request(std::shared_ptr<RtspOptionsRequest> request = nullptr);
     void do_describe_request(std::shared_ptr<RtspDescribeRequest> request = nullptr);
@@ -48,7 +56,8 @@ public:
 private:
     void recv_message(std::shared_ptr<net::TcpConnection> conn, const char *data, size_t len);
     void send_message(std::shared_ptr<RtspMessage> message);
-    
+
+    void handle_response_pre(std::shared_ptr<RtspResponse> response);
     void handle_options_response(std::shared_ptr<RtspOptionsResponse> response);
     void handle_describe_response(std::shared_ptr<RtspDescribeResponse> response);
     void handle_setup_response(std::shared_ptr<RtspSetupResponse> response);
@@ -65,7 +74,6 @@ private:
     std::string m_auth_sln;
     std::string m_auth_realm;
     std::string m_auth_nonce;
-    std::string m_authorization;
     
     std::string m_buffer;
 
@@ -76,7 +84,26 @@ private:
     TeardownResponse m_on_teardown_response;
 
     RtspParser m_parser;
+
+    size_t m_stream_index;
+    size_t m_stream_count;
+    std::string m_session_value;
+    static uint32_t m_session_id;
 };
+
+template <typename T>
+std::shared_ptr<T> RtspSession::get_request_message(const std::string &uri) {
+    auto request = std::make_shared<T>(uri);
+    request->set_cseq(++m_cseq);
+    if (m_need_authorize) {
+        request->set_authorization(generate_auth(request->get_method(), get_url()));
+    }
+    if (!m_session_value.empty()) {
+        request->set_session(m_session_value);
+    }
+    return request;
+}
+
 
 }
 }

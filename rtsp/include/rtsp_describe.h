@@ -7,26 +7,21 @@
 namespace huoguo {
 namespace rtsp {
 
-class RtspDescribeRequest {
+class RtspDescribeRequest: public RtspRequest {
 public:
-    RtspDescribeRequest(const std::string &uri, const std::string &version=RTSP_VERSION);
-
-    void set_cseq(int cseq);
-    void set_authorization(const std::string &value);
-
-    std::shared_ptr<RtspRequest> get_message();
-private:
-    std::shared_ptr<RtspRequest> m_request;
+    RtspDescribeRequest(const std::string &uri, const std::string &version=RTSP_VERSION)
+        : RtspRequest(DESCRIBE, uri, version) {
+    }
 };
 
-class RtspDescribeResponse {
+class RtspDescribeResponse: public RtspResponse {
 public:
-    RtspDescribeResponse(std::shared_ptr<RtspResponse> response);
-
-    std::string get_content_type() const;
-    std::string get_content_body() const;
-private:
-    std::shared_ptr<RtspResponse> m_response;
+    RtspDescribeResponse(int res_code, const std::string &res_desc, const std::string &version=RTSP_VERSION)
+        : RtspResponse(res_code, res_desc, version) {
+    }
+    RtspDescribeResponse(const RtspResponse& response) {
+        clone_from(response);
+    }
 };
 
 } // namespace rtsp

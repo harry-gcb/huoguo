@@ -35,6 +35,13 @@ std::string RtspMessage::to_string() {
     return message;
 }
 
+void RtspMessage::clone_from(const RtspMessage &message) {
+    m_is_request = message.m_is_request;
+
+    m_rtsp_header = message.m_rtsp_header;
+    m_rtsp_body = message.m_rtsp_body;
+}
+
 #if 0
 
 RtspMessage::RTSP_MESSAGE_TYPE RtspMessage::get_message_type() const {

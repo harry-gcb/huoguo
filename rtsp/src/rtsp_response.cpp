@@ -10,13 +10,6 @@ RtspResponse::RtspResponse(int res_code, const std::string &res_desc, const std:
       m_response_line(res_code, res_desc, version) {
 }
 
-int RtspResponse::get_res_code() const {
-    return m_response_line.m_res_code;
-}
-std::string RtspResponse::get_res_desc() const {
-    return m_response_line.m_res_desc;
-}
-
 std::string RtspResponse::to_string() {
     std::string response;
     response += m_response_line.to_string();
@@ -24,8 +17,39 @@ std::string RtspResponse::to_string() {
     return response;
 }
 
+void RtspResponse::clone_from(const RtspResponse &response) {
+    RtspMessage::clone_from(response);
+    m_response_line = response.m_response_line;
+}
+
+int RtspResponse::get_cseq() const {
+    return std::atoi(get_rtsp_header(RTSP_HEADER_FIELDS_CSEQ).c_str());
+}
+
+std::string RtspResponse::get_www_authenticate() const {
+    return get_rtsp_header(RTSP_HEADER_FIELDS_WWW_AUTHENTICATE);
+}
+
+int RtspResponse::get_res_code() const {
+    return m_response_line.m_res_code;
+}
+std::string RtspResponse::get_res_desc() const {
+    return m_response_line.m_res_desc;
+}
+
+std::string RtspResponse::get_content_type() const {
+    return get_rtsp_header(RTSP_HEADER_FIELDS_CONTENT_TYPE);
+}
+
+std::string RtspResponse::get_content_body() const {
+    return get_rtsp_body();
+}
+
 int RtspResponse::parse_www_authenticate(std::string &auth_sln, std::string &auth_realm, std::string &auth_nonce) {
     std::string www_authenticate = get_rtsp_header(RTSP_HEADER_FIELDS_WWW_AUTHENTICATE);
+    if (www_authenticate.empty()) {
+        return -1;
+    }
     if (utils::starts_with(www_authenticate, RTSP_AUTH_BASIC)) {
         auth_sln = RTSP_AUTH_BASIC;
     } else if (utils::starts_with(www_authenticate, RTSP_AUTH_DIGEST)) {
@@ -53,50 +77,19 @@ int RtspResponse::parse_www_authenticate(std::string &auth_sln, std::string &aut
     return 0;
 }
 
-#if 0
-RtspResponse::RtspResponse(int status_code, const std::string &status_desc)
-    : m_status_code(status_code),
-      m_status_desc(status_desc) {
-    set_is_request(false);
-}
-
-int RtspResponse::get_status_code() const {
-    return m_status_code;
-}
-
-std::string RtspResponse::get_status_desc() const {
-    return m_status_desc;
-}
-
-void RtspResponse::extract_response_line(const std::string &reponse_line) {
-    int pos = 0;
-    m_version = reponse_line.substr(0, strlen(RTSP_VERSION));
-    pos += m_version.length();
-
-    pos = reponse_line.find_first_not_of(RTSP_SP, pos);
-    if (pos == std::string::npos || pos + RTSP_STATUS_CODE_LEN > reponse_line.length()) {
-        return;
+int RtspResponse::parse_session(std::string &session_value) {
+    std::string session = get_rtsp_header(RTSP_HEADER_FIELDS_SESSION);
+    if (session.empty()) {
+        return -1;
     }
-    std::string status_code = reponse_line.substr(pos, RTSP_STATUS_CODE_LEN).c_str();
-    pos += status_code.length();
-    m_status_code = std::atoi(status_code.c_str());
-
-    pos = reponse_line.find_first_not_of(RTSP_SP, pos);
-    if (pos != std::string::npos) {
-        m_status_desc = reponse_line.substr(pos);
+    std::vector<std::string> sesses = utils::split(session, ";");
+    if (!sesses.empty()) {
+        session_value = sesses[0];
     }
+    return 0;
 }
 
-void RtspResponse::clone(const RtspResponse &response) {
-    RtspMessage::clone((RtspMessage)response);
-    m_status_code = response.m_status_code;
-    m_status_desc = response.m_status_desc;
-}
 
-std::string RtspResponse::to_string() {
-    return "";
-}
-#endif
 
 }
 }

@@ -12,6 +12,26 @@ std::string RtspRequest::get_method() const {
     return m_request_line.m_method;
 }
 
+void RtspRequest::set_cseq(int cseq) {
+    set_rtsp_header(RTSP_HEADER_FIELDS_CSEQ, std::to_string(cseq));
+}
+
+void RtspRequest::set_authorization(const std::string &authorization) {
+    set_rtsp_header(RTSP_HEADER_FIELDS_AUTHORIZATION, authorization);
+}
+
+void RtspRequest::set_transport(const std::string &transport) {
+    set_rtsp_header(RTSP_HEADER_FIELDS_TRANSPORT, transport);
+}
+
+void RtspRequest::set_session(const std::string &session) {
+    set_rtsp_header(RTSP_HEADER_FIELDS_SESSION, session);
+}
+
+void RtspRequest::set_range(const std::string &range) {
+    set_rtsp_header(RTSP_HEADER_FIELDS_RANGE, range);
+}
+
 std::string RtspRequest::to_string() {
     std::string request;
     request += m_request_line.to_string();
