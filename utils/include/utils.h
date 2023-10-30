@@ -13,5 +13,6 @@
 #include "utils_noncopyable.h"
 #include "utils_singleton.h"
 #include "utils_ssl.h"
+#include "utils_md5.h"
 
 #endif // HUOGUO_UTILS_H_

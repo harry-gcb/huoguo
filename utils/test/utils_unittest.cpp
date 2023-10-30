@@ -1,6 +1,7 @@
 #include "bits_unittest.h"
 #include "kfifo_unittest.h"
 #include "string_unittest.h"
+#include "md5_unittest.h"
 
 int main(int argc, char *argv[]) {
     testing::InitGoogleTest(&argc, argv);

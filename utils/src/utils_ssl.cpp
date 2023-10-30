@@ -7,7 +7,7 @@
 namespace huoguo {
 namespace utils {
 
-std::string md5(const std::string &s) {
+std::string ssl_md5(const std::string &s) {
     unsigned char hash[MD5_DIGEST_LENGTH] = { 0 };
     MD5_CTX md5;
     MD5_Init(&md5);

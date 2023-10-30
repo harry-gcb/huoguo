@@ -13,7 +13,7 @@ TEST(utils, kfifo) {
     EXPECT_TRUE(kfifo->is_empty());
     EXPECT_FALSE(kfifo->is_full());
     std::string a(10, 'a');
-    EXPECT_EQ(10, kfifo->put((const uint8_t *)a.c_str(), a.length()));
+    EXPECT_EQ(10, kfifo->put((const uint8_t *)a.c_str(), static_cast<uint32_t>(a.length())));
     EXPECT_EQ(10, kfifo->length());
     EXPECT_EQ(6, kfifo->avail());
     EXPECT_FALSE(kfifo->is_empty());

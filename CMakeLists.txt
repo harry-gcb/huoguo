@@ -2,6 +2,14 @@ cmake_minimum_required(VERSION 3.12.0)
 
 project(huoguo)
 
+IF (CMAKE_SYSTEM_NAME MATCHES "Linux")
+ELSEIF (CMAKE_SYSTEM_NAME MATCHES "Windows")
+    include($ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake)
+ELSEIF (CMAKE_SYSTEM_NAME MATCHES "Darwin") 
+ELSE () 
+    MESSAGE(STATUS "other platform: ${CMAKE_SYSTEM_NAME}") 
+ENDIF (CMAKE_SYSTEM_NAME MATCHES "Linux")
+
 option(BUILD_SAMPLE "build with sample" OFF)
 option(BUILD_TEST   "build with test" OFF)
 
@@ -23,13 +31,6 @@ endif()
 
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/output/lib)
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/output/bin)
-IF (CMAKE_SYSTEM_NAME MATCHES "Linux")
-ELSEIF (CMAKE_SYSTEM_NAME MATCHES "Windows")
-    set(OPENSSL_HOME $ENV{OPENSSL_HOME})
-ELSEIF (CMAKE_SYSTEM_NAME MATCHES "Darwin") 
-ELSE () 
-    MESSAGE(STATUS "other platform: ${CMAKE_SYSTEM_NAME}") 
-ENDIF (CMAKE_SYSTEM_NAME MATCHES "Linux")
 
 
 

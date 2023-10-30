@@ -6,7 +6,7 @@
 namespace huoguo {
 namespace utils {
 
-std::string md5(const std::string &s);
+std::string ssl_md5(const std::string &s);
 
 }
 }
