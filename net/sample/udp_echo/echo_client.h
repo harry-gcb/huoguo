@@ -1,7 +1,9 @@
 #ifndef HUOGUO_NET_SAMPLE_UDP_ECHO_CLIENT_H_
 #define HUOGUO_NET_SAMPLE_UDP_ECHO_CLIENT_H_
 
-#include "net.h"
+#include "net_eventloop.h"
+#include "net_udpclient.h"
+#include "utils_logger.h"
 
 namespace huoguo {
 namespace sample {
@@ -22,12 +24,12 @@ public:
         m_num++;
     }
 private:
-    void on_message(const std::shared_ptr<net::UdpConnection> &conn, const net::InetAddr &addr, const char *data, int len) {
-        InfoL("receive %d bytes: [%s]", len, data);
+    void on_message(const std::shared_ptr<net::UdpConnection> &conn, const net::InetAddr &addr, const uint8_t *data, size_t size) {
+        InfoL("receive %d bytes: [%s]", size, data);
         if (m_num >= m_count) {
             return;
         }
-        conn->sendto(addr, data, len);
+        conn->sendto(addr, data, size);
         m_num++;
     };
 private:

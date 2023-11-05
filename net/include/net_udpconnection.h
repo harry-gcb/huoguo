@@ -3,9 +3,7 @@
 
 #include <string>
 #include <memory>
-
-#include "utils.h"
-
+#include "utils_noncopyable.h"
 #include "net_callback.h"
 #include "net_inetaddr.h"
 
@@ -24,7 +22,7 @@ public:
     void set_message_callback(DatagramCallback callback);
 
     int sendto(const InetAddr &addr, const std::string &buffer);
-    int sendto(const InetAddr &addr, const char *buffer, int length);
+    int sendto(const InetAddr &addr, const uint8_t *data, size_t size);
 
     std::string get_trace_id() const;
 
@@ -40,7 +38,7 @@ private:
     std::shared_ptr<Socket> m_socket;
     std::shared_ptr<Channel> m_channel;
     std::string m_trace_id;
-    char m_buffer[BUF_SIZE];
+    uint8_t m_buffer[BUF_SIZE];
     DatagramCallback m_message_callback;
     
     InetAddr m_current_addr;

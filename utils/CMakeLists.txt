@@ -17,9 +17,6 @@ ELSE ()
 ENDIF (CMAKE_SYSTEM_NAME MATCHES "Linux")
 
 if (${BUILD_TEST})
-# enable_testing()
-
-# target_link_libraries(unittest PRIVATE GTest::gtest GTest::gtest_main huoguo::utils)
 
 enable_testing()
 

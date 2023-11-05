@@ -1,7 +1,10 @@
 #ifndef NET_SAMPLE_UDP_ECHO_SERVER_H_
 #define NET_SAMPLE_UDP_ECHO_SERVER_H_
 
-#include "net.h"
+#include "net_eventloop.h"
+#include "net_inetaddr.h"
+#include "net_udpserver.h"
+#include "utils_logger.h"
 
 namespace huoguo {
 namespace sample {
@@ -17,9 +20,9 @@ public:
         m_server.start();
     }
 private:
-    void on_message(const std::shared_ptr<net::UdpConnection> &conn, const net::InetAddr &addr, const char *data, int len) {
-        InfoL("receive %d bytes: [%s]", len, data);
-        conn->sendto(addr, data, len);
+    void on_message(const std::shared_ptr<net::UdpConnection> &conn, const net::InetAddr &addr, const uint8_t *data, size_t size) {
+        InfoL("receive %d bytes: [%s]", size, data);
+        conn->sendto(addr, data, size);
     };
 private:
     net::UdpServer m_server;
@@ -56,7 +59,7 @@ void TimeServer::on_connect(std::shared_ptr<net::TcpConnection> conn) {
     }
 }
 
-void TimeServer::on_message(std::shared_ptr<net::TcpConnection> conn, const char *data, size_t len) {
+void TimeServer::on_message(std::shared_ptr<net::TcpConnection> conn, const uint8_t *data, size_t size) {
     InfoL("[TimeServer] receive message from %s:%d", conn->get_remote_ip().c_str(), conn->get_remote_port());
 }
 

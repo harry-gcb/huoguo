@@ -1,7 +1,7 @@
 #ifdef USE_KQUEUE_POLLER
 #include <unistd.h>
 #include <sys/event.h>
-#include "net.h"
+// #include "net.h"
 
 namespace huoguo {
 namespace net {

@@ -1,3 +1,4 @@
+#include "utils_logger.h"
 #include "net_eventloop.h"
 #include "net_poller_factory.h"
 #include "net_wakeup_factory.h"
@@ -38,7 +39,7 @@ int EventLoop::run() {
             if (event->m_error_occurred) {
                 event->m_channel->handle_error_event();
             }
-            InfoL("[%s] active, read=%d, write=%d, error=%d", event->m_channel->get_trace_id().c_str(), event->m_read_occurred, event->m_write_occurred, event->m_error_occurred);
+            // InfoL("[%s] active, read=%d, write=%d, error=%d", event->m_channel->get_trace_id().c_str(), event->m_read_occurred, event->m_write_occurred, event->m_error_occurred);
         }
         handle_close_event();
     }
@@ -65,7 +66,7 @@ int EventLoop::del_channel(std::shared_ptr<Channel> channel) {
 
 void EventLoop::handle_read_event() {
     uint64_t one = 1;
-    size_t n = m_event_io->read((char *)&one, sizeof(one));
+    size_t n = m_event_io->read((uint8_t *)&one, sizeof(one));
     if (n != sizeof(one)) {
         ErrorL("read %d bytes instead of %d", n, sizeof(one));
     }
@@ -73,7 +74,7 @@ void EventLoop::handle_read_event() {
 
 void EventLoop::active_read_event() {
     uint64_t one = 1;
-    size_t n = m_event_io->write((const char *)&one, sizeof(one));
+    size_t n = m_event_io->write((const uint8_t *)&one, sizeof(one));
     if (n != sizeof(one)) {
         ErrorL("read %d bytes instead of %d", n, sizeof(one));
     }

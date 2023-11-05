@@ -1,3 +1,6 @@
+#ifndef HUOGUO_UTILS_STRING_UNITTEST_H_
+#define HUOGUO_UTILS_STRING_UNITTEST_H_
+
 #include <gtest/gtest.h>
 #include "utils_string.h"
 
@@ -10,3 +13,5 @@ TEST(utils, starts_with) {
 
 }
 }
+
+#endif // HUOGUO_UTILS_STRING_UNITTEST_H_

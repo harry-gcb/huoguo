@@ -26,7 +26,7 @@ void RtspClient::on_connect(std::shared_ptr<net::TcpConnection> conn) {
                         conn->is_connected() ? "UP" : "DOWN");
 }
 
-void RtspClient::on_message(std::shared_ptr<net::TcpConnection> conn, const uint8_t *data, size_t len) {
+void RtspClient::on_message(std::shared_ptr<net::TcpConnection> conn, const uint8_t *data, size_t size) {
 
 }
 

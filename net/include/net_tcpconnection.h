@@ -3,7 +3,7 @@
 
 #include <string>
 #include <memory>
-#include "utils.h"
+#include "utils_noncopyable.h"
 #include "net_inetaddr.h"
 #include "net_callback.h"
 
@@ -46,7 +46,7 @@ private:
     const InetAddr m_local_addr;
     const InetAddr m_remote_addr;
     bool m_connected;
-    char m_buffer[BUF_SIZE];
+    uint8_t m_buffer[BUF_SIZE];
     ConnectCallback m_connect_callback;
     SegmentCallback m_message_callback;
     CloseCallback m_close_callback;

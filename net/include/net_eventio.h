@@ -11,8 +11,8 @@ public:
     virtual int get_fd() = 0;
     virtual Channel *get_channel() = 0;
     virtual void set_channel(Channel *channel) = 0;
-    virtual int read(char *data, int len) = 0;
-    virtual int write(const char *data, int len) = 0;
+    virtual int read(uint8_t *data, size_t size) = 0;
+    virtual int write(const uint8_t *data, size_t size) = 0;
 };
 
 } // namespace net

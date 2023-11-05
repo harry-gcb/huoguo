@@ -1,3 +1,5 @@
+#include "utils_uuid.h"
+#include "utils_logger.h"
 #include "net_channel.h"
 #include "net_eventloop.h"
 

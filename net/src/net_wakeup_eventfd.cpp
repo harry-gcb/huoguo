@@ -22,11 +22,11 @@ void EventfdWakeup::set_channel(Channel *channel) {
     m_event_fd->set_channel(channel);
 }
 
-int EventfdWakeup::read(char *data, int len) {
+int EventfdWakeup::read(uint8_t *data, size_t size) {
     return m_event_fd->read(data, len);
 }
 
-int EventfdWakeup::write(const char *data, int len) {
+int EventfdWakeup::write(const uint8_t *data, size_t size) {
     return m_event_fd->write(data, len);
 }
 

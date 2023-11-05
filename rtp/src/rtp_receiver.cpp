@@ -1,3 +1,4 @@
+#include "utils_logger.h"
 #include "rtp_receiver.h"
 
 namespace huoguo {
@@ -13,12 +14,12 @@ void RtpReceiver::set_rtp_packet_callback(RtpPacketCallback callback) {
     m_callback = callback;
 }
 
-void RtpReceiver::on_message(const std::shared_ptr<net::UdpConnection> &connection, const net::InetAddr &addr, const char *data, int len) {
+void RtpReceiver::on_message(const std::shared_ptr<net::UdpConnection> &connection, const net::InetAddr &addr, const uint8_t *data, size_t size) {
     auto it = m_sessions.find(addr.get_ip());
     if (it == m_sessions.end()) {
         auto session = std::make_shared<RtpSession>(connection);
         session->set_rtp_packet_callback(m_callback);
-        session->on_message(connection, addr, data, len);
+        session->on_message(connection, addr, data, size);
         m_sessions.insert({addr.get_ip(), session});
         return;
     }

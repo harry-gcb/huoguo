@@ -1,7 +1,7 @@
 #include "time_client.h"
-#include "utils.h"
-#include "net.h"
 
+#include "net_tcpconnection.h"
+#include "utils_logger.h"
 namespace huoguo {
 namespace sample {
 
@@ -29,7 +29,7 @@ void TimeClient::on_connect(std::shared_ptr<net::TcpConnection> conn) {
     }
 }
 
-void TimeClient::on_message(std::shared_ptr<net::TcpConnection> conn, const char *data, size_t len) {
+void TimeClient::on_message(std::shared_ptr<net::TcpConnection> conn, const uint8_t *data, size_t size) {
     InfoL("[TimeClient] receive message from %s:%d", conn->get_remote_ip().c_str(), conn->get_remote_port());
 }
 

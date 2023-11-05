@@ -1,7 +1,7 @@
 #ifdef NET_MACOS
 #include <fcntl.h>
 #include <errno.h>
-#include "utils.h"
+// #include "utils.h"
 #include "net_pipewakeup.h"
 
 namespace huoguo {

@@ -19,7 +19,7 @@ public:
     void start();
 
     int sendto(const InetAddr &addr, const std::string &buffer);
-    int sendto(const InetAddr &addr, const char *buffer, int length);
+    int sendto(const InetAddr &addr, const uint8_t *data, size_t size);
 private:
     EventLoop *m_loop;
     std::shared_ptr<UdpConnection> m_connection;

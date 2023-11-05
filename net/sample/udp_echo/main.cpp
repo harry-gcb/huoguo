@@ -1,5 +1,6 @@
 #include "echo_server.h"
 #include "echo_client.h"
+#include "utils_option.h"
 #include <string>
 
 static void init_option(int argc, char *argv[]) {

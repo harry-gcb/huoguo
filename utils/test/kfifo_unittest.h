@@ -1,3 +1,6 @@
+#ifndef HUOGUO_UTILS_KFIFO_UNITTEST_H_
+#define HUOGUO_UTILS_KFIFO_UNITTEST_H_
+
 #include <memory>
 #include <gtest/gtest.h>
 #include "utils_kfifo.h"
@@ -22,3 +25,5 @@ TEST(utils, kfifo) {
 
 }
 }
+
+#endif // HUOGUO_UTILS_KFIFO_UNITTEST_H_

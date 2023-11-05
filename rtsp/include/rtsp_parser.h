@@ -12,7 +12,7 @@ class RtspSession;
 class RtspParser {
     friend class RtspSession;
 public:
-    std::shared_ptr<RtspMessage> parse(const char *data, int len);
+    std::shared_ptr<RtspMessage> parse(const uint8_t *data, size_t size);
 private:
     std::shared_ptr<RtspMessage> parse_message(std::string &buffer);
     std::shared_ptr<RtspRequest> parse_request(std::string &buffer);

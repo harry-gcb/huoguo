@@ -6,7 +6,7 @@
 #include <map>
 #include <list>
 #include <functional>
-#include "utils.h"
+#include "utils_noncopyable.h"
 
 namespace huoguo {
 namespace net {

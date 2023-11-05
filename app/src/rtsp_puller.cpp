@@ -1,6 +1,10 @@
 #include "rtsp_puller.h"
-#include "utils.h"
 #include "rtp_portpool.h"
+#include "utils_config.h"
+#include "utils_string.h"
+#include "utils_singleton.h"
+#include "utils_logger.h"
+#include "utils_singleton.h"
 
 namespace huoguo {
 namespace app {
@@ -105,7 +109,17 @@ void RtspPuller::on_setup_response(std::shared_ptr<rtsp::RtspSession> session, s
 }
 
 void RtspPuller::on_rtp_packet(const std::shared_ptr<rtp::RtpSession> &session, const std::shared_ptr<rtp::RtpPacket> &packet) {
-    InfoL("on_rtp_packet");
+    static int count = 0;
+    InfoL("%-3d, V=%d, P=%d, X=%d, CC=%d, M=%d, PT=%d, SN=%d, TS=%d, SSRC=%d", count++,
+                        packet->get_version(),
+                        packet->get_padding(),
+                        packet->get_extension(),
+                        packet->get_number_of_csrc(),
+                        packet->get_marker(),
+                        packet->get_payload_type(),
+                        packet->get_sequence_number(),
+                        packet->get_timestamp(),
+                        packet->get_ssrc());
 }
 
 // void RtspClient::on_option_response(std::shared_ptr<rtsp::RtspSession> session, std::shared_ptr<rtsp::RtspOptionsResponse> response) {
@@ -131,7 +145,7 @@ void RtspPuller::on_rtp_packet(const std::shared_ptr<rtp::RtpSession> &session, 
 //     }
 // }
 
-// void RtspClient::on_message(std::shared_ptr<net::TcpConnection> conn, const uint8_t *data, size_t len) {
+// void RtspClient::on_message(std::shared_ptr<net::TcpConnection> conn, const uint8_t *data, size_t size) {
 //     auto message = m_rtsp_session->on_message(data, len);
 //     if (!message) {
 //         return;

@@ -17,8 +17,8 @@ public:
     virtual int get_fd() override;
     virtual Channel *get_channel() override;
     virtual void set_channel(Channel *channel) override;
-    virtual int read(char *data, int len) override;
-    virtual int write(const char *data, int len) override;
+    virtual int read(uint8_t *data, size_t size) override;
+    virtual int write(const uint8_t *data, size_t size) override;
 private:
     std::mutex m_accept_mutex;
     std::thread m_accept_thread;

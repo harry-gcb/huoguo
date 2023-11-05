@@ -32,8 +32,6 @@ endif()
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/output/lib)
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/output/bin)
 
-
-
 add_subdirectory(utils)
 add_subdirectory(sdp)
 add_subdirectory(net)

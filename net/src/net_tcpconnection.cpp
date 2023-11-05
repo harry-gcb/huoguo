@@ -1,4 +1,4 @@
-#include "utils.h"
+#include "utils_logger.h"
 #include "net_tcpconnection.h"
 #include "net_eventloop.h"
 #include "net_channel.h"
@@ -51,7 +51,7 @@ void TcpConnection::shutdown() {
 }
 
 int TcpConnection::send(const std::string &buffer) {
-    return m_socket->write(buffer.data(), static_cast<int>(buffer.length()));
+    return m_socket->write((const uint8_t *)buffer.data(), buffer.length());
 }
 
 void TcpConnection::set_connect_callback(ConnectCallback callback) {

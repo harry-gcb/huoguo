@@ -1,6 +1,8 @@
 #include "rtp_portpair.h"
 #include "rtp_portpool.h"
 
+#include "utils_singleton.h"
+
 namespace huoguo {
 namespace rtp {
 

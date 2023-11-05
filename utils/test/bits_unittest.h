@@ -1,3 +1,6 @@
+#ifndef HUOGUO_UTILS_BITS_UNITTEST_H_
+#define HUOGUO_UTILS_BITS_UNITTEST_H_
+
 #include <gtest/gtest.h>
 #include "utils_bits.h"
 
@@ -29,4 +32,6 @@ TEST(utils, roundup_pow_of_2) {
 
 } // namespace utils
 } // namespace huoguo
+
+#endif // HUOGUO_UTILS_BITS_UNITTEST_H_
 

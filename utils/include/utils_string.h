@@ -1,5 +1,5 @@
-#ifndef HUOGUO_UTILS_STRUTILS_H_
-#define HUOGUO_UTILS_STRUTILS_H_
+#ifndef HUOGUO_UTILS_STRING_H_
+#define HUOGUO_UTILS_STRING_H_
 
 #include <string>
 #include <vector>

@@ -1,3 +1,4 @@
+#include "utils_logger.h"
 #include "net_connector.h"
 #include "net_socket.h"
 

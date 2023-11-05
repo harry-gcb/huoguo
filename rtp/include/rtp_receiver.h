@@ -1,7 +1,8 @@
 #ifndef HUOGUO_RTP_RTP_RECEIVER_H_
 #define HUOGUO_RTP_RTP_RECEIVER_H_
 
-#include "net.h"
+// #include "net.h"
+#include "net_udpserver.h"
 #include "rtp_callback.h"
 #include "rtp_session.h"
 
@@ -15,7 +16,7 @@ public:
     void set_rtp_packet_callback(RtpPacketCallback callback);
     void start();
 private:
-    void on_message(const std::shared_ptr<net::UdpConnection> &connection, const net::InetAddr &addr, const char *data, int len);
+    void on_message(const std::shared_ptr<net::UdpConnection> &connection, const net::InetAddr &addr, const uint8_t *data, size_t size);
 private:
     net::EventLoop *m_loop;
     net::UdpServer  m_server;

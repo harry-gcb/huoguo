@@ -1,4 +1,4 @@
-#include "utils.h"
+// #include "utils.h"
 #include "net_socket.h"
 #include "net_udpserver.h"
 
@@ -28,8 +28,8 @@ int UdpServer::sendto(const InetAddr &addr, const std::string &buffer) {
     return m_connection->sendto(addr, buffer);
 }
 
-int UdpServer::sendto(const InetAddr &addr, const char *buffer, int length) {
-    return m_connection->sendto(addr, buffer, length);
+int UdpServer::sendto(const InetAddr &addr, const uint8_t *data, size_t size) {
+    return m_connection->sendto(addr, data, size);
 }
 
 }

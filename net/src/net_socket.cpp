@@ -1,5 +1,5 @@
+#include "utils_logger.h"
 #include "net_socket.h"
-
 
 namespace huoguo {
 namespace net {
@@ -79,40 +79,40 @@ int Socket::connect(const struct sockaddr *addr, socklen_t addrlen) {
     return ret;
 }
 
-int Socket::read(char *data, int len) {
+int Socket::read(uint8_t *data, size_t size) {
 #ifdef _WIN32
-    return ::recv(m_fd, data, len, 0);
+    return ::recv(m_fd, (char *)data, size, 0);
 #else
     return ::read(m_fd, data, len);
 #endif
 }
 
-int Socket::write(const char *data, int len) {
+int Socket::write(const uint8_t *data, size_t size) {
 #ifdef _WIN32
-    return ::send(m_fd, data, len, 0);
+    return ::send(m_fd, (char *)data, size, 0);
 #else
     return ::write(m_fd, data, len);
 #endif
     
 }
 
-int Socket::recvfrom(char *data, int len, InetAddr &addr) {
+int Socket::recvfrom(uint8_t *data, size_t size, InetAddr &addr) {
     int n = 0;
     if (AF_INET6 == m_family) {
         struct sockaddr_in6 addr6 = { 0 };
         socklen_t addr6len = sizeof(addr6);
-        n = ::recvfrom(m_fd, data, len, 0, (sockaddr *)&addr6, &addr6len);
+        n = ::recvfrom(m_fd, (char *)data, size, 0, (sockaddr *)&addr6, &addr6len);
         addr.from_inet_addr6(addr6);
     } else {
         struct sockaddr_in addr4 = { 0 };
         socklen_t addr4len = sizeof(addr4);
-        n = ::recvfrom(m_fd, data, len, 0, (sockaddr *)&addr4, &addr4len);
+        n = ::recvfrom(m_fd, (char *)data, size, 0, (sockaddr *)&addr4, &addr4len);
         addr.from_inet_addr4(addr4);
     }
     return n;
 }
-int Socket::sendto(const char *data, int len, const InetAddr &addr) {
-    return ::sendto(m_fd, data, len, 0, addr.get_addr(), addr.get_len());
+int Socket::sendto(const uint8_t *data, size_t size, const InetAddr &addr) {
+    return ::sendto(m_fd, (char *)data, size, 0, addr.get_addr(), addr.get_len());
 }
 
 int Socket::set_reuse_addr(bool reuse) {

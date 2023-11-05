@@ -1,12 +1,13 @@
 #include "rtsp_parser.h"
 #include "rtsp_session.h"
-#include "utils.h"
+#include "utils_string.h"
+#include "utils_logger.h"
 
 namespace huoguo {
 namespace rtsp {
 
-std::shared_ptr<RtspMessage> RtspParser::parse(const char *data, int len) {
-    m_buffer.append(std::string((const char *)data, len));
+std::shared_ptr<RtspMessage> RtspParser::parse(const uint8_t *data, size_t size) {
+    m_buffer.append(std::string((const char *)data, size));
     return parse_message(m_buffer);
 }
 

@@ -1,7 +1,8 @@
 #ifndef HUOGUO_RTSP_RTSP_CLIENT_H_
 #define HUOGUO_RTSP_RTSP_CLIENT_H_
 
-#include "net.h"
+#include "net_eventloop.h"
+#include "net_tcpclient.h"
 #include "rtsp_url.h"
 #include "rtsp_session.h"
 #include <string>

@@ -2,6 +2,7 @@
 
 #include <future>
 #include <thread>
+#include "utils_logger.h"
 #include "net_socket.h"
 #include "net_inetaddr.h"
 #include "net_wakeup_sockpair.h"
@@ -67,12 +68,12 @@ void SockPairWakeup::set_channel(Channel *channel) {
     m_reader->set_channel(channel);
 }
 
-int SockPairWakeup::read(char *data, int len) {
-    return m_reader->read(data, len);
+int SockPairWakeup::read(uint8_t *data, size_t size) {
+    return m_reader->read(data, size);
 }
 
-int SockPairWakeup::write(const char *data, int len) {
-    return m_connector->write(data, len);
+int SockPairWakeup::write(const uint8_t *data, size_t size) {
+    return m_connector->write(data, size);
 }
 
 }

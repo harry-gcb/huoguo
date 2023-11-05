@@ -2,7 +2,8 @@
 #define HUOGUO_RTSP_RTSP_SESSION_H_
 
 #include <map>
-#include "net.h"
+#include "net_eventloop.h"
+#include "net_tcpconnection.h"
 #include "rtsp_callback.h"
 #include "rtsp_url.h"
 #include "rtsp_message.h"
@@ -54,7 +55,7 @@ public:
 
     std::string get_url() const;
 private:
-    void recv_message(std::shared_ptr<net::TcpConnection> conn, const char *data, size_t len);
+    void recv_message(std::shared_ptr<net::TcpConnection> conn, const uint8_t *data, size_t size);
     void send_message(std::shared_ptr<RtspMessage> message);
 
     void handle_response_pre(std::shared_ptr<RtspResponse> response);

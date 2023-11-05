@@ -1,3 +1,6 @@
+#ifndef HUOGUO_UTILS_MD5_UNITTEST_H_
+#define HUOGUO_UTILS_MD5_UNITTEST_H_
+
 #include <memory>
 #include <gtest/gtest.h>
 #include <iostream>
@@ -31,3 +34,5 @@ TEST(utils, md5) {
 
 }
 }
+
+#endif // HUOGUO_UTILS_MD5_UNITTEST_H_

@@ -26,8 +26,8 @@ int UdpClient::sendto(const InetAddr &addr, const std::string &buffer) {
     return m_connection->sendto(addr, buffer);
 }
 
-int UdpClient::sendto(const InetAddr &addr, const char *buffer, int length) {
-    return m_connection->sendto(addr, buffer, length);
+int UdpClient::sendto(const InetAddr &addr, const uint8_t *data, size_t size) {
+    return m_connection->sendto(addr, data, size);
 }
 
 

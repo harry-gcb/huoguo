@@ -2,7 +2,7 @@
 #define HUOGUO_NET_SOCKET_H_
 
 #include <memory>
-#include "utils.h"
+#include "utils_noncopyable.h"
 #include "net_inetaddr.h"
 #include "net_eventio.h"
 
@@ -24,11 +24,11 @@ public:
     int connect(const InetAddr &addr);
     int connect(const struct sockaddr *addr, socklen_t addrlen);
     // TCP I/O
-    virtual int read(char *data, int len) override;
-    virtual int write(const char *data, int len) override;
+    virtual int read(uint8_t *data, size_t size) override;
+    virtual int write(const uint8_t *data, size_t size) override;
     // UDP I/O
-    int recvfrom(char *data, int len, InetAddr &addr);
-    int sendto(const char *data, int len, const InetAddr &addr);
+    int recvfrom(uint8_t *data, size_t size, InetAddr &addr);
+    int sendto(const uint8_t *data, size_t size, const InetAddr &addr);
 
     int set_reuse_addr(bool reuse);
     int set_reuse_port(bool reuse);
