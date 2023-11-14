@@ -164,6 +164,7 @@ std::shared_ptr<RtpPacket> RtpParser::parse(const uint8_t *data, size_t size) {
     }
     rtp_packet->set_payload_offset(payload_offset);
     rtp_packet->set_payload_size(size - payload_offset - rtp_packet->get_padding_size());
+    rtp_packet->set_buffer(data, size);
     return rtp_packet;
 }
 

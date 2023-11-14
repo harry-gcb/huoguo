@@ -1,5 +1,5 @@
-#ifndef HUOGUO_APP_RTSP_H_
-#define HUOGUO_APP_RTSP_H_
+#ifndef HUOGUO_APP_RTSP_PLAYER_H_
+#define HUOGUO_APP_RTSP_PLAYER_H_
 
 #include <map>
 #include <thread>
@@ -11,13 +11,14 @@
 #include "rtp_receiver.h"
 #include "rtp_portpair.h"
 #include "sdp_content.h"
+#include "player.h"
 
 namespace huoguo {
 namespace app {
 
-class RtspPuller {
+class RtspPlayer {
 public:
-    RtspPuller(net::EventLoop *loop);
+    RtspPlayer(net::EventLoop *loop);
 
     void pull(const std::string &url);
 private:
@@ -35,9 +36,10 @@ private:
     std::map<std::string, std::shared_ptr<rtp::RtpReceiver>> m_rtp_receivers;
 
     sdp::SdpContent m_sdp;
+    play::Player m_player;
 };
 
 } // namespace app
 } // namespace huoguo
 
-#endif // HUOGUO_APP_RTSP_H_
+#endif // HUOGUO_APP_RTSP_PLAYER_H_

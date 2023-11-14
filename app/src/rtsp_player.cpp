@@ -1,4 +1,4 @@
-#include "rtsp_puller.h"
+#include "rtsp_player.h"
 #include "rtp_portpool.h"
 #include "utils_config.h"
 #include "utils_string.h"
@@ -9,11 +9,11 @@
 namespace huoguo {
 namespace app {
 
-RtspPuller::RtspPuller(net::EventLoop *loop)
+RtspPlayer::RtspPlayer(net::EventLoop *loop)
     : m_loop(loop){
 }
 
-void RtspPuller::pull(const std::string &url) {
+void RtspPlayer::pull(const std::string &url) {
 
     // m_rtsp_client = std::make_shared<rtsp::RtspClient>(url);
     // auto rtsp_url = m_rtsp_client->get_rtsp_url();
@@ -21,12 +21,12 @@ void RtspPuller::pull(const std::string &url) {
     // m_tcp_client = std::make_shared<net::TcpClient>(m_loop, InetAddr())
 
     m_rtsp_puller = std::make_shared<rtsp::RtspClient>(m_loop, url);
-    m_rtsp_puller->set_describe_response_callback(std::bind(&RtspPuller::on_describe_response, this, std::placeholders::_1, std::placeholders::_2));
-    m_rtsp_puller->set_setup_response_callback(std::bind(&RtspPuller::on_setup_response, this, std::placeholders::_1, std::placeholders::_2));
+    m_rtsp_puller->set_describe_response_callback(std::bind(&RtspPlayer::on_describe_response, this, std::placeholders::_1, std::placeholders::_2));
+    m_rtsp_puller->set_setup_response_callback(std::bind(&RtspPlayer::on_setup_response, this, std::placeholders::_1, std::placeholders::_2));
     m_rtsp_puller->start();
 }
 
-void RtspPuller::do_setup_request(std::shared_ptr<rtsp::RtspSession> session) {
+void RtspPlayer::do_setup_request(std::shared_ptr<rtsp::RtspSession> session) {
     auto port_pair = utils::Singleton<rtp::RtpPortPool>::getInstance().require();
     if (!port_pair) {
         return;
@@ -34,6 +34,11 @@ void RtspPuller::do_setup_request(std::shared_ptr<rtsp::RtspSession> session) {
 
     std::string path;
     auto stream = m_sdp.get_stream(session->get_stream_index());
+    if (stream->get_type() == "video") {
+        m_player.set_video_codec_info();
+    } else if (stream->get_type() == "audio") {
+        m_player.set_audio_codec_info();
+    }
     auto attributes = stream->get_attributes_list();
     for (auto &attribute: attributes) {
         if (!utils::starts_with(attribute, "control:")) {
@@ -51,7 +56,7 @@ void RtspPuller::do_setup_request(std::shared_ptr<rtsp::RtspSession> session) {
     session->do_setup_request(message);
 
     auto rtp_receiver = std::make_shared<rtp::RtpReceiver>(m_loop, port_pair->get_rtp_port());
-    rtp_receiver->set_rtp_packet_callback(std::bind(&RtspPuller::on_rtp_packet, this, std::placeholders::_1, std::placeholders::_2));
+    rtp_receiver->set_rtp_packet_callback(std::bind(&RtspPlayer::on_rtp_packet, this, std::placeholders::_1, std::placeholders::_2));
     rtp_receiver->start();
 
     m_port_pairs.insert({uri, port_pair});
@@ -60,7 +65,7 @@ void RtspPuller::do_setup_request(std::shared_ptr<rtsp::RtspSession> session) {
     session->set_stream_index(session->get_stream_index() + 1);
 }
 
-void RtspPuller::on_describe_response(std::shared_ptr<rtsp::RtspSession> session, std::shared_ptr<rtsp::RtspDescribeResponse> response) {
+void RtspPlayer::on_describe_response(std::shared_ptr<rtsp::RtspSession> session, std::shared_ptr<rtsp::RtspDescribeResponse> response) {
     if (RTSP_SDP_TYPE == response->get_content_type()) {
         m_sdp.from_string(response->get_content_body());
         InfoL("RtspClient::on_describe_response, sdp=\n%s", m_sdp.to_string().c_str());
@@ -71,7 +76,7 @@ void RtspPuller::on_describe_response(std::shared_ptr<rtsp::RtspSession> session
     do_setup_request(session);
 }
 
-void RtspPuller::on_setup_response(std::shared_ptr<rtsp::RtspSession> session, std::shared_ptr<rtsp::RtspSetupResponse> response) {
+void RtspPlayer::on_setup_response(std::shared_ptr<rtsp::RtspSession> session, std::shared_ptr<rtsp::RtspSetupResponse> response) {
     if (session->get_stream_index() < session->get_stream_count()) {
         do_setup_request(session);
     } else {
@@ -81,7 +86,7 @@ void RtspPuller::on_setup_response(std::shared_ptr<rtsp::RtspSession> session, s
     }
 }
 
-void RtspPuller::on_rtp_packet(const std::shared_ptr<rtp::RtpSession> &session, const std::shared_ptr<rtp::RtpPacket> &packet) {
+void RtspPlayer::on_rtp_packet(const std::shared_ptr<rtp::RtpSession> &session, const std::shared_ptr<rtp::RtpPacket> &packet) {
     static int count = 0;
     InfoL("%3d, V=%d, P=%d, X=%d, CC=%d, M=%d, PT=%d, SN=%d, TS=%d, SSRC=%d, OFFSET=%d, SIZE=%d, LENGTH=%d", count++,
                         packet->get_version(),

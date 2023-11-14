@@ -5,6 +5,7 @@
 #include "application.h"
 // #include "utils.h"
 #include "rtsp_puller.h"
+#include "rtsp_player.h"
 
 #include <iostream>
 
@@ -23,9 +24,9 @@ int Application::run() {
         return 0;
     }
     net::EventLoop m_loop;
-    auto rtsp = std::make_shared<RtspPuller>(&m_loop);
-    if (OPTION.is_exists("pull")) {
-        rtsp->pull(OPTION.get("pull"));
+    auto rtsp = std::make_shared<RtspPlayer>(&m_loop);
+    if (OPTION.is_exists("play")) {
+        rtsp->pull(OPTION.get("play"));
     }
     return m_loop.run();
     
